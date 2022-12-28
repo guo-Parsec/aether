@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: aether-auth
+  profiles:
+    active: dev

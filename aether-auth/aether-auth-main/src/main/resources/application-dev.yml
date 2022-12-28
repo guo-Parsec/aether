@@ -1,0 +1,58 @@
+spring:
+  cache:
+    type: redis
+    redis:
+      cache-null-values: false
+      key-prefix: AETHER
+      use-key-prefix: true
+      time-to-live: 14400000
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1/aether?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    druid:
+      initial-size: 5
+      min-idle: 10
+      max-active: 20
+      web-stat-filter:
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+      stat-view-servlet:
+        login-username: druid
+        login-password: druid
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+feign:
+  okhttp:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 600000
+        loggerLevel: basic
+mybatis-plus:
+  mapper-locations:
+    - classpath*:mapper/**/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+aether:
+  snowflake:
+    machine-id: 1
+    datacenter-id: 1
+  swagger:
+    enable: true
+  crypto:
+    aes:
+      mode: ecb
+      padding: pkcs5padding
+      key: abc123456
+logging:
+  level:
+    top.finder.aether: debug

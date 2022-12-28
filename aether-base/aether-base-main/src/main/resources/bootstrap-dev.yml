@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: http://127.0.0.1:8848
+        namespace: aether_dev
+      config:
+        server-addr: http://127.0.0.1:8848
+        file-extension: yaml
+        namespace: aether_dev

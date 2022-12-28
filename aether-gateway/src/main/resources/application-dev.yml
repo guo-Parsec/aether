@@ -1,0 +1,48 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: aether-base
+          uri: lb://aether-base
+          predicates:
+            - Path=/base/**
+        - id: aether-auth
+          uri: lb://aether-auth
+          predicates:
+            - Path=/auth/**
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+logging:
+  level:
+    top.finder.aether: debug
+aether:
+  gateway:
+    white:
+      urls:
+        - /auth/**
+        - "/swagger-resources/**"
+        - "/swagger/**"
+        - /webjars/**
+        - /**/v2/**
+        - /**/v3/**
+        - /swagger-ui/**
+        - /swagger-ui.html/**
+        - /doc.html/**
+        - /favicon.ico
+        - /csrf
+        - "/"
+        - "/doc.html"
+        - "/swagger-resources/**"
+        - "/swagger/**"
+        - "/*/v2/api-docs"
+        - "/*/v3/api-docs"
+        - "/*/*.js"
+        - "/*/*.css"
+        - "/*/*.png"
+        - "/*/*.ico"

@@ -1,0 +1,7 @@
+server:
+  port: 16200
+  servlet:
+    context-path: /base
+spring:
+  profiles:
+    active: dev

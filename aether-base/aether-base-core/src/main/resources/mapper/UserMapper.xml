@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.finder.aether.base.core.mapper.UserMapper">
+    <resultMap id="AmsUserMap" type="top.finder.aether.base.core.entity.User">
+        <!--@mbg.generated-->
+        <!--@Table ams_user-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
+        <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
+        <result column="birthday" jdbcType="DATE" property="birthday"/>
+        <result column="user_type" jdbcType="INTEGER" property="userType"/>
+        <result column="data_status" jdbcType="INTEGER" property="dataStatus"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify"/>
+    </resultMap>
+
+    <sql id="ams_user_column_list">
+        <!--@mbg.generated-->
+        <!--@sql select -->
+        au.id, au.account, au.`password`, au.nickname, au.sex, au.avatar_url, au.birthday, au.user_type, au.data_status,
+        au.gmt_create, au.gmt_modify
+        <!--@sql from ams_user au -->
+    </sql>
+
+    <select id="findById" resultMap="AmsUserMap" parameterType="java.lang.Long">
+        select
+        <include refid="ams_user_column_list"/>
+        from ams_user au
+        where au.id = #{id,jdbcType=BIGINT}
+        and au.data_status = 0;
+    </select>
+</mapper>
