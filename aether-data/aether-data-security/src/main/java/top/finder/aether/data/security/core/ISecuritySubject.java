@@ -1,5 +1,7 @@
 package top.finder.aether.data.security.core;
 
+import top.finder.aether.common.support.pool.SecurityConstantPool;
+
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.Set;
@@ -93,6 +95,7 @@ public interface ISecuritySubject<U extends Serializable> extends Serializable {
     default void setTokenId(String tokenId) {
         this.setToken(Optional.ofNullable(this.getToken()).map(token -> {
             token.setId(tokenId);
+            token.setContent(SecurityConstantPool.EFFECTIVE_TOKEN_PREFIX + tokenId);
             return token;
         }).orElse(Token.ofId(tokenId)));
     }

@@ -12,17 +12,16 @@ import javax.validation.constraints.NotNull;
 import java.util.StringJoiner;
 
 /**
- * <p>系统角色创建参数</p>
+ * <p>系统角色更新参数</p>
  *
  * @author guocq
  * @since 2022/12/27
  */
 @Getter
 @Setter
-@ApiModel("系统角色创建参数")
+@ApiModel("系统角色更新参数")
 public class RoleUpdateDto implements IModel {
-    private static final long serialVersionUID = -8344571878810290148L;
-
+    private static final long serialVersionUID = 154862514958599947L;
     /**
      * 主键
      */

@@ -106,8 +106,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public List<RoleVo> listQuery(Role role) {
         Wrapper<Role> wrapper = new LambdaQueryWrapper<Role>()
                 .eq(ObjectUtil.isNotEmpty(role.getId()), Role::getId, role.getId())
-                .eq(ObjectUtil.isNotEmpty(role.getRoleCode()), Role::getRoleCode, role.getRoleCode())
-                .like(ObjectUtil.isNotEmpty(role.getRoleName()), Role::getRoleName, role.getRoleName());
+                .eq(StrUtil.isNotBlank(role.getRoleCode()), Role::getRoleCode, role.getRoleCode())
+                .like(StrUtil.isNotBlank(role.getRoleName()), Role::getRoleName, role.getRoleName());
         List<Role> roles = roleMapper.selectList(wrapper);
         return roles.stream().map(ele -> TransformerHelper.transformer(ele, RoleVo.class))
                 .peek(DictHelper::translate).collect(Collectors.toList());

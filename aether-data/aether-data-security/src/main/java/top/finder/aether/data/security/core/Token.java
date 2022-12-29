@@ -2,6 +2,7 @@ package top.finder.aether.data.security.core;
 
 import lombok.Getter;
 import lombok.Setter;
+import top.finder.aether.common.support.pool.SecurityConstantPool;
 
 /**
  * <p>令牌存储信息</p>
@@ -22,12 +23,17 @@ public class Token {
      */
     private String name;
 
-    Token() {
-    }
+    /**
+     * 令牌内容
+     */
+    private String content;
 
     Token(String id, String name) {
         this.id = id;
         this.name = name;
+        if (id != null) {
+            this.content = SecurityConstantPool.EFFECTIVE_TOKEN_PREFIX + id;
+        }
     }
 
     public static Token of(String id, String name) {
@@ -35,10 +41,12 @@ public class Token {
     }
 
     public static Token ofId(String id) {
-        return of(id ,null);
+        Token of = of(id, null);
+        of.setContent(SecurityConstantPool.EFFECTIVE_TOKEN_PREFIX + id);
+        return of;
     }
 
     public static Token ofName(String name) {
-        return of(null ,name);
+        return of(null, name);
     }
 }

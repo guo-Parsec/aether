@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.support.mybatisplus;
+package top.finder.aether.data.core.support.mp;
 
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;

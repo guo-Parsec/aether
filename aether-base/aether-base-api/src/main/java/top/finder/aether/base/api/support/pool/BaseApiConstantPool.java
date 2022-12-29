@@ -21,4 +21,9 @@ public interface BaseApiConstantPool {
      * 用户模块网络请求前缀
      */
     String ROLE_WEB_API_PREFIX = BASE_WEB_API_PREFIX + "/role";
+
+    /**
+     * 字典模块网络请求前缀
+     */
+    String DICT_WEB_API_PREFIX = BASE_WEB_API_PREFIX + "/dict";
 }

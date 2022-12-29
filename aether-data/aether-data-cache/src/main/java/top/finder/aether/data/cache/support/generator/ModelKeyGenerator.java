@@ -14,7 +14,6 @@ import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 
 import java.lang.reflect.Method;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -54,10 +53,16 @@ public class ModelKeyGenerator implements KeyGenerator {
             TreeMap<String, Object> sortedMap = MapUtil.sort(modelMap);
             sortedMap.forEach((key, value) -> {
                 if (StrUtil.isNotBlank(key) && ObjectUtil.isNotEmpty(value)) {
-                    builder.append(key).append(CommonConstantPool.REDIS_KEY_SEPARATOR).append(value);
+                    builder.append(key).append(CommonConstantPool.REDIS_KEY_SEPARATOR).append(value).append(CommonConstantPool.REDIS_KEY_SEPARATOR);
                 }
             });
-            return StrUtil.isBlank(builder.toString()) ? EMPTY_STR : builder.toString().toUpperCase(Locale.ROOT);
+            String builderStr = builder.toString();
+            int lastIndex = builder.length() - 1;
+            int lastSeparatorIndex = builderStr.lastIndexOf(CommonConstantPool.REDIS_KEY_SEPARATOR);
+            if (lastSeparatorIndex == lastIndex && lastIndex != -1) {
+                builderStr = builderStr.substring(0, lastSeparatorIndex);
+            }
+            return StrUtil.isBlank(builderStr) ? EMPTY_STR : builderStr;
         }
         return CodeHelper.logAetherErrorReturn(log, "[ModelKeyGenerator]参数必须为IModel类型");
     }

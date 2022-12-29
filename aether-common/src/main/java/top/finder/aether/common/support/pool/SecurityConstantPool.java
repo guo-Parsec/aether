@@ -16,5 +16,5 @@ public interface SecurityConstantPool {
     /**
      * 有效令牌文本前缀
      */
-    String EFFECTIVE_TOKEN_PREFIX = "BEARER ";
+    String EFFECTIVE_TOKEN_PREFIX = "Bearer ";
 }
