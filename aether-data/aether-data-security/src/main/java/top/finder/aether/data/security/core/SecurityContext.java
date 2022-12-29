@@ -141,11 +141,11 @@ public class SecurityContext {
         RedisHelper redisHelper = RedisHelper.getInstance();
         String securityUserKey = SecurityHelper.generateSecurityUserKey(userId);
         boolean exist = redisHelper.hasKey(securityUserKey);
-        redisHelper.delete(securityUserKey);
         if (exist) {
             String tokenId = redisHelper.get(securityUserKey, String.class);
             String securityTokenKey = SecurityHelper.generateSecurityTokenKey(tokenId);
             redisHelper.delete(securityTokenKey);
         }
+        redisHelper.delete(securityUserKey);
     }
 }
