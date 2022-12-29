@@ -1,11 +1,8 @@
 package top.finder.aether.base.core.entity;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
-import top.finder.aether.base.api.support.helper.DictHelper;
-import top.finder.aether.base.api.vo.UserVo;
 import top.finder.aether.data.core.entity.BaseDataEntity;
 
 import java.time.LocalDate;
@@ -73,17 +70,5 @@ public class User extends BaseDataEntity {
                 .add("gmtModify=" + gmtModify)
                 .add("id=" + id)
                 .toString();
-    }
-
-    public static void main(String[] args) {
-        UserVo userVo = new UserVo();
-        User user = new User();
-        user.setId(1L);
-        user.setSex(0);
-        user.setUserType(1);
-        user.setAccount("admin");
-        BeanUtil.copyProperties(user, userVo);
-        DictHelper.translate(userVo);
-        System.out.println(userVo);
     }
 }

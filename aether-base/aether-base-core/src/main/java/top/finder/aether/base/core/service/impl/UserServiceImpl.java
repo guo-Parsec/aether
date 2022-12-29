@@ -1,6 +1,5 @@
 package top.finder.aether.base.core.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -17,6 +16,7 @@ import top.finder.aether.base.core.entity.User;
 import top.finder.aether.base.core.mapper.UserMapper;
 import top.finder.aether.base.core.service.UserService;
 import top.finder.aether.common.support.helper.SpringBeanHelper;
+import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.support.strategy.Md5SaltCrypto;
 
@@ -54,8 +54,7 @@ public class UserServiceImpl implements UserService {
     @Cacheable(cacheNames = "USER:SINGLE", key = "'ID:' + #id")
     public UserVo findById(Long id) {
         User user = userMapper.findById(id);
-        UserVo userVo = new UserVo();
-        BeanUtil.copyProperties(user, userVo);
+        UserVo userVo = TransformerHelper.transformer(user, UserVo.class);
         DictHelper.translate(userVo);
         return userVo;
     }
@@ -100,8 +99,7 @@ public class UserServiceImpl implements UserService {
             log.error("未找到用户account={}", account);
             return null;
         }
-        UserVo userVo = new UserVo();
-        BeanUtil.copyProperties(user, userVo);
+        UserVo userVo = TransformerHelper.transformer(user, UserVo.class);
         DictHelper.translate(userVo);
         return userVo;
     }
