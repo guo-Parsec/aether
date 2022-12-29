@@ -16,6 +16,36 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `ams_dict`
+--
+
+DROP TABLE IF EXISTS `ams_dict`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ams_dict` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `dict_type_code` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '字典类别码值',
+  `dict_type_name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '字典类别名称',
+  `dict_name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '字典名称',
+  `dict_code` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '字典码值',
+  `dict_sort` int NOT NULL DEFAULT '10' COMMENT '字典排序',
+  `data_status` int NOT NULL DEFAULT '0' COMMENT '数据状态',
+  `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modify` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ams_dict_dict_type_code_dict_code_uindex` (`dict_type_code`,`dict_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统字典表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ams_dict`
+--
+
+/*!40000 ALTER TABLE `ams_dict` DISABLE KEYS */;
+INSERT INTO `ams_dict` (`id`, `dict_type_code`, `dict_type_name`, `dict_name`, `dict_code`, `dict_sort`, `data_status`, `gmt_create`, `gmt_modify`) VALUES (50247825258450944,'sex','性别值','未知','0',10,0,'2022-12-29 15:46:55','2022-12-29 15:54:32'),(50247872180129792,'sex','性别值','男性','1',20,0,'2022-12-29 15:47:06','2022-12-29 15:54:32'),(50247913401749504,'sex','性别值','女性','2',30,0,'2022-12-29 15:47:16','2022-12-29 15:54:32'),(50249611734159360,'user_type','用户类型','内部用户','0',10,0,'2022-12-29 15:54:01','2022-12-29 15:54:01'),(50249797453746176,'user_type','用户类型','注册用户','1',20,0,'2022-12-29 15:54:45','2022-12-29 15:54:45');
+/*!40000 ALTER TABLE `ams_dict` ENABLE KEYS */;
+
+--
 -- Table structure for table `ams_role`
 --
 
@@ -85,4 +115,4 @@ INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-28 16:54:19
+-- Dump completed on 2022-12-29 16:43:48
