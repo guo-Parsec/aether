@@ -26,4 +26,9 @@ public interface BaseApiConstantPool {
      * 字典模块网络请求前缀
      */
     String DICT_WEB_API_PREFIX = BASE_WEB_API_PREFIX + "/dict";
+
+    /**
+     * 日志模块网络请求前缀
+     */
+    String LOG_WEB_API_PREFIX = BASE_WEB_API_PREFIX + "/log";
 }

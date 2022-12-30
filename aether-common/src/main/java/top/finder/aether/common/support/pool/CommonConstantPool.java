@@ -41,4 +41,29 @@ public interface CommonConstantPool {
      * 占位符
      */
     String EMPTY_VAR_PLACEHOLDER = "{}";
+
+    /**
+     * Spring App名称key
+     */
+    String APP_NAME_KEY = "spring.application.name";
+
+    /**
+     * User-Agent
+     */
+    String USER_AGENT_HEAD = "User-Agent";
+
+    /**
+     * 成功信息
+     */
+    String SUCCESS = "SUCCESS";
+
+    /**
+     * 失败信息
+     */
+    String FAILED = "FAILED";
+
+    /**
+     * feign调用时注入请求头的key
+     */
+    String FEIGN_SOURCE_APP_HEAD_KEY = "source-app";
 }

@@ -30,7 +30,7 @@ public class LoginController {
     @ApiOperation(value = "登录", notes = "用户登录")
     @PostMapping(value = "/login.do")
     public Apis<SecuritySubject> login(@RequestParam("account") String account, @RequestParam("password") String password,
-                                       @RequestParam(value = "verificationCode", required = false) String verificationCode) {
-        return Apis.success(loginService.login(account, password, verificationCode));
+                                       @RequestParam(value = "verifyCode", required = false) String verifyCode) {
+        return Apis.success(loginService.login(account, password, verifyCode));
     }
 }

@@ -11,6 +11,7 @@ import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
 import top.finder.aether.base.core.entity.Dict;
 import top.finder.aether.base.core.service.DictService;
+import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class DictController {
 
     @ApiOperation(value = "新增字典", notes = "字典信息新增操作")
     @PostMapping(value = "/create.do")
+    @OperateLog
     public Apis<Void> create(@RequestBody @Validated DictCreateDto createDto) {
         dictService.create(createDto);
         return Apis.success();
@@ -53,6 +55,7 @@ public class DictController {
 
     @ApiOperation(value = "更新字典", notes = "字典信息更新操作")
     @PutMapping(value = "/update.do")
+    @OperateLog
     public Apis<Void> update(@RequestBody @Validated DictUpdateDto updateDto) {
         dictService.update(updateDto);
         return Apis.success();
@@ -60,6 +63,7 @@ public class DictController {
 
     @ApiOperation(value = "删除字典", notes = "字典信息删除操作")
     @DeleteMapping(value = "/delete.do")
+    @OperateLog
     public Apis<Void> delete(@RequestBody @Validated Set<Long> idSet) {
         dictService.delete(idSet);
         return Apis.success();

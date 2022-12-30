@@ -19,7 +19,7 @@ public class AetherException extends RuntimeException {
     private final String message;
 
     public AetherException(IHttpStatus httpStatus) {
-       this(httpStatus.getCode(), httpStatus.getMessage());
+        this(httpStatus.getCode(), httpStatus.getMessage());
     }
 
     public AetherException(String message) {
@@ -28,6 +28,10 @@ public class AetherException extends RuntimeException {
 
     public AetherException(Throwable cause, IHttpStatus httpStatus) {
         this(httpStatus, cause.getMessage());
+    }
+
+    public AetherException(Throwable cause) {
+        this(cause, CommonHttpStatus.FAILED);
     }
 
     public AetherException(Throwable cause, String message) {

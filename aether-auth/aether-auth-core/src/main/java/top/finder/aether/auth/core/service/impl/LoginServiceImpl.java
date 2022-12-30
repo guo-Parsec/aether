@@ -12,6 +12,7 @@ import top.finder.aether.base.api.vo.UserVo;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
+import top.finder.aether.data.security.core.ISecuritySubject;
 import top.finder.aether.data.security.core.SecurityContext;
 
 import javax.annotation.Resource;
@@ -39,23 +40,23 @@ public class LoginServiceImpl implements LoginService {
     /**
      * <p>登录操作</p>
      *
-     * @param account          账户信息
-     * @param password         密码信息
-     * @param verificationCode 验证码信息
+     * @param account    账户信息
+     * @param password   密码信息
+     * @param verifyCode 验证码信息
      * @return {@link SecuritySubject}
      * @author guocq
      * @date 2022/12/28 15:25
      */
     @Override
-    public SecuritySubject login(String account, String password, String verificationCode) {
+    public SecuritySubject login(String account, String password, String verifyCode) {
         Apis<UserVo> userVoApis = userClient.loadUser(account, password);
         UserVo userVo = Apis.getApiDataNoException(userVoApis);
         if (userVo == null || !userVo.getCertified()) {
             return CodeHelper.logAetherErrorReturn(log, "用户账户信息[{}]与密码[{}]匹配错误", account, password);
         }
-        SecuritySubject subject = new SecuritySubject(userVo);
-        SecurityContext.login(subject);
+        ISecuritySubject<UserVo> subject = new SecuritySubject(userVo);
+        SecurityContext.login((ISecuritySubject<?>) subject);
         // todo 角色 权限 填充
-        return subject;
+        return (SecuritySubject) subject;
     }
 }

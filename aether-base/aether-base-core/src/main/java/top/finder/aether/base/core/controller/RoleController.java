@@ -10,6 +10,7 @@ import top.finder.aether.base.core.dto.RoleCreateDto;
 import top.finder.aether.base.core.dto.RoleUpdateDto;
 import top.finder.aether.base.core.entity.Role;
 import top.finder.aether.base.core.service.RoleService;
+import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class RoleController {
 
     @ApiOperation(value = "新增角色", notes = "角色信息新增操作")
     @PostMapping(value = "/create.do")
+    @OperateLog
     public Apis<Void> create(@RequestBody @Validated RoleCreateDto createDto) {
         roleService.create(createDto);
         return Apis.success();
@@ -46,6 +48,7 @@ public class RoleController {
 
     @ApiOperation(value = "更新角色", notes = "角色信息更新操作")
     @PutMapping(value = "/update.do")
+    @OperateLog
     public Apis<Void> update(@RequestBody @Validated RoleUpdateDto updateDto) {
         roleService.update(updateDto);
         return Apis.success();
@@ -53,6 +56,7 @@ public class RoleController {
 
     @ApiOperation(value = "删除角色", notes = "角色信息删除操作")
     @DeleteMapping(value = "/delete.do")
+    @OperateLog
     public Apis<Void> delete(@RequestBody @Validated Set<Long> idSet) {
         roleService.delete(idSet);
         return Apis.success();
