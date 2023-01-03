@@ -50,7 +50,7 @@ public class Role extends BaseDataEntity {
                 .add("roleName='" + roleName + "'")
                 .add("roleSort=" + roleSort)
                 .add("roleDesc='" + roleDesc + "'")
-                .add("dataStatus='" + dataStatus + "'")
+                .add("deleteAt='" + deleteAt + "'")
                 .add("gmtCreate=" + gmtCreate)
                 .add("gmtModify=" + gmtModify)
                 .add("id=" + id)

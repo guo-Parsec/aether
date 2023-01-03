@@ -65,7 +65,7 @@ public class User extends BaseDataEntity {
                 .add("avatarUrl='" + avatarUrl + "'")
                 .add("birthday=" + birthday)
                 .add("userType=" + userType)
-                .add("dataStatus='" + dataStatus + "'")
+                .add("deleteAt='" + deleteAt + "'")
                 .add("gmtCreate=" + gmtCreate)
                 .add("gmtModify=" + gmtModify)
                 .add("id=" + id)

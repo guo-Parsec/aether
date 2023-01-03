@@ -9,7 +9,7 @@
         <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
         <result column="role_sort" jdbcType="INTEGER" property="roleSort"/>
         <result column="role_desc" jdbcType="VARCHAR" property="roleDesc"/>
-        <result column="data_status" jdbcType="INTEGER" property="dataStatus"/>
+        <result column="delete_at" jdbcType="BIGINT" property="deleteAt"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify"/>
     </resultMap>
@@ -21,7 +21,7 @@
         role.role_name,
         role.role_sort,
         role.role_desc,
-        role.data_status,
+        role.delete_at,
         role.gmt_create,
         role.gmt_modify
         <!--@sql from ams_role role -->

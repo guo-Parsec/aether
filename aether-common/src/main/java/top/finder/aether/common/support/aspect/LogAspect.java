@@ -5,7 +5,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -34,11 +33,6 @@ import java.util.concurrent.Executor;
 @Component
 public class LogAspect {
     private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
-    private final ApplicationEventPublisher publisher;
-
-    public LogAspect(ApplicationEventPublisher publisher) {
-        this.publisher = publisher;
-    }
 
     @Around("@annotation(operateLog)")
     public Object around(ProceedingJoinPoint point, OperateLog operateLog) {
@@ -57,10 +51,17 @@ public class LogAspect {
             error = exception;
             result = Apis.failed(exception);
             logModel.error(error);
+            if (log.isDebugEnabled()) {
+                exception.printStackTrace();
+            }
         } catch (Throwable exception) {
             error = new AetherException(exception, exception.getMessage());
             result = Apis.failed(error);
             logModel.error(error);
+            exception.printStackTrace();
+            if (log.isDebugEnabled()) {
+                exception.printStackTrace();
+            }
         }
         long endTime = System.currentTimeMillis();
         logModel.setTimeConsuming(endTime - startTime);

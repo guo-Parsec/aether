@@ -94,7 +94,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     public void delete(Set<Long> idSet) {
         log.debug("删除角色信息, 入参={}", idSet);
         checkBeforeDelete(idSet);
-        dictMapper.deleteBatchIds(idSet);
+        dictMapper.logicBatchDeleteByIds(idSet, System.currentTimeMillis());
         DictHelper.clearCache();
         log.debug("删除角色成功");
     }

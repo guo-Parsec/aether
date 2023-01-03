@@ -66,4 +66,9 @@ public interface CommonConstantPool {
      * feign调用时注入请求头的key
      */
     String FEIGN_SOURCE_APP_HEAD_KEY = "source-app";
+
+    /**
+     * 逻辑删除填充文本
+     */
+    String LOGIC_DELETE_FILL_TEXT = "deleteAtTime";
 }

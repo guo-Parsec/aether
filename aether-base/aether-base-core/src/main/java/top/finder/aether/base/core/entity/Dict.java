@@ -69,7 +69,7 @@ public class Dict extends BaseDataEntity {
                 .add("dictName='" + dictName + "'")
                 .add("dictCode='" + dictCode + "'")
                 .add("dictSort=" + dictSort)
-                .add("dataStatus='" + dataStatus + "'")
+                .add("deleteAt='" + deleteAt + "'")
                 .add("gmtCreate=" + gmtCreate)
                 .add("gmtModify=" + gmtModify)
                 .add("id=" + id)

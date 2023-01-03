@@ -12,7 +12,7 @@
         <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
         <result column="birthday" jdbcType="DATE" property="birthday"/>
         <result column="user_type" jdbcType="INTEGER" property="userType"/>
-        <result column="data_status" jdbcType="INTEGER" property="dataStatus"/>
+        <result column="delete_at" jdbcType="BIGINT" property="deleteAt"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify"/>
     </resultMap>
@@ -20,7 +20,7 @@
     <sql id="ams_user_column_list">
         <!--@mbg.generated-->
         <!--@sql select -->
-        au.id, au.account, au.`password`, au.nickname, au.sex, au.avatar_url, au.birthday, au.user_type, au.data_status,
+        au.id, au.account, au.`password`, au.nickname, au.sex, au.avatar_url, au.birthday, au.user_type, au.delete_at,
         au.gmt_create, au.gmt_modify
         <!--@sql from ams_user au -->
     </sql>
@@ -30,6 +30,6 @@
         <include refid="ams_user_column_list"/>
         from ams_user au
         where au.id = #{id,jdbcType=BIGINT}
-        and au.data_status = 0;
+        and au.delete_at = 0;
     </select>
 </mapper>

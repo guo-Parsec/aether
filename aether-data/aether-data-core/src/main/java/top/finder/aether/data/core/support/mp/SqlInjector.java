@@ -17,6 +17,8 @@ public class SqlInjector extends DefaultSqlInjector {
     public List<AbstractMethod> getMethodList(Class<?> mapperClass, TableInfo tableInfo) {
         List<AbstractMethod> methodList = super.getMethodList(mapperClass, tableInfo);
         methodList.add(new BatchInsertMethod());
+        methodList.add(new LogicDeleteMethod());
+        methodList.add(new LogicDeleteBatchMethod());
         return methodList;
     }
 }

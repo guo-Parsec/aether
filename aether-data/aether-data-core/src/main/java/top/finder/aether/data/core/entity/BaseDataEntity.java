@@ -21,10 +21,10 @@ public abstract class BaseDataEntity extends BaseEntity {
     private static final long serialVersionUID = 6125581009488770858L;
 
     /**
-     * 数据状态
+     * 数据删除时间(未删除时为0)
      */
     @TableLogic(value = "0", delval = "1")
-    protected String dataStatus;
+    protected Long deleteAt;
 
     /**
      * 数据创建时间
@@ -48,7 +48,7 @@ public abstract class BaseDataEntity extends BaseEntity {
     @Override
     public String toString() {
         return new StringJoiner(", ", BaseDataEntity.class.getSimpleName() + "[", "]")
-                .add("dataStatus='" + dataStatus + "'")
+                .add("deleteAt='" + deleteAt + "'")
                 .add("gmtCreate=" + gmtCreate)
                 .add("gmtModify=" + gmtModify)
                 .add("id=" + id)
