@@ -55,7 +55,12 @@ public class RedisHelper implements Serializable {
      * @date 2022/12/15 14:52
      */
     public <V> V get(String key, Class<V> vClass) {
-        return vClass.cast(redisTemplate.opsForValue().get(key));
+        try {
+            return vClass.cast(redisTemplate.opsForValue().get(key));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

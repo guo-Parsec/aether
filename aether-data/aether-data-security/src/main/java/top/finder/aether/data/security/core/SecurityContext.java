@@ -2,6 +2,7 @@ package top.finder.aether.data.security.core;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -43,7 +44,7 @@ public class SecurityContext {
         RedisHelper redisHelper = RedisHelper.getInstance();
         String securityTokenKey = SecurityHelper.generateSecurityTokenKey(tokenId);
         String securityUserKey = SecurityHelper.generateSecurityUserKey(id);
-        redisHelper.set(securityTokenKey, subject, DEFAULT_EXPIRE_TIME, TimeUnit.HOURS);
+        redisHelper.set(securityTokenKey,  JSON.toJSONString(subject), DEFAULT_EXPIRE_TIME, TimeUnit.HOURS);
         redisHelper.set(securityUserKey, tokenId, DEFAULT_EXPIRE_TIME, TimeUnit.HOURS);
     }
 
@@ -75,8 +76,9 @@ public class SecurityContext {
         String effectiveTokenId = SecurityHelper.findEffectiveTokenId(tokenText);
         RedisHelper redisHelper = RedisHelper.getInstance();
         String securityUserKey = SecurityHelper.generateSecurityTokenKey(effectiveTokenId);
+        String subjectJsonStr = redisHelper.get(securityUserKey, String.class);
         @SuppressWarnings("unchecked")
-        ISecuritySubject<U> securitySubject = redisHelper.get(securityUserKey, ISecuritySubject.class);
+        ISecuritySubject<U> securitySubject = JSON.parseObject(subjectJsonStr, ISecuritySubject.class);
         SecurityHelper.checkSecuritySubjectEmpty(securitySubject);
         return securitySubject;
     }
