@@ -54,9 +54,9 @@ public class LoginServiceImpl implements LoginService {
         if (userVo == null || !userVo.getCertified()) {
             return CodeHelper.logAetherErrorReturn(log, "用户账户信息[{}]与密码[{}]匹配错误", account, password);
         }
-        ISecuritySubject<UserVo> subject = new SecuritySubject(userVo);
+        SecuritySubject subject = new SecuritySubject(userVo);
         SecurityContext.login((ISecuritySubject<?>) subject);
         // todo 角色 权限 填充
-        return (SecuritySubject) subject;
+        return subject;
     }
 }

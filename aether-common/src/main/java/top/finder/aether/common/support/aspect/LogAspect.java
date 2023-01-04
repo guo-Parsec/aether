@@ -1,11 +1,14 @@
 package top.finder.aether.common.support.aspect;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import top.finder.aether.common.model.LogModel;
@@ -36,14 +39,45 @@ public class LogAspect {
 
     @Around("@annotation(operateLog)")
     public Object around(ProceedingJoinPoint point, OperateLog operateLog) {
+        LogModel logModel = beforeProcess(point);
+        ProcessResult processed = processed(point, logModel);
+        Object result = processed.getResult();
+        LogHelper.buildLogModel(logModel);
+        afterProcess(logModel);
+        return result;
+    }
+
+    /**
+     * <p>前置处理</p>
+     *
+     * @param point 切入点
+     * @return {@link LogModel}
+     * @author guocq
+     * @date 2023/1/4 10:09
+     */
+    private LogModel beforeProcess(ProceedingJoinPoint point) {
         LogModel logModel = new LogModel();
         logModel.setLogTime(LocalDateTime.now());
         String className = point.getTarget().getClass().getName();
         String methodName = point.getSignature().getName();
         log.debug("{}#{}正在记录操作日志", className, methodName);
-        long startTime = System.currentTimeMillis();
-        AetherException error;
+        return logModel;
+    }
+
+    /**
+     * <p>核心处理</p>
+     *
+     * @param point    切入点
+     * @param logModel 日志模型
+     * @return {@link ProcessResult}
+     * @author guocq
+     * @date 2023/1/4 9:53
+     */
+    private ProcessResult processed(ProceedingJoinPoint point, LogModel logModel) {
         Object result;
+        AetherException error = null;
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("记录请求时间");
         try {
             result = point.proceed();
             logModel.setResult(CommonConstantPool.SUCCESS);
@@ -51,40 +85,99 @@ public class LogAspect {
             error = exception;
             result = Apis.failed(exception);
             logModel.error(error);
-            if (log.isDebugEnabled()) {
-                exception.printStackTrace();
-            }
         } catch (Throwable exception) {
             error = new AetherException(exception, exception.getMessage());
             result = Apis.failed(error);
             logModel.error(error);
-            exception.printStackTrace();
-            if (log.isDebugEnabled()) {
-                exception.printStackTrace();
-            }
         }
-        long endTime = System.currentTimeMillis();
-        logModel.setTimeConsuming(endTime - startTime);
-        LogHelper.buildLogModel(logModel);
-        // 设置RequestAttributes线程共享，防止日志子线程异步调用时无法获得请求信息
-        asyncShareRequest();
-        SysLogListener bean = SpringBeanHelper.getBean(SysLogListener.class);
+        stopWatch.stop();
+        long totalTimeMillis = stopWatch.getTotalTimeMillis();
+        logModel.setTimeConsuming(totalTimeMillis);
+        return new ProcessResult(error, result);
+    }
+
+    /**
+     * <p>后置处理</p>
+     *
+     * @param logModel 日志模型
+     * @author guocq
+     * @date 2023/1/4 10:08
+     */
+    private void afterProcess(LogModel logModel) {
+        SysLogListener sysLogListener = SpringBeanHelper.getBean(SysLogListener.class);
+        // 获取异步线程池
         Executor asyncTaskExecutor = SpringBeanHelper.getBean("asyncTaskExecutor", Executor.class);
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
             Map<String, String> headers = CodeHelper.getHeaders();
+            // 异步执行 防止阻碍主线程
             CompletableFuture.runAsync(() -> {
                 CodeHelper.setHeadersToShare(headers);
                 RequestContextHolder.setRequestAttributes(attributes);
-                bean.saveOperateLog(logModel);
+                sysLogListener.saveOperateLog(logModel);
             }, asyncTaskExecutor);
         }
-        return result;
     }
 
-    private static void asyncShareRequest() {
+}
 
+@Setter
+@Getter
+class ProcessResult {
+    private static final Logger log = LoggerFactory.getLogger(ProcessResult.class);
 
+    /**
+     * 异常信息
+     */
+    AetherException error;
+
+    /**
+     * 返回结果
+     */
+    Object result;
+
+    /**
+     * 是否成功
+     */
+    boolean success;
+
+    ProcessResult(AetherException error, Object result) {
+        this.error = error;
+        this.result = result;
+        this.success = error != null && error.getCode() != null;
+        this.log();
     }
 
+    /**
+     * <p>输出日志</p>
+     *
+     * @author guocq
+     * @date 2023/1/4 9:45
+     */
+    public void log() {
+        log(log);
+    }
+
+    /**
+     * <p>输出日志</p>
+     *
+     * @param logger 日志对象
+     * @author guocq
+     * @date 2023/1/4 9:45
+     */
+    public void log(Logger logger) {
+        if (logger == null) {
+            logger = log;
+        }
+        boolean debugEnabled = logger.isDebugEnabled();
+        if (!debugEnabled) {
+            return;
+        }
+        if (!this.success) {
+            logger.error(error.getMessage(), error);
+            return;
+        }
+        logger.debug("操作成功");
+        return;
+    }
 }

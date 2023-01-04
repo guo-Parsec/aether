@@ -13,8 +13,7 @@ import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
 import top.finder.aether.data.security.support.helper.SecurityHelper;
 
-import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
+import static java.util.concurrent.TimeUnit.HOURS;
 
 /**
  * <p>安全认证上下文</p>
@@ -25,6 +24,9 @@ import java.util.concurrent.TimeUnit;
 public class SecurityContext {
     private static final Logger log = LoggerFactory.getLogger(SecurityContext.class);
 
+    /**
+     * 默认过期时间 - 小时
+     */
     private static final Long DEFAULT_EXPIRE_TIME = 6L;
 
     /**
@@ -34,7 +36,7 @@ public class SecurityContext {
      * @author guocq
      * @date 2022/12/27 17:00
      */
-    public static <U extends Serializable> void login(final ISecuritySubject<U> subject) {
+    public static <U> void login(final ISecuritySubject<U> subject) {
         log.debug("登录操作开始, 当前登录人={}", subject);
         String tokenId = IdUtil.fastSimpleUUID();
         subject.setTokenId(tokenId);
@@ -44,8 +46,8 @@ public class SecurityContext {
         RedisHelper redisHelper = RedisHelper.getInstance();
         String securityTokenKey = SecurityHelper.generateSecurityTokenKey(tokenId);
         String securityUserKey = SecurityHelper.generateSecurityUserKey(id);
-        redisHelper.set(securityTokenKey,  JSON.toJSONString(subject), DEFAULT_EXPIRE_TIME, TimeUnit.HOURS);
-        redisHelper.set(securityUserKey, tokenId, DEFAULT_EXPIRE_TIME, TimeUnit.HOURS);
+        redisHelper.set(securityTokenKey, JSON.toJSONString(subject), DEFAULT_EXPIRE_TIME, HOURS);
+        redisHelper.set(securityUserKey, tokenId, DEFAULT_EXPIRE_TIME, HOURS);
     }
 
     /**
@@ -55,7 +57,7 @@ public class SecurityContext {
      * @author guocq
      * @date 2022/12/27 17:27
      */
-    public static <U extends Serializable> ISecuritySubject<U> findSecuritySubject() {
+    public static <U> ISecuritySubject<U> findSecuritySubject() {
         String tokenText = CodeHelper.getHttpServletRequest().getHeader(SecurityConstantPool.TOKEN_IN_HEAD_KEY);
         return findSecuritySubject(tokenText);
     }
@@ -68,7 +70,7 @@ public class SecurityContext {
      * @author guocq
      * @date 2022/12/27 17:19
      */
-    public static <U extends Serializable> ISecuritySubject<U> findSecuritySubject(String tokenText) {
+    public static <U> ISecuritySubject<U> findSecuritySubject(String tokenText) {
         log.debug("根据令牌文本={}获取安全认证主体", tokenText);
         if (StrUtil.isBlank(tokenText)) {
             CodeHelper.logAetherError(log, "tokenText不能为空", CommonHttpStatus.UNAUTHORIZED);
@@ -120,7 +122,7 @@ public class SecurityContext {
      * @author guocq
      * @date 2022/12/27 17:34
      */
-    public static <U extends Serializable> void logout() {
+    public static <U> void logout() {
         ISecuritySubject<U> subject;
         try {
             subject = findSecuritySubject();

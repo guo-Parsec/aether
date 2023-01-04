@@ -24,8 +24,8 @@ import java.util.StringJoiner;
 public class SecuritySubject implements ISecuritySubject<UserVo> {
     private static final long serialVersionUID = 7115538001764343009L;
 
-    @ApiModelProperty(value = "核心用户")
-    private UserVo subject;
+    @ApiModelProperty(value = "签名对象")
+    private UserVo signature;
 
     @ApiModelProperty(value = "主键")
     private Long id;
@@ -48,14 +48,13 @@ public class SecuritySubject implements ISecuritySubject<UserVo> {
     public SecuritySubject(UserVo subject) {
         this.id = Long.valueOf(subject.getId());
         this.account = subject.getAccount();
-        this.subject = subject;
+        this.signature = subject;
         this.token = Token.ofName(SecurityConstantPool.TOKEN_IN_HEAD_KEY);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", SecuritySubject.class.getSimpleName() + "[", "]")
-                .add("subject=" + subject)
                 .add("id=" + id)
                 .add("account='" + account + "'")
                 .add("roles=" + roles)

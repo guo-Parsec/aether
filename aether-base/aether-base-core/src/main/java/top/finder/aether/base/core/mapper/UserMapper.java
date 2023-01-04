@@ -1,7 +1,7 @@
 package top.finder.aether.base.core.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.finder.aether.base.core.entity.User;
+import top.finder.aether.data.core.mapper.CommonMapper;
 
 /**
  * <p>用户与数据库交互Mapper</p>
@@ -9,7 +9,7 @@ import top.finder.aether.base.core.entity.User;
  * @author guocq
  * @since 2022/12/14
  */
-public interface UserMapper extends BaseMapper<User> {
+public interface UserMapper extends CommonMapper<User> {
     /**
      * <p>根据id查询用户</p>
      *

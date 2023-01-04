@@ -12,15 +12,15 @@ import java.util.Set;
  * @author guocq
  * @since 2022/12/28
  */
-public interface ISecuritySubject<U extends Serializable> extends Serializable {
+public interface ISecuritySubject<U> extends Serializable {
     /**
-     * <p>获取用户主体信息</p>
+     * <p>获取签名</p>
      *
-     * @return U 用户主体信息
+     * @return java.lang.Object
      * @author guocq
-     * @date 2022/12/28 9:54
+     * @date 2023/1/4 9:23
      */
-    U getSubject();
+    Object getSignature();
 
     /**
      * <p>获取用户主键信息</p>

@@ -71,7 +71,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public void delete(Set<Long> idSet) {
         log.debug("删除角色信息, 入参={}", idSet);
         checkBeforeDelete(idSet);
-        roleMapper.deleteBatchIds(idSet);
+        roleMapper.logicBatchDeleteByIds(idSet, System.currentTimeMillis());
         log.debug("删除角色成功");
     }
 

@@ -10,8 +10,6 @@ import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
 import top.finder.aether.data.security.core.ISecuritySubject;
 
-import java.io.Serializable;
-
 /**
  * <p>安全认证辅助类</p>
  *
@@ -103,8 +101,8 @@ public class SecurityHelper {
      * @author guocq
      * @date 2022/12/28 10:14
      */
-    public static boolean isSecuritySubjectEmpty(ISecuritySubject<? extends Serializable> securitySubject) {
-        return ObjectUtil.isNull(securitySubject) || ObjectUtil.isNull(securitySubject.getSubject());
+    public static boolean isSecuritySubjectEmpty(ISecuritySubject<?> securitySubject) {
+        return ObjectUtil.isNull(securitySubject) || ObjectUtil.isNull(securitySubject.getSignature());
     }
 
     /**
@@ -114,7 +112,7 @@ public class SecurityHelper {
      * @author guocq
      * @date 2022/12/28 10:16
      */
-    public static void checkSecuritySubjectEmpty(ISecuritySubject<? extends Serializable> securitySubject) {
+    public static void checkSecuritySubjectEmpty(ISecuritySubject<?> securitySubject) {
         if (isSecuritySubjectEmpty(securitySubject)) {
             CodeHelper.logAetherError(log, "获取登录凭证信息失败，无法获取到登录信息，可能因为令牌已过期", CommonHttpStatus.UNAUTHORIZED);
         }
