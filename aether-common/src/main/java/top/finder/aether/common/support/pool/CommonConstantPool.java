@@ -68,6 +68,11 @@ public interface CommonConstantPool {
     String FEIGN_SOURCE_APP_HEAD_KEY = "source-app";
 
     /**
+     * 是否请求来自网关
+     */
+    String IS_FROM_GATEWAY = "is-form-gateway";
+
+    /**
      * 逻辑删除填充文本
      */
     String LOGIC_DELETE_FILL_TEXT = "deleteAtTime";

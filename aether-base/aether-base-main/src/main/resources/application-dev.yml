@@ -43,6 +43,8 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
 aether:
+  system:
+    allow-non-gateway-request: false
   snowflake:
     machine-id: 1
     datacenter-id: 2

@@ -39,6 +39,7 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             String currentAppName = EnvHelper.get(CommonConstantPool.APP_NAME_KEY);
             log.debug("应用[{}]正在进行远程调用", currentAppName);
             requestTemplate.header(CommonConstantPool.FEIGN_SOURCE_APP_HEAD_KEY, currentAppName);
+            requestTemplate.header(CommonConstantPool.IS_FROM_GATEWAY, Boolean.TRUE.toString());
             Map<String, String> headersToShare = CodeHelper.getHeadersToShare();
             String header = null;
             Optional<String> optionalKey = headersToShare.keySet().stream().filter(key -> key.equalsIgnoreCase(TOKEN_IN_HEAD_KEY)).findFirst();
