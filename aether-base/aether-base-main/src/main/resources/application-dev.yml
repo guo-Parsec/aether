@@ -52,7 +52,7 @@ aether:
     aes:
       mode: ecb
       padding: pkcs5padding
-      key: abc123456
+      key: a1e92t273h480e5r
 logging:
   level:
     top.finder.aether: debug

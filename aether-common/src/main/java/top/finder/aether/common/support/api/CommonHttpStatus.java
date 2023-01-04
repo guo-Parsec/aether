@@ -28,6 +28,11 @@ public enum CommonHttpStatus implements IHttpStatus {
      */
     UNAUTHORIZED(401, "暂未登录或token已经过期"),
 
+    /**
+     * 暂未登录或token已经过期
+     */
+    ILLEGAL_REQUESTS(402, "非法请求，当前请求无法访问"),
+
     ;
     /**
      * 状态码

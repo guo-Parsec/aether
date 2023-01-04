@@ -206,7 +206,7 @@ class ProcessResult {
     ProcessResult(AetherException error, Object result) {
         this.error = error;
         this.result = result;
-        this.success = error != null && error.getCode() != null;
+        this.success = error == null || error.getCode() == null;
         this.log();
     }
 

@@ -11,6 +11,7 @@ import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
 import top.finder.aether.base.core.entity.Dict;
 import top.finder.aether.base.core.service.DictService;
+import top.finder.aether.common.support.annotation.FeignApi;
 import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 
@@ -33,8 +34,9 @@ public class DictController {
         this.dictService = dictService;
     }
 
-    @ApiOperation(value = "根据字典类别码值查询字典列表", notes = "根据字典类别码值查询字典列表")
+    @ApiOperation(value = "根据字典类别码值查询字典列表", notes = "根据字典类别码值查询字典列表", hidden = false)
     @GetMapping(value = "/find-dict-list-by-type")
+    @FeignApi
     public Apis<List<DictModel>> findDictListByType(@RequestParam("dictTypeCode") String dictTypeCode) {
         return Apis.success(dictService.findDictListByType(dictTypeCode));
     }

@@ -71,4 +71,14 @@ public interface CommonConstantPool {
      * 逻辑删除填充文本
      */
     String LOGIC_DELETE_FILL_TEXT = "deleteAtTime";
+
+    /**
+     * 代表全部的文本
+     */
+    String ALL_TEXT = "*";
+
+    /**
+     * 最高优先级
+     */
+    Integer FIRST_PRIORITY = Integer.MIN_VALUE;
 }

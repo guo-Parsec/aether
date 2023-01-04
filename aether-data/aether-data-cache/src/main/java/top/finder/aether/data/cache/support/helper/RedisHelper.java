@@ -301,6 +301,19 @@ public class RedisHelper implements Serializable {
     }
 
     /**
+     * <p>判断hash结构是否含有key</p>
+     *
+     * @param key     键
+     * @param hashKey hash键
+     * @return boolean
+     * @author guocq
+     * @date 2023/1/4 16:10
+     */
+    public boolean hasHashKey(String key, String hashKey) {
+        return redisTemplate.opsForHash().hasKey(key, hashKey);
+    }
+
+    /**
      * <p>根据redis的key和hash结构的key获取指定value</p>
      *
      * @param key     键
@@ -368,6 +381,7 @@ public class RedisHelper implements Serializable {
      * @date 2022/12/15 16:39
      */
     public <V> void hashSet(String key, String hashKey, V val) {
+        log.debug("向redis中存储[key={},hashKey={},val={}]的数据并设置永不过期", key, val, hashKey);
         redisTemplate.opsForHash().put(key, hashKey, val);
     }
 
@@ -382,6 +396,7 @@ public class RedisHelper implements Serializable {
      * @date 2022/12/15 16:39
      */
     public <V> void hashSetAll(String key, Map<String, V> map, long time, TimeUnit timeUnit) {
+        log.debug("向redis中存储[key={},map={}]的数据并设置过期时间[time={},timeUnit={}]", key, map, time, timeUnit);
         redisTemplate.opsForHash().putAll(key, map);
         expire(key, time, timeUnit);
     }
