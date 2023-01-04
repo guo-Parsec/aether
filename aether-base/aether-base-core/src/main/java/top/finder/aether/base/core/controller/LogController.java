@@ -1,19 +1,21 @@
 package top.finder.aether.base.core.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
+import top.finder.aether.base.api.vo.HiLoginVo;
+import top.finder.aether.base.api.vo.HiOperateLogVo;
+import top.finder.aether.base.core.dto.HiLoginQueryDto;
+import top.finder.aether.base.core.dto.HiOperateLogQueryDto;
 import top.finder.aether.base.core.service.LogService;
 import top.finder.aether.common.model.LogModel;
 import top.finder.aether.common.support.api.Apis;
 
 /**
- * <p></p>
+ * <p>系统日志管理</p>
  *
  * @author guocq
  * @since 2022/12/30
@@ -28,10 +30,29 @@ public class LogController {
         this.logService = logService;
     }
 
-    @ApiOperation(value = "保存操作日志信息", notes = "保存操作日志信息")
+    @ApiOperation(value = "保存操作日志信息", notes = "保存操作日志信息", hidden = true)
     @PostMapping(value = "/operate-log/save.do")
     public Apis<Void> doSaveOperateLog(@RequestBody @Validated LogModel logModel) {
         logService.saveOperateLog(logModel);
         return Apis.success();
+    }
+
+    @ApiOperation(value = "保存登录日志信息", notes = "保存登录日志信息", hidden = true)
+    @PostMapping(value = "/login-log/save.do")
+    public Apis<Void> doSaveLoginLog(@RequestBody @Validated LogModel logModel) {
+        logService.saveLoginLog(logModel);
+        return Apis.success();
+    }
+
+    @ApiOperation(value = "分页查询登录日志信息", notes = "分页查询登录日志信息")
+    @GetMapping(value = "/login-log/page/query")
+    public Apis<IPage<HiLoginVo>> loginLogPageQuery(@Validated HiLoginQueryDto dto) {
+        return Apis.success(logService.loginLogPageQuery(dto));
+    }
+
+    @ApiOperation(value = "分页查询操作日志信息", notes = "分页查询操作日志信息")
+    @GetMapping(value = "/operate-log/page/query")
+    public Apis<IPage<HiOperateLogVo>> operateLogPageQuery(@Validated HiOperateLogQueryDto dto) {
+        return Apis.success(logService.operateLogPageQuery(dto));
     }
 }

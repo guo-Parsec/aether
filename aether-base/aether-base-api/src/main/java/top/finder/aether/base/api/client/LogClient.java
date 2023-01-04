@@ -1,6 +1,5 @@
 package top.finder.aether.base.api.client;
 
-import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,24 +21,46 @@ public interface LogClient extends ILogInterface {
     /**
      * <p>保存操作日志信息</p>
      *
-     * @param logModel      日志信息
+     * @param logModel 日志信息
      * @return {@link Apis<Void>}
      * @author guocq
      * @date 2022/12/30 11:52
      */
-    @ApiOperation(value = "保存操作日志信息", notes = "保存操作日志信息")
     @PostMapping(value = "/operate-log/save.do")
     Apis<Void> doSaveOperateLog(@RequestBody @Validated LogModel logModel);
 
     /**
+     * <p>保存登录日志信息</p>
+     *
+     * @param logModel 日志信息
+     * @return {@link Apis<Void>}
+     * @author guocq
+     * @date 2023/01/04 10:52
+     */
+    @PostMapping(value = "/login-log/save.do")
+    Apis<Void> doSaveLoginLog(@RequestBody @Validated LogModel logModel);
+
+    /**
      * <p>保存操作日志信息</p>
      *
-     * @param logModel      日志信息
+     * @param logModel 日志信息
      * @author guocq
      * @date 2022/12/30 10:31
      */
     @Override
     default void saveOperateLog(LogModel logModel) {
         this.doSaveOperateLog(logModel);
+    }
+
+    /**
+     * <p>保存登录日志信息</p>
+     *
+     * @param logModel 日志信息
+     * @author guocq
+     * @date 2023/1/4 10:54
+     */
+    @Override
+    default void saveLoginLog(LogModel logModel) {
+        this.doSaveLoginLog(logModel);
     }
 }

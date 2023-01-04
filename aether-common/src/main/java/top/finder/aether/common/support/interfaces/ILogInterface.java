@@ -12,9 +12,18 @@ public interface ILogInterface {
     /**
      * <p>保存操作日志信息</p>
      *
-     * @param logModel      日志信息
+     * @param logModel 日志信息
      * @author guocq
      * @date 2022/12/30 10:31
      */
     void saveOperateLog(LogModel logModel);
+
+    /**
+     * <p>保存登录日志信息</p>
+     *
+     * @param logModel 日志信息
+     * @author guocq
+     * @date 2023/1/4 10:54
+     */
+    void saveLoginLog(LogModel logModel);
 }

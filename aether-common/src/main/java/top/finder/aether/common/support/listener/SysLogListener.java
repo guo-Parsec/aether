@@ -28,4 +28,16 @@ public class SysLogListener {
         logInterface.saveOperateLog(logModel);
     }
 
+    /**
+     * <p>保存登录日志信息</p>
+     *
+     * @param logModel 日志模型
+     * @return void
+     * @author guocq
+     * @date 2023/1/4 10:55
+     */
+    public void saveLoginLog(LogModel logModel) {
+        logInterface.saveLoginLog(logModel);
+    }
+
 }

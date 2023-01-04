@@ -55,12 +55,12 @@ public interface CommonConstantPool {
     /**
      * 成功信息
      */
-    String SUCCESS = "SUCCESS";
+    String SUCCESS = "成功";
 
     /**
      * 失败信息
      */
-    String FAILED = "FAILED";
+    String FAILED = "失败";
 
     /**
      * feign调用时注入请求头的key

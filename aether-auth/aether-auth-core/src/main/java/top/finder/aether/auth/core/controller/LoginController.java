@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.finder.aether.auth.core.model.SecuritySubject;
 import top.finder.aether.auth.core.service.LoginService;
 import top.finder.aether.auth.core.support.pool.AuthApiConstantPool;
+import top.finder.aether.common.support.annotation.LoginLog;
 import top.finder.aether.common.support.api.Apis;
 
 /**
@@ -29,6 +30,7 @@ public class LoginController {
 
     @ApiOperation(value = "登录", notes = "用户登录")
     @PostMapping(value = "/login.do")
+    @LoginLog(index = 0)
     public Apis<SecuritySubject> login(@RequestParam("account") String account, @RequestParam("password") String password,
                                        @RequestParam(value = "verifyCode", required = false) String verifyCode) {
         return Apis.success(loginService.login(account, password, verifyCode));

@@ -32,84 +32,84 @@ public class HiOperateLog extends BaseEntity {
      */
     @TableField(value = "access_url")
     @ApiModelProperty(value = "访问路径")
-    private String accessUrl;
+    protected String accessUrl;
 
     /**
      * 访问应用
      */
     @TableField(value = "access_app")
     @ApiModelProperty(value = "访问应用")
-    private String accessApp;
+    protected String accessApp;
 
     /**
      * 操作人id
      */
     @TableField(value = "operate_user_id")
     @ApiModelProperty(value = "操作人id")
-    private Long operateUserId;
+    protected Long operateUserId;
 
     /**
      * 操作用户账户
      */
     @TableField(value = "operate_user_account")
     @ApiModelProperty(value = "操作用户账户")
-    private String operateUserAccount;
+    protected String operateUserAccount;
 
     /**
      * 操作ip
      */
     @TableField(value = "operate_ip")
     @ApiModelProperty(value = "操作ip")
-    private String operateIp;
+    protected String operateIp;
 
     /**
      * 设备名称
      */
     @TableField(value = "device_name")
     @ApiModelProperty(value = "设备名称")
-    private String deviceName;
+    protected String deviceName;
 
     /**
      * 耗时时间(ms)
      */
     @TableField(value = "time_consuming")
     @ApiModelProperty(value = "耗时时间(ms)")
-    private Long timeConsuming;
+    protected Long timeConsuming;
 
     /**
      * 访问类型
      */
     @TableField(value = "method_type")
     @ApiModelProperty(value = "访问类型")
-    private String methodType;
+    protected String methodType;
 
     /**
      * 访问结果
      */
     @TableField(value = "access_result")
     @ApiModelProperty(value = "访问结果")
-    private String accessResult;
+    protected String accessResult;
 
     /**
      * 错误码
      */
     @TableField(value = "error_code")
     @ApiModelProperty(value = "错误码")
-    private Integer errorCode;
+    protected Integer errorCode;
 
     /**
      * 错误信息
      */
     @TableField(value = "error_message")
     @ApiModelProperty(value = "错误信息")
-    private String errorMessage;
+    protected String errorMessage;
 
     /**
      * 日志记录时间
      */
     @TableField(value = "gmt_create")
     @ApiModelProperty(value = "日志记录时间")
-    private LocalDateTime gmtCreate;
+    protected LocalDateTime gmtCreate;
 
     /**
      * <p>logModel转化为HiOperateLog</p>

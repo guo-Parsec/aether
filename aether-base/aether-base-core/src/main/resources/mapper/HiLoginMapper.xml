@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.finder.aether.base.core.mapper.HiLoginMapper">
+    <resultMap id="BaseResultMap" type="top.finder.aether.base.core.entity.HiLogin">
+        <!--@mbg.generated-->
+        <!--@Table ams_hi_login-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="login_ip" jdbcType="VARCHAR" property="loginIp"/>
+        <result column="login_account" jdbcType="VARCHAR" property="loginAccount"/>
+        <result column="login_result" jdbcType="VARCHAR" property="loginResult"/>
+        <result column="device_name" jdbcType="VARCHAR" property="deviceName"/>
+        <result column="time_consuming" jdbcType="BIGINT" property="timeConsuming"/>
+        <result column="error_code" jdbcType="INTEGER" property="errorCode"/>
+        <result column="error_message" jdbcType="LONGVARCHAR" property="errorMessage"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id,
+        login_ip,
+        login_account,
+        login_result,
+        device_name,
+        time_consuming,
+        error_code,
+        error_message,
+        gmt_create
+    </sql>
+</mapper>

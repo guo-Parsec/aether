@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import top.finder.aether.base.core.entity.Role;
+import top.finder.aether.data.core.entity.IPageDto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -18,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @ApiModel("角色分页查询参数")
-public class RolePageQueryDto extends Role {
+public class RolePageQueryDto extends Role implements IPageDto {
     private static final long serialVersionUID = 4938421970914661532L;
 
     /**
