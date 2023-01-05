@@ -21,13 +21,13 @@
             <exclusions>
                 <exclusion>
                     <groupId>top.finder</groupId>
-                    <artifactId>aether-data-core</artifactId>
+                    <artifactId>aether-data-common</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>top.finder</groupId>
-            <artifactId>aether-data-core</artifactId>
+            <artifactId>aether-data-common</artifactId>
         </dependency>
         <dependency>
             <groupId>top.finder</groupId>

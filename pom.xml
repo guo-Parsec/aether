@@ -137,7 +137,7 @@
             <!-- 数据服务核心模块 -->
             <dependency>
                 <groupId>top.finder</groupId>
-                <artifactId>aether-data-core</artifactId>
+                <artifactId>aether-data-common</artifactId>
                 <version>${aether.version}</version>
             </dependency>
             <!-- 数据服务缓存模块 -->

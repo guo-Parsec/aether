@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>top.finder</groupId>
-            <artifactId>aether-data-core</artifactId>
+            <artifactId>aether-data-common</artifactId>
         </dependency>
         <dependency>
             <groupId>top.finder</groupId>

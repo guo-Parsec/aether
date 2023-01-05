@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>aether-data-core</module>
+        <module>aether-data-common</module>
         <module>aether-data-aop</module>
         <module>aether-data-cache</module>
         <module>aether-data-security</module>
