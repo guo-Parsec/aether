@@ -1,26 +1,23 @@
 package top.finder.aether.base.api.support.helper;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.finder.aether.base.api.client.DictClient;
 import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.common.support.annotation.DictTranslate;
+import top.finder.aether.common.support.annotation.DictValid;
 import top.finder.aether.common.support.api.Apis;
+import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.helper.ReflectHelper;
 import top.finder.aether.common.support.helper.SpringBeanHelper;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -32,8 +29,19 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DictHelper {
     private static final Logger log = LoggerFactory.getLogger(DictHelper.class);
 
+    /**
+     * DictTranslate类对象
+     */
     private static final Class<DictTranslate> DICT_TRANSLATE_CLASS = DictTranslate.class;
 
+    /**
+     * DictValid类对象
+     */
+    private static final Class<DictValid> DICT_VALID_CLASS = DictValid.class;
+
+    /**
+     * DictClient对象
+     */
     private static final DictClient DICT_CLIENT = SpringBeanHelper.getBean(DictClient.class);
 
     /**
@@ -118,6 +126,51 @@ public class DictHelper {
      */
     public static void clearCache() {
         CACHED_DICT.clear();
+    }
+
+    /**
+     * <p>校验字典属性是否合法</p>
+     *
+     * @param target       目标对象
+     * @author guocq
+     * @date 2023/1/5 14:12
+     */
+    public static void verifyDictLegitimacy(final Object target) {
+        if (ObjectUtil.isEmpty(target)) {
+            log.warn("目标对象[target]不能为空");
+            return;
+        }
+        final Class<Object> targetClass = ClassUtil.getClass(target);
+        final Set<Field> fields = Sets.newHashSet(ReflectHelper.getFields(targetClass, field -> field.isAnnotationPresent(DICT_VALID_CLASS)));
+        if (ArrayUtil.isEmpty(fields)) {
+            log.debug("目标对象[target={}]中字典属性", target);
+            return;
+        }
+        fields.forEach(field -> validFieldDict(field, target));
+    }
+
+    /**
+     * <p>校验字典属性是否合法</p>
+     *
+     * @param field        属性对象
+     * @param target       目标对象
+     * @author guocq
+     * @date 2023/1/5 14:11
+     */
+    private static void validFieldDict(Field field, Object target) {
+        String fieldName = field.getName();
+        DictValid dictValid = field.getAnnotation(DICT_VALID_CLASS);
+        String dictTypeCode = dictValid.type();
+        String fieldValue = StrUtil.toStringOrNull(ReflectHelper.getFieldValue(target, field));
+        if (ObjectUtil.isNull(fieldValue)) {
+            CodeHelper.logAetherValidError(log, "字段[fieldName={}]为空，校验失败", fieldName);
+            return;
+        }
+        Integer dictCode = NumberUtil.parseInt(fieldValue);
+        String dictValue = translateCore(dictTypeCode, dictCode);
+        if (StrUtil.isBlank(dictValue)) {
+            CodeHelper.logAetherValidError(log, "字段[fieldName={},dictTypeCode={},dictCode={}]找不到对应的字典值校验失败", fieldName, dictTypeCode, dictCode);
+        }
     }
 }
 

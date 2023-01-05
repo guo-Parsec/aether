@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import top.finder.aether.base.core.entity.Role;
 import top.finder.aether.data.common.entity.IPageDto;
 
 import javax.validation.constraints.Min;
@@ -12,17 +11,17 @@ import javax.validation.constraints.NotNull;
 import java.util.StringJoiner;
 
 /**
- * <p>角色查询参数</p>
+ * <p>用户分页查询参数</p>
  *
  * @author guocq
  * @since 2022/12/27
  */
 @Getter
 @Setter
-@ApiModel("角色分页查询参数")
-public class RolePageQueryDto extends Role implements IPageDto {
-    private static final long serialVersionUID = 4938421970914661532L;
+@ApiModel("用户分页查询参数")
+public class UserPageQueryDto extends UserQueryDto implements IPageDto {
 
+    private static final long serialVersionUID = -3323511371707903871L;
     /**
      * 当前页
      */
@@ -41,17 +40,16 @@ public class RolePageQueryDto extends Role implements IPageDto {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", RolePageQueryDto.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", UserPageQueryDto.class.getSimpleName() + "[", "]")
                 .add("currentPage=" + currentPage)
                 .add("pageSize=" + pageSize)
-                .add("roleCode='" + roleCode + "'")
-                .add("roleName='" + roleName + "'")
-                .add("roleSort=" + roleSort)
-                .add("roleDesc='" + roleDesc + "'")
-                .add("deleteAt=" + deleteAt)
-                .add("gmtCreate=" + gmtCreate)
-                .add("gmtModify=" + gmtModify)
-                .add("id=" + id)
+                .add("account='" + account + "'")
+                .add("nickname='" + nickname + "'")
+                .add("sexSet=" + sexSet)
+                .add("avatarUrl='" + avatarUrl + "'")
+                .add("birthdayStarter=" + birthdayStarter)
+                .add("birthdayEnd=" + birthdayEnd)
+                .add("userTypeSet=" + userTypeSet)
                 .toString();
     }
 }

@@ -23,25 +23,25 @@ public class Role extends BaseDataEntity {
      * 角色编码
      */
     @TableField(value = "role_code")
-    private String roleCode;
+    protected String roleCode;
 
     /**
      * 角色名称
      */
     @TableField(value = "role_name")
-    private String roleName;
+    protected String roleName;
 
     /**
      * 角色排序
      */
     @TableField(value = "role_sort")
-    private Integer roleSort;
+    protected Integer roleSort;
 
     /**
      * 角色描述信息
      */
     @TableField(value = "role_desc")
-    private String roleDesc;
+    protected String roleDesc;
 
     @Override
     public String toString() {

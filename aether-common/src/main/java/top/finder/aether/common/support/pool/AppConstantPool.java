@@ -10,10 +10,20 @@ public interface AppConstantPool {
     /**
      * APP名称 - BASE
      */
-    String APP_BASE = "aether-base/base";
+    String APP_NAME_BASE = "aether-base";
+
+    /**
+     * 用于feign的baseApp
+     */
+    String APP_BASE = APP_NAME_BASE + "/base";
 
     /**
      * APP名称 - AUTH
      */
-    String APP_AUTH = "aether-auth/auth";
+    String APP_NAME_AUTH = "aether-auth";
+
+    /**
+     * 用于feign的authApp
+     */
+    String APP_AUTH = APP_NAME_AUTH + "/auth";
 }
