@@ -52,9 +52,7 @@ public class LogServiceImpl implements LogService {
     @Transactional(rollbackFor = Exception.class)
     public void saveOperateLog(LogModel logModel) {
         log.debug("保存操作日志信息开始，入参={}", logModel);
-        if (!setLoginInfo(logModel)) {
-            return;
-        }
+        setLoginInfo(logModel);
         hiOperateLogMapper.insert(HiOperateLog.transformToHiOperateLog(logModel));
         log.debug("保存操作日志信息成功");
     }
@@ -114,14 +112,11 @@ public class LogServiceImpl implements LogService {
         return rawPage.convert(record -> TransformerHelper.transformer(record, HiLoginVo.class));
     }
 
-    private boolean setLoginInfo(LogModel logModel) {
+    private void setLoginInfo(LogModel logModel) {
         if (SecurityContext.isLogin()) {
             ISecuritySubject<UserVo> subject = SecurityContext.findSecuritySubject();
             logModel.setUserId(subject.getId());
             logModel.setUserAccount(subject.getAccount());
-            return true;
         }
-        log.warn("获取当前登录用户失败，日志拒绝保存");
-        return false;
     }
 }

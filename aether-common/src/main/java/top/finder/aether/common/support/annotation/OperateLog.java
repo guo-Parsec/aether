@@ -12,4 +12,13 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface OperateLog {
+    /**
+     * 是否需要用户登录
+     */
+    boolean value() default true;
+
+    /**
+     * 账户所在参数
+     */
+    String accountField() default "";
 }

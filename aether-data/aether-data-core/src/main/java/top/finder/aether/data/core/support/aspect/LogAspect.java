@@ -1,4 +1,4 @@
-package top.finder.aether.common.support.aspect;
+package top.finder.aether.data.core.support.aspect;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -23,6 +23,7 @@ import top.finder.aether.common.support.helper.LogHelper;
 import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.listener.SysLogListener;
 import top.finder.aether.common.support.pool.CommonConstantPool;
+import top.finder.aether.data.core.support.helper.AppHelper;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -50,7 +51,10 @@ public class LogAspect {
      * @date 2023/1/4 10:32
      */
     @Around("@annotation(operateLog)")
-    public Object around(ProceedingJoinPoint point, OperateLog operateLog) {
+    public Object around(ProceedingJoinPoint point, OperateLog operateLog) throws Throwable {
+        if (AppHelper.isFeignRequest()) {
+            return point.proceed(point.getArgs());
+        }
         LogModel logModel = beforeProcess(point);
         ProcessResult processed = processed(point, logModel);
         Object result = processed.getResult();
