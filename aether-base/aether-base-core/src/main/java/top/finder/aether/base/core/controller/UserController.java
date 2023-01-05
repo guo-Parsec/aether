@@ -1,12 +1,15 @@
 package top.finder.aether.base.core.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.finder.aether.base.api.dto.UserCreateDto;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
 import top.finder.aether.base.api.vo.UserVo;
-import top.finder.aether.base.api.dto.UserCreateDto;
+import top.finder.aether.base.core.dto.UserPageQueryDto;
+import top.finder.aether.base.core.dto.UserUpdateDto;
 import top.finder.aether.base.core.service.UserService;
 import top.finder.aether.common.support.annotation.AppBlocking;
 import top.finder.aether.common.support.annotation.AppGroup;
@@ -14,6 +17,8 @@ import top.finder.aether.common.support.annotation.FeignApi;
 import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.pool.AppConstantPool;
+
+import java.util.Set;
 
 /**
  * <p>用户操作控制器</p>
@@ -54,5 +59,27 @@ public class UserController {
     public Apis<Void> create(@RequestBody @Validated UserCreateDto dto) {
         userService.create(dto);
         return Apis.success();
+    }
+
+    @ApiOperation(value = "更新用户", notes = "更新用户信息")
+    @PutMapping(value = "update.do")
+    @OperateLog
+    public Apis<Void> update(@RequestBody @Validated UserUpdateDto dto) {
+        userService.update(dto);
+        return Apis.success();
+    }
+
+    @ApiOperation(value = "删除用户", notes = "删除用户信息")
+    @DeleteMapping(value = "delete.do")
+    @OperateLog
+    public Apis<Void> delete(@RequestBody Set<Long> idSet) {
+        userService.delete(idSet);
+        return Apis.success();
+    }
+
+    @ApiOperation(value = "分页查询", notes = "分页查询用户信息")
+    @GetMapping(value = "/page/query")
+    public Apis<IPage<UserVo>> pageQuery(@RequestBody @Validated UserPageQueryDto dto) {
+        return Apis.success(userService.pageQuery(dto));
     }
 }

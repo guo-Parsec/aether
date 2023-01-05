@@ -15,6 +15,7 @@ import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.helper.ReflectHelper;
 import top.finder.aether.common.support.helper.SpringBeanHelper;
+import top.finder.aether.common.support.helper.TransformerHelper;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -80,6 +81,21 @@ public class DictHelper {
     }
 
     /**
+     * <p>对象互转并转义</p>
+     *
+     * @param source 源对象
+     * @param tClass 目标对象class
+     * @return T
+     * @author guocq
+     * @date 2023/1/5 17:46
+     */
+    public static <S, T> T transformerAndTranslate(S source, Class<T> tClass) {
+        T t = TransformerHelper.transformer(source, tClass);
+        translate(t);
+        return t;
+    }
+
+    /**
      * <p>核心转义</p>
      *
      * @param dictTypeCode 字典类别码值
@@ -131,7 +147,7 @@ public class DictHelper {
     /**
      * <p>校验字典属性是否合法</p>
      *
-     * @param target       目标对象
+     * @param target 目标对象
      * @author guocq
      * @date 2023/1/5 14:12
      */
@@ -152,8 +168,8 @@ public class DictHelper {
     /**
      * <p>校验字典属性是否合法</p>
      *
-     * @param field        属性对象
-     * @param target       目标对象
+     * @param field  属性对象
+     * @param target 目标对象
      * @author guocq
      * @date 2023/1/5 14:11
      */
@@ -161,9 +177,12 @@ public class DictHelper {
         String fieldName = field.getName();
         DictValid dictValid = field.getAnnotation(DICT_VALID_CLASS);
         String dictTypeCode = dictValid.type();
+        boolean emptyValid = dictValid.emptyValid();
         String fieldValue = StrUtil.toStringOrNull(ReflectHelper.getFieldValue(target, field));
-        if (ObjectUtil.isNull(fieldValue)) {
-            CodeHelper.logAetherValidError(log, "字段[fieldName={}]为空，校验失败", fieldName);
+        if (ObjectUtil.isEmpty(fieldValue)) {
+            if (emptyValid) {
+                CodeHelper.logAetherValidError(log, "字段[fieldName={}]为空，校验失败", fieldName);
+            }
             return;
         }
         Integer dictCode = NumberUtil.parseInt(fieldValue);

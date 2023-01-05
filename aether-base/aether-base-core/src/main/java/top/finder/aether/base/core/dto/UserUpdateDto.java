@@ -4,9 +4,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 import top.finder.aether.common.model.IModel;
+import top.finder.aether.common.support.annotation.DictValid;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.StringJoiner;
 
@@ -32,19 +35,17 @@ public class UserUpdateDto implements IModel {
      * 登陆账户
      */
     @ApiModelProperty("登陆账户")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "密码只能包含数字和英文")
+    @Length(min = 4, max = 24, message = "登陆账户长度不能少于4,也不能超过24")
     private String account;
 
     /**
      * 登陆密码
      */
     @ApiModelProperty("登陆密码")
+    @Length(min = 6, max = 16, message = "登陆密码长度不能少于6,也不能超过16")
+    @Pattern(regexp = "^[A-Za-z0-9_@!.,]+$", message = "密码只能包含数字、英文和[_@!.,]内的字符")
     private String password;
-
-    /**
-     * 二次密码
-     */
-    @ApiModelProperty("二次密码")
-    private String checkPassword;
 
     /**
      * 昵称
@@ -56,6 +57,7 @@ public class UserUpdateDto implements IModel {
      * 用户性别
      */
     @ApiModelProperty("用户性别")
+    @DictValid(type = "sex", emptyValid = false)
     private Integer sex;
 
     /**
@@ -74,6 +76,7 @@ public class UserUpdateDto implements IModel {
      * 用户类别
      */
     @ApiModelProperty("用户类别")
+    @DictValid(type = "user_type", emptyValid = false)
     private Integer userType;
 
     @Override
@@ -82,7 +85,6 @@ public class UserUpdateDto implements IModel {
                 .add("id=" + id)
                 .add("account='" + account + "'")
                 .add("password='" + password + "'")
-                .add("checkPassword='" + checkPassword + "'")
                 .add("nickname='" + nickname + "'")
                 .add("sex=" + sex)
                 .add("avatarUrl='" + avatarUrl + "'")

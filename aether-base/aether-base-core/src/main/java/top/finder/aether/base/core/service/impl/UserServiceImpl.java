@@ -1,6 +1,8 @@
 package top.finder.aether.base.core.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -13,10 +15,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.finder.aether.base.api.dto.UserCreateDto;
 import top.finder.aether.base.api.support.helper.DictHelper;
 import top.finder.aether.base.api.support.pool.BaseConstantPool;
 import top.finder.aether.base.api.vo.UserVo;
-import top.finder.aether.base.api.dto.UserCreateDto;
 import top.finder.aether.base.core.dto.UserPageQueryDto;
 import top.finder.aether.base.core.dto.UserUpdateDto;
 import top.finder.aether.base.core.entity.User;
@@ -27,6 +29,7 @@ import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.support.strategy.Md5SaltCrypto;
+import top.finder.aether.data.core.support.helper.PageHelper;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -141,8 +144,14 @@ public class UserServiceImpl implements UserService {
      * @date 2023/1/5 11:02
      */
     @Override
+    @CacheEvict(cacheNames = {"AMS:USER:SINGLE", "AMS:USER:LIST"}, allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
     public void update(UserUpdateDto dto) {
-
+        log.debug("更新用户信息, 入参={}", dto);
+        checkBeforeUpdate(dto);
+        User user = TransformerHelper.transformer(dto, User.class);
+        userMapper.updateById(user);
+        log.debug("更新用户信息成功");
     }
 
     /**
@@ -153,8 +162,13 @@ public class UserServiceImpl implements UserService {
      * @date 2023/1/5 11:02
      */
     @Override
+    @CacheEvict(cacheNames = {"AMS:USER:SINGLE", "AMS:USER:LIST"}, allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> idSet) {
-
+        log.debug("删除用户信息, 入参={}", idSet);
+        checkBeforeDelete(idSet);
+        userMapper.logicBatchDeleteByIds(idSet, System.currentTimeMillis());
+        log.debug("删除用户信息成功");
     }
 
     /**
@@ -167,7 +181,20 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public IPage<UserVo> pageQuery(UserPageQueryDto dto) {
-        return null;
+        log.debug("分页查询用户,入参={}", dto);
+        IPage<User> page = PageHelper.initPage(dto);
+        Wrapper<User> wrapper = new LambdaQueryWrapper<User>()
+                .eq(ObjectUtil.isNotNull(dto.getId()), User::getId, dto.getId())
+                .like(StrUtil.isNotBlank(dto.getAccount()), User::getAccount, dto.getAccount())
+                .like(StrUtil.isNotBlank(dto.getNickname()), User::getNickname, dto.getNickname())
+                .in(CollUtil.isNotEmpty(dto.getSexSet()), User::getSex, dto.getSexSet())
+                .ge(ObjectUtil.isNotEmpty(dto.getBirthdayStarter()), User::getBirthday, dto.getBirthdayStarter())
+                .le(ObjectUtil.isNotEmpty(dto.getBirthdayEnd()), User::getBirthday, dto.getBirthdayEnd())
+                .in(CollUtil.isNotEmpty(dto.getUserTypeSet()), User::getUserType, dto.getUserTypeSet())
+                .orderByDesc(User::getGmtModify)
+                .orderByDesc(User::getGmtCreate);
+        IPage<User> rawPage = userMapper.selectPage(page, wrapper);
+        return rawPage.convert(record -> DictHelper.transformerAndTranslate(record, UserVo.class));
     }
 
     /**
@@ -253,5 +280,56 @@ public class UserServiceImpl implements UserService {
         }
         // 校验字典信息
         DictHelper.verifyDictLegitimacy(createDto);
+    }
+
+    /**
+     * <p>更新前校验</p>
+     *
+     * @param dto 更新入参
+     * @return void
+     * @author guocq
+     * @date 2023/1/5 17:30
+     */
+    private void checkBeforeUpdate(UserUpdateDto dto) {
+        Long id = dto.getId();
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            CodeHelper.logAetherValidError(log, "用户[id={}]不存在无法更新数据", id);
+        }
+        String account = dto.getAccount();
+        if (StrUtil.isNotBlank(account)) {
+            Wrapper<User> wrapper = new LambdaQueryWrapper<User>()
+                    .eq(User::getAccount, account)
+                    .ne(User::getId, id);
+            boolean exists = userMapper.exists(wrapper);
+            if (exists) {
+                CodeHelper.logAetherValidError(log, "用户账户为[account={}]的数据已存在，不能重复更新", account);
+            }
+        }
+        // 用户信息修改时不能直接修改用户密码
+        dto.setPassword(user.getPassword());
+        // 校验字典信息
+        DictHelper.verifyDictLegitimacy(dto);
+    }
+
+    /**
+     * <p>删除用户信息前校验</p>
+     *
+     * @param idSet 主键集合
+     * @return void
+     * @author guocq
+     * @date 2023/1/5 17:32
+     */
+    private void checkBeforeDelete(Set<Long> idSet) {
+        if (CollUtil.isEmpty(idSet)) {
+            CodeHelper.logAetherValidError(log, "删除时主键集合不能为空", idSet);
+        }
+        Wrapper<User> wrapper = new LambdaQueryWrapper<User>()
+                .in(User::getId, idSet);
+        Long count = userMapper.selectCount(wrapper);
+        int size = idSet.size();
+        if (count < size) {
+            log.warn("待删除的idSet={}中部分主键不存在无法删除，系统将删除已存在的数据{}条", idSet, count);
+        }
     }
 }
