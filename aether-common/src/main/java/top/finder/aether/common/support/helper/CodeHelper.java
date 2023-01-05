@@ -23,7 +23,9 @@ import java.util.Map;
  * @since 2022/12/15
  */
 public class CodeHelper {
+    @SuppressWarnings("all")
     private static ThreadLocal<Map<String, String>> headerThreadLocal = ThreadUtil.createThreadLocal(Maps::newHashMap);
+
 
     /**
      * <p>将源对象转化为{@code V}类型对象</p>
@@ -121,7 +123,6 @@ public class CodeHelper {
     /**
      * <p>获取请求头信息</p>
      *
-     * @param
      * @return java.util.Map<java.lang.String, java.lang.String>
      * @author guocq
      * @date 2022/12/30 16:26

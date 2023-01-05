@@ -1,4 +1,4 @@
-package top.finder.aether.data.cache.support.aspect;
+package top.finder.aether.data.core.support.aspect;
 
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Sets;
@@ -12,14 +12,15 @@ import top.finder.aether.common.support.annotation.FeignApi;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.helper.CodeHelper;
+import top.finder.aether.common.support.helper.LoggerHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
-import top.finder.aether.data.cache.support.runner.SystemSetting;
+import top.finder.aether.data.core.support.runner.SystemSetting;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 import static top.finder.aether.common.support.pool.CommonConstantPool.ALL_TEXT;
-import static top.finder.aether.data.cache.support.pool.SystemSettingConstantPool.FEIGN_SECRET;
+import static top.finder.aether.data.core.support.pool.SystemSettingConstantPool.FEIGN_SECRET;
 
 /**
  * <p>feignApi校验切面 防止服务间调用避免暴露给外部</p>
@@ -40,9 +41,11 @@ public class FeignApiValidAspect {
 
     @Around("@annotation(feignApi)")
     public Object around(ProceedingJoinPoint point, FeignApi feignApi) throws Throwable {
-        log.info("feignApi校验开始");
+        LoggerHelper.aopLog(log, point, "feignApi校验{}开始");
         if (validCurrentAppIsAccessible(feignApi)) {
-            point.proceed(point.getArgs());
+            log.debug("feignApi校验成功");
+            LoggerHelper.aopLog(log, point, "feignApi校验{}开始");
+            return point.proceed(point.getArgs());
         }
         return Apis.failed(CommonHttpStatus.ILLEGAL_REQUESTS);
     }

@@ -26,7 +26,6 @@
                 <artifactId>aether-base-core</artifactId>
                 <version>${aether.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

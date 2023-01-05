@@ -23,15 +23,19 @@
                     <groupId>top.finder</groupId>
                     <artifactId>aether-data-common</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-openfeign</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>top.finder</groupId>
-            <artifactId>aether-data-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>top.finder</groupId>
-            <artifactId>aether-data-cache</artifactId>
+            <artifactId>aether-data-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

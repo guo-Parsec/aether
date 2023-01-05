@@ -11,12 +11,13 @@ import top.finder.aether.common.properties.AetherSystemProperties;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.helper.CodeHelper;
+import top.finder.aether.common.support.helper.LoggerHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * <p></p>
+ * <p>网关校验</p>
  *
  * @author guocq
  * @since 2023/1/4
@@ -43,14 +44,13 @@ public class GatewayValidAspect {
             log.debug("系统不设置网关校验限制，直接放行");
             return point.proceed();
         }
-        String className = point.getTarget().getClass().getName();
-        String methodName = point.getSignature().getName();
-        log.debug("{}#{}正在校验是否来自于网关", className, methodName);
+        LoggerHelper.aopLog(log, point, "网关校验{}开始");
         HttpServletRequest request = CodeHelper.getHttpServletRequest();
         if (!Boolean.parseBoolean(request.getHeader(CommonConstantPool.IS_FROM_GATEWAY))) {
-            log.debug("{}#{}不是来自于网关, 将限制访问", className, methodName);
+            LoggerHelper.aopLog(log, point, "{}不是来自于网关, 将限制访问");
             return Apis.failed(CommonHttpStatus.ILLEGAL_REQUESTS);
         }
+        LoggerHelper.aopLog(log, point, "网关校验{}成功");
         return point.proceed();
     }
 }

@@ -15,31 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>top.finder</groupId>
-            <artifactId>aether-data-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>top.finder</groupId>
-            <artifactId>aether-data-cache</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>top.finder</groupId>
-                    <artifactId>aether-common</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>top.finder</groupId>
-            <artifactId>aether-data-security</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>top.finder</groupId>
-                    <artifactId>aether-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>top.finder</groupId>
-                    <artifactId>aether-data-cache</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>aether-data-core</artifactId>
         </dependency>
         <dependency>
             <groupId>top.finder</groupId>
@@ -50,8 +26,8 @@
                     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>top.finder</groupId>
-                    <artifactId>aether-data-security</artifactId>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-openfeign</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

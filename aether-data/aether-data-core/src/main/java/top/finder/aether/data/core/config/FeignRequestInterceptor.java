@@ -1,4 +1,4 @@
-package top.finder.aether.data.cache.config;
+package top.finder.aether.data.core.config;
 
 import cn.hutool.core.util.StrUtil;
 import feign.RequestInterceptor;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.helper.EnvHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
-import top.finder.aether.data.cache.support.runner.SystemSetting;
+import top.finder.aether.data.core.support.runner.SystemSetting;
 
 import java.util.Map;
 import java.util.Optional;
 
 import static top.finder.aether.common.support.pool.SecurityConstantPool.TOKEN_IN_HEAD_KEY;
-import static top.finder.aether.data.cache.support.pool.SystemSettingConstantPool.FEIGN_SECRET;
+import static top.finder.aether.data.core.support.pool.SystemSettingConstantPool.FEIGN_SECRET;
 
 /**
  * <p>远程调用拦截器</p>

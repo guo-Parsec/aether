@@ -1,11 +1,12 @@
-package top.finder.aether.data.cache.support.helper;
+package top.finder.aether.data.core.support.helper;
 
 import cn.hutool.core.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.finder.aether.data.cache.support.helper.RedisHelper;
 
 import static top.finder.aether.common.support.pool.CommonConstantPool.APP_COMMON_PREFIX;
-import static top.finder.aether.data.cache.support.pool.SystemSettingConstantPool.SYSTEM_SETTING_KEY;
+import static top.finder.aether.data.core.support.pool.SystemSettingConstantPool.SYSTEM_SETTING_KEY;
 
 /**
  * <p>系统配置启动类</p>
