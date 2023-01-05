@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.entity;
+package top.finder.aether.data.common.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;

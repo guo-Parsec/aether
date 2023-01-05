@@ -1,8 +1,7 @@
 package top.finder.aether.base.core.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.finder.aether.base.core.entity.HiOperateLog;
-import top.finder.aether.data.core.mapper.CommonMapper;
+import top.finder.aether.data.common.mapper.CommonMapper;
 
 /**
  * <p>操作历史记录Mapper</p>

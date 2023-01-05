@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
-import top.finder.aether.data.core.entity.BaseDataEntity;
+import top.finder.aether.data.common.entity.BaseDataEntity;
 
 import java.util.StringJoiner;
 

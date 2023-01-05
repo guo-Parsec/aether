@@ -17,6 +17,7 @@
         <module>aether-data-aop</module>
         <module>aether-data-cache</module>
         <module>aether-data-security</module>
+        <module>aether-data-core</module>
     </modules>
 
     <dependencies>

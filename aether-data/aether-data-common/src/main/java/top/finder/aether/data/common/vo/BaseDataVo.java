@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.vo;
+package top.finder.aether.data.common.vo;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;

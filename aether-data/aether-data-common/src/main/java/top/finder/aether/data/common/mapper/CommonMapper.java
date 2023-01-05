@@ -1,9 +1,9 @@
-package top.finder.aether.data.core.mapper;
+package top.finder.aether.data.common.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import org.apache.ibatis.annotations.Param;
-import top.finder.aether.data.core.entity.BaseEntity;
+import top.finder.aether.data.common.entity.BaseEntity;
 
 import java.io.Serializable;
 import java.util.Collection;

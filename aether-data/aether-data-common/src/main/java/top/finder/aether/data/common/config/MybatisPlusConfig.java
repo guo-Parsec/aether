@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.config;
+package top.finder.aether.data.common.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
@@ -9,7 +9,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import top.finder.aether.data.core.support.mp.SqlInjector;
+import top.finder.aether.data.common.support.mp.SqlInjector;
 
 import java.time.LocalDateTime;
 

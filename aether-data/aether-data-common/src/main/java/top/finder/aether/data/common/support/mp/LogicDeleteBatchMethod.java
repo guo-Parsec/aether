@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.support.mp;
+package top.finder.aether.data.common.support.mp;
 
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import lombok.extern.slf4j.Slf4j;

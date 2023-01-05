@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.properties;
+package top.finder.aether.data.common.properties;
 
 import lombok.Getter;
 import lombok.Setter;

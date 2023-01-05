@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import top.finder.aether.base.core.entity.Role;
-import top.finder.aether.data.core.entity.IPageDto;
+import top.finder.aether.data.common.entity.IPageDto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

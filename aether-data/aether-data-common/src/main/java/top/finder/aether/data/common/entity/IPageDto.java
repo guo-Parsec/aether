@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.entity;
+package top.finder.aether.data.common.entity;
 
 /**
  * <p>分页参数</p>

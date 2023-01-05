@@ -1,7 +1,7 @@
 package top.finder.aether.base.core.mapper;
 
 import top.finder.aether.base.core.entity.Role;
-import top.finder.aether.data.core.mapper.CommonMapper;
+import top.finder.aether.data.common.mapper.CommonMapper;
 
 /**
  * <p>系统角色Mapper</p>

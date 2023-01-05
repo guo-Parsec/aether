@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>top.finder</groupId>
+        <artifactId>aether-data</artifactId>
+        <version>0.0.1</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>aether-data-core</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>top.finder</groupId>
+            <artifactId>aether-data-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>top.finder</groupId>
+                    <artifactId>aether-common</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>top.finder</groupId>
+            <artifactId>aether-data-cache</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>top.finder</groupId>
+                    <artifactId>aether-common</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>top.finder</groupId>
+            <artifactId>aether-data-security</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>top.finder</groupId>
+                    <artifactId>aether-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>top.finder</groupId>
+                    <artifactId>aether-data-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>top.finder</groupId>
+                    <artifactId>aether-data-cache</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

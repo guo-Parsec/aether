@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.finder.aether.common.model.LogModel;
-import top.finder.aether.data.core.entity.BaseEntity;
+import top.finder.aether.data.common.entity.BaseEntity;
 
 import java.time.LocalDateTime;
 import java.util.StringJoiner;

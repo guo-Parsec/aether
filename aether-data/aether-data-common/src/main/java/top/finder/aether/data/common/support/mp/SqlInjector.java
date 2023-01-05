@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.support.mp;
+package top.finder.aether.data.common.support.mp;
 
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;

@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import top.finder.aether.common.support.annotation.DictTranslate;
-import top.finder.aether.data.core.vo.BaseDataVo;
+import top.finder.aether.data.common.vo.BaseDataVo;
 
 import java.time.LocalDate;
 import java.util.StringJoiner;

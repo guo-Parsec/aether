@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.vo;
+package top.finder.aether.data.common.vo;
 
 import lombok.Getter;
 import lombok.Setter;

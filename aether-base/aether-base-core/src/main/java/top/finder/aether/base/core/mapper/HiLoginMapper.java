@@ -1,7 +1,7 @@
 package top.finder.aether.base.core.mapper;
 
 import top.finder.aether.base.core.entity.HiLogin;
-import top.finder.aether.data.core.mapper.CommonMapper;
+import top.finder.aether.data.common.mapper.CommonMapper;
 
 /**
  * <p>登录历史记录表Mapper</p>

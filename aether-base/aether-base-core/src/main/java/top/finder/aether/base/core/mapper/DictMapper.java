@@ -1,7 +1,7 @@
 package top.finder.aether.base.core.mapper;
 
 import top.finder.aether.base.core.entity.Dict;
-import top.finder.aether.data.core.mapper.CommonMapper;
+import top.finder.aether.data.common.mapper.CommonMapper;
 
 /**
  * <p></p>
