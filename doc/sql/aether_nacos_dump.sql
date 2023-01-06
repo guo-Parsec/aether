@@ -42,7 +42,7 @@ CREATE TABLE `config_info` (
   `encrypted_data_key` text CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL COMMENT '秘钥',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_configinfo_datagrouptenant` (`data_id`,`group_id`,`tenant_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin ROW_FORMAT=DYNAMIC COMMENT='config_info';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin ROW_FORMAT=DYNAMIC COMMENT='config_info';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,6 +50,7 @@ CREATE TABLE `config_info` (
 --
 
 /*!40000 ALTER TABLE `config_info` DISABLE KEYS */;
+INSERT INTO `config_info` (`id`, `data_id`, `group_id`, `content`, `md5`, `gmt_create`, `gmt_modified`, `src_user`, `src_ip`, `app_name`, `tenant_id`, `c_desc`, `c_use`, `effect`, `type`, `c_schema`, `encrypted_data_key`) VALUES (1,'aether-gate-dev.yaml','DEFAULT_GROUP','aether:\r\n  gateway:\r\n    white:\r\n      urls:\r\n        - /**','97b36ca116071bff75072da697e600bb','2022-12-29 07:45:43','2022-12-29 07:45:43',NULL,'127.0.0.1','','aether_dev',NULL,NULL,NULL,'yaml',NULL,'');
 /*!40000 ALTER TABLE `config_info` ENABLE KEYS */;
 
 --
@@ -229,7 +230,7 @@ CREATE TABLE `his_config_info` (
   KEY `idx_gmt_create` (`gmt_create`) USING BTREE,
   KEY `idx_gmt_modified` (`gmt_modified`) USING BTREE,
   KEY `idx_did` (`data_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin ROW_FORMAT=DYNAMIC COMMENT='多租户改造';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin ROW_FORMAT=DYNAMIC COMMENT='多租户改造';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -237,6 +238,7 @@ CREATE TABLE `his_config_info` (
 --
 
 /*!40000 ALTER TABLE `his_config_info` DISABLE KEYS */;
+INSERT INTO `his_config_info` (`id`, `nid`, `data_id`, `group_id`, `app_name`, `content`, `md5`, `gmt_create`, `gmt_modified`, `src_user`, `src_ip`, `op_type`, `tenant_id`, `encrypted_data_key`) VALUES (0,1,'aether-gate-dev.yaml','DEFAULT_GROUP','','aether:\r\n  gateway:\r\n    white:\r\n      urls:\r\n        - /**','97b36ca116071bff75072da697e600bb','2022-12-29 15:45:43','2022-12-29 07:45:43',NULL,'127.0.0.1','I','aether_dev','');
 /*!40000 ALTER TABLE `his_config_info` ENABLE KEYS */;
 
 --
@@ -340,7 +342,8 @@ CREATE TABLE `tenant_info` (
 --
 
 /*!40000 ALTER TABLE `tenant_info` DISABLE KEYS */;
-INSERT INTO `tenant_info` (`id`, `kp`, `tenant_id`, `tenant_name`, `tenant_desc`, `create_source`, `gmt_create`, `gmt_modified`) VALUES (4,'1','aether','aether','aether','nacos',1670398824937,1670398824937),(5,'1','aether_dev','aether_dev','aether_dev','nacos',1670981643080,1670981643080);
+INSERT INTO `tenant_info` (`id`, `kp`, `tenant_id`, `tenant_name`, `tenant_desc`, `create_source`, `gmt_create`, `gmt_modified`) VALUES (4,'1','aether','aether','aether','nacos',1670398824937,1670398824937);
+INSERT INTO `tenant_info` (`id`, `kp`, `tenant_id`, `tenant_name`, `tenant_desc`, `create_source`, `gmt_create`, `gmt_modified`) VALUES (5,'1','aether_dev','aether_dev','aether_dev','nacos',1670981643080,1670981643080);
 /*!40000 ALTER TABLE `tenant_info` ENABLE KEYS */;
 
 --
@@ -375,4 +378,4 @@ INSERT INTO `users` (`username`, `password`, `enabled`) VALUES ('nacos','$2a$10$
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-28 16:54:46
+-- Dump completed on 2023-01-06 15:01:38
