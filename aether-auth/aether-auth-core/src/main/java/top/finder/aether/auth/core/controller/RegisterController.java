@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.finder.aether.auth.core.dto.RegisterDto;
 import top.finder.aether.auth.core.support.pool.AuthApiConstantPool;
 import top.finder.aether.base.api.client.UserClient;
-import top.finder.aether.base.api.dto.UserCreateDto;
 import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 
@@ -31,7 +31,7 @@ public class RegisterController {
     @ApiOperation(value = "注册用户", notes = "注册用户信息")
     @PostMapping(value = "register.do")
     @OperateLog
-    public Apis<Void> register(@RequestBody @Validated UserCreateDto dto) {
-        return userClient.create(dto);
+    public Apis<Void> register(@RequestBody @Validated RegisterDto dto) {
+        return userClient.create(dto.toUserCreateDto());
     }
 }

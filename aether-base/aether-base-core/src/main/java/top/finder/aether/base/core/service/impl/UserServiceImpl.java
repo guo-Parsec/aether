@@ -274,8 +274,13 @@ public class UserServiceImpl implements UserService {
         String account = createDto.getAccount();
         String password = createDto.getPassword();
         String checkPassword = createDto.getCheckPassword();
-        if (!password.equals(checkPassword)) {
+        boolean isRegister = createDto.isRegister();
+        if (isRegister && !password.equals(checkPassword)) {
             CodeHelper.logAetherValidError(log, "用户[account={}]两次密码不一致无法新增", account);
+        }
+        if (!isRegister) {
+            // 非注册接口默认密码赋予为abc123456
+            createDto.setPassword("abc123456");
         }
         Wrapper<User> wrapper = new LambdaQueryWrapper<User>()
                 .eq(User::getAccount, account);

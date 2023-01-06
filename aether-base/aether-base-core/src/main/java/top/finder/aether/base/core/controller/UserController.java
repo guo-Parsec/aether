@@ -79,7 +79,7 @@ public class UserController {
 
     @ApiOperation(value = "分页查询", notes = "分页查询用户信息")
     @GetMapping(value = "/page/query")
-    public Apis<IPage<UserVo>> pageQuery(@RequestBody @Validated UserPageQueryDto dto) {
+    public Apis<IPage<UserVo>> pageQuery(@Validated UserPageQueryDto dto) {
         return Apis.success(userService.pageQuery(dto));
     }
 }

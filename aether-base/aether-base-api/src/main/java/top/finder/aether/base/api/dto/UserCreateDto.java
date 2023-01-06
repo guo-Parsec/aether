@@ -37,8 +37,7 @@ public class UserCreateDto implements IModel {
     /**
      * 登陆密码
      */
-    @ApiModelProperty("登陆密码")
-    @NotEmpty(message = "登陆密码不能为空")
+    @ApiModelProperty(value = "登陆密码", hidden = true)
     @Length(min = 6, max = 16, message = "登陆密码长度不能少于6,也不能超过16")
     @Pattern(regexp = "^[A-Za-z0-9_@!.,]+$", message = "密码只能包含数字、英文和[_@!.,]内的字符")
     private String password;
@@ -46,8 +45,7 @@ public class UserCreateDto implements IModel {
     /**
      * 二次密码
      */
-    @ApiModelProperty("二次密码")
-    @NotEmpty(message = "二次密码不能为空")
+    @ApiModelProperty(value = "二次密码", hidden = true)
     @Length(min = 6, max = 16, message = "二次密码长度不能少于6,也不能超过16")
     @Pattern(regexp = "^[A-Za-z0-9_@!.,]+$", message = "二次密码只能包含数字、英文和[_@!.,]内的字符")
     private String checkPassword;
@@ -83,6 +81,9 @@ public class UserCreateDto implements IModel {
     @ApiModelProperty("用户类别")
     @DictValid(type = "user_type")
     private Integer userType;
+
+    @ApiModelProperty(value = "是否为注册", hidden = true)
+    private boolean register = false;
 
     @Override
     public String toString() {
