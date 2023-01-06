@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
+import top.finder.aether.data.core.support.annotation.EnableBlock;
 
 /**
  * <p>认证中心启动类</p>
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.ComponentScan;
         "top.finder.aether.base",
         "top.finder.aether.auth"
 })
+@EnableBlock({"top.finder.aether.auth.core.service"})
 @EnableFeignClients(basePackages = {"top.finder.aether.**.api"})
 @EnableDiscoveryClient
 @SpringBootApplication
