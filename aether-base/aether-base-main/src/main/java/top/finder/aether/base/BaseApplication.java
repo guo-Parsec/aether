@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
+import top.finder.aether.data.core.support.annotation.EnableBlock;
 
 /**
  * <p>基础服务启动类</p>
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
         "top.finder.aether.data",
         "top.finder.aether.base"
 })
+@EnableBlock({"top.finder.aether.base.core.service"})
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication

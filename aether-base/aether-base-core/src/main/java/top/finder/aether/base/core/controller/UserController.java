@@ -52,8 +52,8 @@ public class UserController {
     @ApiOperation(value = "新增用户", notes = "新增用户信息")
     @PostMapping(value = "create.do")
     @AppGroup(blocking = {
-            @AppBlocking(appNames = {AppConstantPool.APP_NAME_BASE}, execBean = UserService.class, execMethod = "systemInnerUserCreate"),
-            @AppBlocking(appNames = {AppConstantPool.APP_NAME_AUTH}, execBean = UserService.class, execMethod = "registeredUserCreate")
+            @AppBlocking(appNames = {AppConstantPool.APP_NAME_BASE}, blockerId = "userService.systemInnerUserCreate"),
+            @AppBlocking(appNames = {AppConstantPool.APP_NAME_AUTH}, blockerId = "userService.registeredUserCreate")
     })
     @OperateLog
     public Apis<Void> create(@RequestBody @Validated UserCreateDto dto) {

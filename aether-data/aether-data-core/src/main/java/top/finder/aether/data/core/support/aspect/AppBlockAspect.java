@@ -13,10 +13,11 @@ import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.annotation.AppBlocking;
 import top.finder.aether.common.support.annotation.AppGroup;
 import top.finder.aether.common.support.enums.AppBlockingType;
+import top.finder.aether.common.support.helper.EnvHelper;
 import top.finder.aether.common.support.helper.LoggerHelper;
-import top.finder.aether.common.support.helper.ReflectHelper;
-import top.finder.aether.common.support.helper.SpringBeanHelper;
+import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.data.core.support.helper.AppHelper;
+import top.finder.aether.data.core.support.runner.BlockRegister;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +37,6 @@ import java.util.stream.Collectors;
 public class AppBlockAspect {
 
     @Pointcut("@annotation(top.finder.aether.common.support.annotation.AppBlocking)")
-
     public void blockPointCut() {
 
     }
@@ -48,15 +48,21 @@ public class AppBlockAspect {
 
     @Around("@annotation(appBlocking)")
     public Object appBlockingAround(ProceedingJoinPoint point, AppBlocking appBlocking) throws Throwable {
-        LoggerHelper.aopLog(log, Level.INFO, point, "{}appBlocking拦截开始");
         Object[] args = point.getArgs();
         AppBlockingType value = appBlocking.value();
         boolean allowIntercept = allowIntercept(appBlocking);
-        if (allowIntercept && AppBlockingType.BEFORE.equals(value)) {
+        if (!allowIntercept) {
+            String appName = EnvHelper.get(CommonConstantPool.APP_NAME_KEY);
+            LoggerHelper.aopLog(log, Level.INFO, point, "{}[appBlocking]对当前应用[" + appName + "]不设置拦截");
+            return point.proceed(args);
+        }
+        if (AppBlockingType.BEFORE.equals(value)) {
+            LoggerHelper.aopLog(log, Level.INFO, point, "{}[appBlocking]前置拦截开始");
             before(appBlocking, args);
         }
         Object result = point.proceed(args);
-        if (allowIntercept && AppBlockingType.AFTER.equals(value)) {
+        if (AppBlockingType.AFTER.equals(value)) {
+            LoggerHelper.aopLog(log, Level.INFO, point, "{}[appBlocking]后置拦截开始");
             after(appBlocking, args, result);
         }
         return result;
@@ -76,11 +82,13 @@ public class AppBlockAspect {
                 .collect(Collectors.groupingBy(AppBlocking::value));
         List<AppBlocking> before = blockMap.get(AppBlockingType.BEFORE);
         if (CollUtil.isNotEmpty(before)) {
+            LoggerHelper.aopLog(log, Level.INFO, point, "{}[appBlocking]前置拦截开始");
             before.forEach(appBlocking -> before(appBlocking, args));
         }
         Object result = point.proceed(args);
         List<AppBlocking> after = blockMap.get(AppBlockingType.AFTER);
         if (CollUtil.isNotEmpty(after)) {
+            LoggerHelper.aopLog(log, Level.INFO, point, "{}[appBlocking]后置拦截开始");
             after.forEach(appBlocking -> after(appBlocking, args, result));
         }
         return result;
@@ -111,10 +119,7 @@ public class AppBlockAspect {
      * @date 2023/1/5 15:25
      */
     private static void before(AppBlocking appBlocking, Object[] args) {
-        Class<?> beanClass = appBlocking.execBean();
-        String methodName = appBlocking.execMethod();
-        Object bean = SpringBeanHelper.getBean(beanClass);
-        ReflectHelper.invoke(bean, methodName, args);
+        BlockRegister.invoke(appBlocking.blockerId(), args);
     }
 
     /**
@@ -127,11 +132,8 @@ public class AppBlockAspect {
      * @date 2023/1/5 15:30
      */
     private static void after(AppBlocking appBlocking, Object[] args, Object result) {
-        Class<?> beanClass = appBlocking.execBean();
-        String methodName = appBlocking.execMethod();
         Set<Object> argSet = Sets.newHashSet(args);
         argSet.add(result);
-        Object bean = SpringBeanHelper.getBean(beanClass);
-        ReflectHelper.invoke(bean, methodName, ArrayUtil.toArray(argSet, Object.class));
+        BlockRegister.invoke(appBlocking.blockerId(), ArrayUtil.toArray(argSet, Object.class));
     }
 }

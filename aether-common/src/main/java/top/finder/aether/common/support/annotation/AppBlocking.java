@@ -20,14 +20,9 @@ public @interface AppBlocking {
     String[] appNames();
 
     /**
-     * 拦截时执行的bean
+     * 拦截器id
      */
-    Class<?> execBean();
-
-    /**
-     * 拦截时执行的方法名称
-     */
-    String execMethod();
+    String blockerId();
 
     /**
      * 拦截类型 默认前置拦截

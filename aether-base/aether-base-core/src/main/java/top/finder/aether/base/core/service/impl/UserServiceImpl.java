@@ -24,6 +24,8 @@ import top.finder.aether.base.core.dto.UserUpdateDto;
 import top.finder.aether.base.core.entity.User;
 import top.finder.aether.base.core.mapper.UserMapper;
 import top.finder.aether.base.core.service.UserService;
+import top.finder.aether.common.support.annotation.BlockBean;
+import top.finder.aether.common.support.annotation.BlockMethod;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.helper.TransformerHelper;
@@ -42,6 +44,7 @@ import java.util.Set;
  * @since 2022/12/14
  */
 @Service(value = "userService")
+@BlockBean(value = "userService")
 public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -205,6 +208,7 @@ public class UserServiceImpl implements UserService {
      * @date 2023/1/5 14:58
      */
     @Override
+    @BlockMethod(value = "systemInnerUserCreate")
     public void systemInnerUserCreate(UserCreateDto dto) {
         dto.setUserType(BaseConstantPool.USER_TYPE_INNER);
     }
@@ -217,6 +221,7 @@ public class UserServiceImpl implements UserService {
      * @date 2023/1/5 14:58
      */
     @Override
+    @BlockMethod(value = "registeredUserCreate")
     public void registeredUserCreate(UserCreateDto dto) {
         dto.setUserType(BaseConstantPool.USER_TYPE_REGISTERED);
     }
