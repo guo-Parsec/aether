@@ -138,6 +138,9 @@ INSERT INTO `ams_hi_operate` (`id`, `access_url`, `access_app`, `operate_user_id
 INSERT INTO `ams_hi_operate` (`id`, `access_url`, `access_app`, `operate_user_id`, `operate_user_account`, `operate_ip`, `device_name`, `time_consuming`, `method_type`, `access_result`, `error_code`, `error_message`, `gmt_create`) VALUES (53077951666982912,'/base/ams/user/create.do','aether-base',52793893988864000,'admin','127.0.0.1','Windows 10 or Windows Server 2016#Chrome',22,'POST','成功',NULL,NULL,'2023-01-06 11:12:50');
 INSERT INTO `ams_hi_operate` (`id`, `access_url`, `access_app`, `operate_user_id`, `operate_user_account`, `operate_ip`, `device_name`, `time_consuming`, `method_type`, `access_result`, `error_code`, `error_message`, `gmt_create`) VALUES (53077982608363520,'/base/ams/user/create.do','aether-base',52793893988864000,'admin','127.0.0.1','Windows 10 or Windows Server 2016#Chrome',8,'POST','失败',400,'用户[account=test3332]的数据已存在，不能重复新增','2023-01-06 11:12:57');
 INSERT INTO `ams_hi_operate` (`id`, `access_url`, `access_app`, `operate_user_id`, `operate_user_account`, `operate_ip`, `device_name`, `time_consuming`, `method_type`, `access_result`, `error_code`, `error_message`, `gmt_create`) VALUES (53078020210298880,'/base/ams/user/delete.do','aether-base',52793893988864000,'admin','127.0.0.1','Windows 10 or Windows Server 2016#Chrome',15,'DELETE','成功',NULL,NULL,'2023-01-06 11:13:06');
+INSERT INTO `ams_hi_operate` (`id`, `access_url`, `access_app`, `operate_user_id`, `operate_user_account`, `operate_ip`, `device_name`, `time_consuming`, `method_type`, `access_result`, `error_code`, `error_message`, `gmt_create`) VALUES (54215523533328384,'/base/ams/param/create.do','aether-base',NULL,NULL,'127.0.0.1','Windows 10 or Windows Server 2016#Chrome',388,'POST','成功',NULL,NULL,'2023-01-09 14:33:07');
+INSERT INTO `ams_hi_operate` (`id`, `access_url`, `access_app`, `operate_user_id`, `operate_user_account`, `operate_ip`, `device_name`, `time_consuming`, `method_type`, `access_result`, `error_code`, `error_message`, `gmt_create`) VALUES (54215782493851648,'/base/ams/param/create.do','aether-base',NULL,NULL,'127.0.0.1','Windows 10 or Windows Server 2016#Chrome',31,'POST','成功',NULL,NULL,'2023-01-09 14:34:10');
+INSERT INTO `ams_hi_operate` (`id`, `access_url`, `access_app`, `operate_user_id`, `operate_user_account`, `operate_ip`, `device_name`, `time_consuming`, `method_type`, `access_result`, `error_code`, `error_message`, `gmt_create`) VALUES (54227248240398336,'/base/ams/param/create.do','aether-base',NULL,NULL,'127.0.0.1','Windows 10 or Windows Server 2016#Chrome',67,'POST','成功',NULL,NULL,'2023-01-09 15:19:43');
 /*!40000 ALTER TABLE `ams_hi_operate` ENABLE KEYS */;
 
 --
@@ -175,6 +178,39 @@ CREATE TABLE `ams_menu` (
 
 /*!40000 ALTER TABLE `ams_menu` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ams_menu` ENABLE KEYS */;
+
+--
+-- Table structure for table `ams_param`
+--
+
+DROP TABLE IF EXISTS `ams_param`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ams_param` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `param_type_code` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '参数类别码值',
+  `param_type_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '参数类别名称',
+  `param_name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '参数名称',
+  `param_code` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '参数码值',
+  `param_value` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '参数值',
+  `param_sort` int NOT NULL DEFAULT '10' COMMENT '参数排序',
+  `delete_at` bigint NOT NULL DEFAULT '0' COMMENT '数据删除时间(未删除时为0)',
+  `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modify` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ams_param_param_code_delete_at_uindex` (`param_code`,`delete_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统参数表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ams_param`
+--
+
+/*!40000 ALTER TABLE `ams_param` DISABLE KEYS */;
+INSERT INTO `ams_param` (`id`, `param_type_code`, `param_type_name`, `param_name`, `param_code`, `param_value`, `param_sort`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (54215521759137792,NULL,NULL,'默认初始密码','DEFAULT_PASSWORD','abc123456',10,0,'2023-01-09 14:33:08','2023-01-09 14:33:08');
+INSERT INTO `ams_param` (`id`, `param_type_code`, `param_type_name`, `param_name`, `param_code`, `param_value`, `param_sort`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (54215782363828224,NULL,NULL,'默认令牌过期时间(小时)','DEFAULT_TOKEN_EXPIRE_TIME','6',20,0,'2023-01-09 14:34:10','2023-01-09 14:34:10');
+INSERT INTO `ams_param` (`id`, `param_type_code`, `param_type_name`, `param_name`, `param_code`, `param_value`, `param_sort`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (54227247938408448,NULL,NULL,'默认用户密码加解密策略','DEFAULT_USER_PASSWORD_CRYPTO_STRATEGY','md5SaltCrypto',30,0,'2023-01-09 15:19:43','2023-01-09 15:19:43');
+/*!40000 ALTER TABLE `ams_param` ENABLE KEYS */;
 
 --
 -- Table structure for table `ams_resource`
@@ -302,6 +338,7 @@ CREATE TABLE `ams_user` (
   `avatar_url` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '头像地址',
   `birthday` date NOT NULL COMMENT '出生日期',
   `user_type` int NOT NULL DEFAULT '0' COMMENT '用户类型',
+  `enable_status` int NOT NULL DEFAULT '0' COMMENT '启用状态',
   `delete_at` bigint NOT NULL DEFAULT '0' COMMENT '数据删除时间(未删除时为0)',
   `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '数据创建时间',
   `gmt_modify` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '数据修改时间',
@@ -315,12 +352,12 @@ CREATE TABLE `ams_user` (
 --
 
 /*!40000 ALTER TABLE `ams_user` DISABLE KEYS */;
-INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (52793893988864000,'admin','baa779b59017ac3ffa8852fb87a2375e','超级管理员',0,'','2023-01-05',0,0,'2023-01-05 16:24:05','2023-01-05 16:24:05');
-INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (52794395153666048,'guochengqiang','1ca3219819b76ba4295f5d77dfa94fc4','一郭菠萝炖不下',1,'','1998-11-18',1,0,'2023-01-05 16:26:05','2023-01-05 16:26:05');
-INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (52800078766936064,'admin1','669b8726c48be63e7a1acc53f6c8e775','超级管理员',0,'','2023-01-05',0,1672974752000,'2023-01-05 16:48:40','2023-01-05 16:48:40');
-INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (53077342075228160,'test2222','d6725d86611d91fd17ec7645213fe364','test2222',2,'','2023-01-06',1,1672974752000,'2023-01-06 11:10:24','2023-01-06 11:10:24');
-INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (53077698683342848,'test3332','f4ad4439953b011c3638fe278a75c5e7','test3332',2,'','2023-01-06',0,1672974752000,'2023-01-06 11:11:50','2023-01-06 11:11:50');
-INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (53077951469850624,'test3332','f4ad4439953b011c3638fe278a75c5e7','test3332',2,'','2023-01-06',0,1672974786132,'2023-01-06 11:12:50','2023-01-06 11:12:50');
+INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `enable_status`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (52793893988864000,'admin','baa779b59017ac3ffa8852fb87a2375e','超级管理员',0,'','2023-01-05',0,0,0,'2023-01-05 16:24:05','2023-01-05 16:24:05');
+INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `enable_status`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (52794395153666048,'guochengqiang','1ca3219819b76ba4295f5d77dfa94fc4','一郭菠萝炖不下',1,'','1998-11-18',1,0,0,'2023-01-05 16:26:05','2023-01-05 16:26:05');
+INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `enable_status`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (52800078766936064,'admin1','669b8726c48be63e7a1acc53f6c8e775','超级管理员',0,'','2023-01-05',0,0,1672974752000,'2023-01-05 16:48:40','2023-01-05 16:48:40');
+INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `enable_status`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (53077342075228160,'test2222','d6725d86611d91fd17ec7645213fe364','test2222',2,'','2023-01-06',1,0,1672974752000,'2023-01-06 11:10:24','2023-01-06 11:10:24');
+INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `enable_status`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (53077698683342848,'test3332','f4ad4439953b011c3638fe278a75c5e7','test3332',2,'','2023-01-06',0,0,1672974752000,'2023-01-06 11:11:50','2023-01-06 11:11:50');
+INSERT INTO `ams_user` (`id`, `account`, `password`, `nickname`, `sex`, `avatar_url`, `birthday`, `user_type`, `enable_status`, `delete_at`, `gmt_create`, `gmt_modify`) VALUES (53077951469850624,'test3332','f4ad4439953b011c3638fe278a75c5e7','test3332',2,'','2023-01-06',0,0,1672974786132,'2023-01-06 11:12:50','2023-01-06 11:12:50');
 /*!40000 ALTER TABLE `ams_user` ENABLE KEYS */;
 
 --
@@ -356,4 +393,4 @@ CREATE TABLE `ams_user_role` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-01-06 15:01:45
+-- Dump completed on 2023-01-09 17:02:19
