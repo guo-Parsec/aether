@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 import top.finder.aether.auth.core.model.SecuritySubject;
 import top.finder.aether.auth.core.service.LoginService;
 import top.finder.aether.base.api.client.UserClient;
+import top.finder.aether.base.api.support.pool.BaseConstantPool;
 import top.finder.aether.base.api.vo.UserVo;
 import top.finder.aether.common.support.api.Apis;
+import top.finder.aether.common.support.api.CommonHttpStatus;
+import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.data.security.core.ISecuritySubject;
@@ -53,6 +56,10 @@ public class LoginServiceImpl implements LoginService {
         UserVo userVo = Apis.getApiDataNoException(userVoApis);
         if (userVo == null || !userVo.getCertified()) {
             return CodeHelper.logAetherErrorReturn(log, "用户账户信息[{}]与密码[{}]匹配错误", account, password);
+        }
+        if (userVo.getEnableStatus() == null || !userVo.getEnableStatus().equals(BaseConstantPool.ENABLE_STATUS_ENABLE)) {
+            log.error("用户[account={}]已被禁用", account);
+            throw new AetherException(CommonHttpStatus.FAILED, "用户已被禁用");
         }
         SecuritySubject subject = new SecuritySubject(userVo);
         SecurityContext.login((ISecuritySubject<?>) subject);
