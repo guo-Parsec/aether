@@ -1,6 +1,9 @@
 package top.finder.aether.base.api.client;
 
+import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,6 +11,7 @@ import top.finder.aether.base.api.model.ParamModel;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
 import top.finder.aether.base.api.vo.ParamVo;
 import top.finder.aether.common.support.api.Apis;
+import top.finder.aether.common.support.exception.AetherValidException;
 import top.finder.aether.common.support.pool.AppConstantPool;
 import top.finder.aether.data.core.model.IParamModel;
 import top.finder.aether.data.core.support.access.IParamAccess;
@@ -23,6 +27,8 @@ import java.util.stream.Collectors;
  */
 @FeignClient(name = AppConstantPool.APP_BASE + BaseApiConstantPool.PARAM_WEB_API_PREFIX, contextId = "paramClient")
 public interface ParamClient extends IParamAccess {
+    Logger log = LoggerFactory.getLogger(ParamClient.class);
+
     /**
      * <p>根据参数类别码查询参数列表</p>
      *
@@ -45,11 +51,21 @@ public interface ParamClient extends IParamAccess {
      */
     @Override
     default List<IParamModel> queryParamByParamTypeCode(String paramTypeCode) {
+        if (StrUtil.isBlank(paramTypeCode)) {
+            log.error("参数类别码不能为空");
+            throw new AetherValidException("参数类别码不能为空");
+        }
+        boolean containsKey = PARAM_MODELS_MAPPING.containsKey(paramTypeCode);
+        if (containsKey) {
+            return PARAM_MODELS_MAPPING.get(paramTypeCode);
+        }
         List<ParamVo> paramVos = Apis.getApiDataNoException(findParamByParamTypeCode(paramTypeCode));
         if (paramVos == null) {
             return Lists.newArrayList();
         }
-        return paramVos.stream().map(ParamVo::toParamModel).collect(Collectors.toList());
+        List<IParamModel> iParamModels = paramVos.stream().map(ParamVo::toParamModel).collect(Collectors.toList());
+        PARAM_MODELS_MAPPING.put(paramTypeCode, iParamModels);
+        return iParamModels;
     }
 
     /**
@@ -74,10 +90,20 @@ public interface ParamClient extends IParamAccess {
      */
     @Override
     default IParamModel queryParamByParamCode(String paramCode) {
+        if (StrUtil.isBlank(paramCode)) {
+            log.error("参数码不能为空");
+            throw new AetherValidException("参数码不能为空");
+        }
+        boolean containsKey = PARAM_MODEL_MAPPING.containsKey(paramCode);
+        if (containsKey) {
+            return PARAM_MODEL_MAPPING.get(paramCode);
+        }
         ParamVo paramVo = Apis.getApiDataNoException(findParamByParamCode(paramCode));
         if (paramVo == null) {
             return new ParamModel();
         }
-        return paramVo.toParamModel();
+        IParamModel paramModel = paramVo.toParamModel();
+        PARAM_MODEL_MAPPING.put(paramCode, paramModel);
+        return paramModel;
     }
 }
