@@ -344,12 +344,13 @@ public class UserServiceImpl implements UserService {
      * @date 2022/12/28 15:08
      */
     private boolean match(String account, String password, String dbPassword) {
-        if (defaultCryptoStrategy.isOptionNeed()) {
+        CryptoStrategy strategy = this.findDefaultCryptoStrategy();
+        if (strategy.isOptionNeed()) {
             Map<String, Object> option = Maps.newHashMapWithExpectedSize(1);
             option.put(Md5SaltCrypto.OPTION_KEY_SALT, account);
-            return defaultCryptoStrategy.match(password, dbPassword, option);
+            return strategy.match(password, dbPassword, option);
         }
-        return defaultCryptoStrategy.match(password, dbPassword);
+        return strategy.match(password, dbPassword);
     }
 
     /**
@@ -362,12 +363,34 @@ public class UserServiceImpl implements UserService {
      * @date 2023/1/5 16:03
      */
     private String encrypt(String account, String rawPassword) {
-        if (defaultCryptoStrategy.isOptionNeed()) {
+        CryptoStrategy strategy = this.findDefaultCryptoStrategy();
+        if (strategy.isOptionNeed()) {
             Map<String, Object> option = Maps.newHashMapWithExpectedSize(1);
             option.put(Md5SaltCrypto.OPTION_KEY_SALT, account);
-            return defaultCryptoStrategy.encrypt(rawPassword, option);
+            return strategy.encrypt(rawPassword, option);
         }
-        return defaultCryptoStrategy.encrypt(rawPassword);
+        return strategy.encrypt(rawPassword);
+    }
+
+    /**
+     * <p>获取默认策略其</p>
+     *
+     * @return {@link CryptoStrategy}
+     * @author guocq
+     * @date 2023/1/9 15:25
+     */
+    private CryptoStrategy findDefaultCryptoStrategy() {
+        ParamVo paramVo = paramService.findParamByParamCode(BaseConstantPool.PARAM_DEFAULT_USER_PASSWORD_CRYPTO_STRATEGY);
+        if (paramVo == null || StrUtil.isBlank(paramVo.getParamValue())) {
+            return defaultCryptoStrategy;
+        }
+        String paramValue = paramVo.getParamValue();
+        try {
+            return SpringBeanHelper.getBean(paramValue, CryptoStrategy.class);
+        } catch (Exception e) {
+            log.debug("获取[strategy={}]失败，返回默认策略器", paramValue);
+            return defaultCryptoStrategy;
+        }
     }
 
     /**

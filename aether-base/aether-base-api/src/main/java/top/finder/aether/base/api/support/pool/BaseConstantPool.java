@@ -51,4 +51,9 @@ public interface BaseConstantPool {
      * 默认令牌过期时间(小时)
      */
     String PARAM_DEFAULT_TOKEN_EXPIRE_TIME = "DEFAULT_TOKEN_EXPIRE_TIME";
+
+    /**
+     * 默认用户密码加解密策略
+     */
+    String PARAM_DEFAULT_USER_PASSWORD_CRYPTO_STRATEGY = "DEFAULT_USER_PASSWORD_CRYPTO_STRATEGY";
 }
