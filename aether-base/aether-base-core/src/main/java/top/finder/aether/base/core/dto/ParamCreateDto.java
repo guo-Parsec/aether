@@ -53,7 +53,7 @@ public class ParamCreateDto implements IModel {
      */
     @NotEmpty(message = "参数码值不能为空")
     @Length(max = 64, message = "参数码值长度不能超过64")
-    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "参数码值只能包含数字和英文")
+    @Pattern(regexp = "^[A-Za-z0-9_]+$", message = "参数码值只能包含数字和英文")
     @ApiModelProperty(value = "参数码值")
     protected String paramCode;
 

@@ -19,15 +19,17 @@ import org.springframework.transaction.annotation.Transactional;
 import top.finder.aether.base.api.dto.UserCreateDto;
 import top.finder.aether.base.api.support.helper.DictHelper;
 import top.finder.aether.base.api.support.pool.BaseConstantPool;
+import top.finder.aether.base.api.vo.ParamVo;
 import top.finder.aether.base.api.vo.UserVo;
-import top.finder.aether.base.core.dto.UserChangePasswordDto;
 import top.finder.aether.base.core.dto.GrantRoleToUserDto;
+import top.finder.aether.base.core.dto.UserChangePasswordDto;
 import top.finder.aether.base.core.dto.UserPageQueryDto;
 import top.finder.aether.base.core.dto.UserUpdateDto;
 import top.finder.aether.base.core.entity.Role;
 import top.finder.aether.base.core.entity.User;
 import top.finder.aether.base.core.mapper.RoleMapper;
 import top.finder.aether.base.core.mapper.UserMapper;
+import top.finder.aether.base.core.service.ParamService;
 import top.finder.aether.base.core.service.UserService;
 import top.finder.aether.common.support.annotation.BlockBean;
 import top.finder.aether.common.support.annotation.BlockMethod;
@@ -43,6 +45,7 @@ import top.finder.aether.data.security.core.SecurityContext;
 
 import javax.annotation.Resource;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -62,10 +65,16 @@ public class UserServiceImpl implements UserService {
     @Resource
     private RoleMapper roleMapper;
     private CryptoStrategy defaultCryptoStrategy;
+    private ParamService paramService;
 
     @Autowired
     public void setCryptoStrategy(@Qualifier("md5SaltCrypto") CryptoStrategy cryptoStrategy) {
         this.defaultCryptoStrategy = cryptoStrategy;
+    }
+
+    @Autowired
+    public void setParamService(ParamService paramService) {
+        this.paramService = paramService;
     }
 
     /**
@@ -230,7 +239,7 @@ public class UserServiceImpl implements UserService {
     public void resetUser(String account) {
         log.debug("重置用户, 入参={}", account);
         User user = checkAccountIsExist(account);
-        user.setPassword(encrypt(account, "abc123456"));
+        user.setPassword(encrypt(account, getDefaultPassword()));
         user.setEnableStatus(BaseConstantPool.ENABLE_STATUS_ENABLE);
         Wrapper<User> wrapper = new LambdaUpdateWrapper<User>()
                 .eq(User::getAccount, account)
@@ -377,8 +386,8 @@ public class UserServiceImpl implements UserService {
             CodeHelper.logAetherValidError(log, "用户[account={}]两次密码不一致无法新增", account);
         }
         if (!isRegister) {
-            // 非注册接口默认密码赋予为abc123456
-            createDto.setPassword("abc123456");
+            // 非注册接口赋予默认密码
+            createDto.setPassword(getDefaultPassword());
         }
         Wrapper<User> wrapper = new LambdaQueryWrapper<User>()
                 .eq(User::getAccount, account);
@@ -506,5 +515,17 @@ public class UserServiceImpl implements UserService {
             log.warn("当前传入角色id列表[{}]有部分数据不存在，系统默认只添加已存在的角色[{}]", roleId, roleIdFormDb);
             dto.setRoleId(roleIdFormDb);
         }
+    }
+
+    /**
+     * <p>获取默认密码</p>
+     *
+     * @return java.lang.String
+     * @author guocq
+     * @date 2023/1/9 14:38
+     */
+    private String getDefaultPassword() {
+        return Optional.ofNullable(paramService.findParamByParamCode(BaseConstantPool.PARAM_DEFAULT_PASSWORD)).map(ParamVo::getParamValue)
+                .orElse("abc123456");
     }
 }

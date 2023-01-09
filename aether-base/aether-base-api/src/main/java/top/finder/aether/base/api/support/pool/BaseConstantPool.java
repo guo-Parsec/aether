@@ -41,4 +41,14 @@ public interface BaseConstantPool {
      * 启用状态 - 禁用
      */
     Integer ENABLE_STATUS_DISABLE = 1;
+
+    /**
+     * 默认初始密码
+     */
+    String PARAM_DEFAULT_PASSWORD = "DEFAULT_PASSWORD";
+
+    /**
+     * 默认令牌过期时间(小时)
+     */
+    String PARAM_DEFAULT_TOKEN_EXPIRE_TIME = "DEFAULT_TOKEN_EXPIRE_TIME";
 }
