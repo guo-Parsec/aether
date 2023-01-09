@@ -26,4 +26,12 @@
         role.gmt_modify
         <!--@sql from ams_role role -->
     </sql>
+
+    <select id="findRoleCodeByUserId" parameterType="java.lang.Long" resultType="java.lang.String">
+        select role.role_code
+        from ams_role role
+        left join ams_user_role aur on role.id = aur.role_id
+        where role.delete_at = 0
+        and aur.user_id = #{userId,jdbcType=BIGINT}
+    </select>
 </mapper>

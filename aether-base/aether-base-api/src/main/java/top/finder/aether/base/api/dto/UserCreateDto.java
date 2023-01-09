@@ -30,7 +30,7 @@ public class UserCreateDto implements IModel {
      */
     @ApiModelProperty("登陆账户")
     @NotEmpty(message = "登陆账户不能为空")
-    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "密码只能包含数字和英文")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "登陆账户只能包含数字和英文")
     @Length(min = 4, max = 24, message = "登陆账户长度不能少于4,也不能超过24")
     private String account;
 

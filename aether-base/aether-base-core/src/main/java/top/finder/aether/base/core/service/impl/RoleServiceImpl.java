@@ -13,7 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.finder.aether.base.api.support.helper.DictHelper;
-import top.finder.aether.base.api.vo.RoleVo;
+import top.finder.aether.base.core.vo.RoleVo;
 import top.finder.aether.base.core.dto.RoleCreateDto;
 import top.finder.aether.base.core.dto.RoleUpdateDto;
 import top.finder.aether.base.core.entity.Role;

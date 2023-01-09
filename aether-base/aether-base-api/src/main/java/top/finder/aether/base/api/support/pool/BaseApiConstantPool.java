@@ -31,4 +31,9 @@ public interface BaseApiConstantPool {
      * 日志模块网络请求前缀
      */
     String LOG_WEB_API_PREFIX = BASE_WEB_API_PREFIX + "/log";
+
+    /**
+     * 参数模块网络请求前缀
+     */
+    String PARAM_WEB_API_PREFIX = BASE_WEB_API_PREFIX + "/param";
 }

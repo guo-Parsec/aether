@@ -2,7 +2,7 @@ package top.finder.aether.base.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.finder.aether.base.api.model.DictModel;
-import top.finder.aether.base.api.vo.DictVo;
+import top.finder.aether.base.core.vo.DictVo;
 import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
 import top.finder.aether.base.core.entity.Dict;

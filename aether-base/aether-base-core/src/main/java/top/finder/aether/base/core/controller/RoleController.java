@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
-import top.finder.aether.base.api.vo.RoleVo;
+import top.finder.aether.base.core.vo.RoleVo;
 import top.finder.aether.base.core.dto.RoleCreateDto;
 import top.finder.aether.base.core.dto.RoleUpdateDto;
 import top.finder.aether.base.core.entity.Role;

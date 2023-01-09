@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.base.api.support.helper.DictHelper;
-import top.finder.aether.base.api.vo.DictVo;
+import top.finder.aether.base.core.vo.DictVo;
 import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
 import top.finder.aether.base.core.entity.Dict;

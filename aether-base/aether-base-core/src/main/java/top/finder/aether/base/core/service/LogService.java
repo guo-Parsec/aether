@@ -2,8 +2,8 @@ package top.finder.aether.base.core.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import top.finder.aether.base.api.vo.HiLoginVo;
-import top.finder.aether.base.api.vo.HiOperateLogVo;
+import top.finder.aether.base.core.vo.HiLoginVo;
+import top.finder.aether.base.core.vo.HiOperateLogVo;
 import top.finder.aether.base.core.dto.HiLoginQueryDto;
 import top.finder.aether.base.core.dto.HiOperateLogQueryDto;
 import top.finder.aether.common.model.LogModel;

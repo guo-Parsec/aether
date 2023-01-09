@@ -1,4 +1,4 @@
-package top.finder.aether.base.api.vo;
+package top.finder.aether.base.core.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

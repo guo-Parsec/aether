@@ -4,9 +4,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import top.finder.aether.common.model.IModel;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.StringJoiner;
 
 /**
  * <p>用户查询参数</p>
@@ -17,7 +19,8 @@ import java.util.Set;
 @Getter
 @Setter
 @ApiModel("用户查询参数")
-public class UserQueryDto {
+public class UserQueryDto implements IModel {
+    private static final long serialVersionUID = -5881965998574922617L;
     /**
      * 主键
      */
@@ -65,4 +68,18 @@ public class UserQueryDto {
      */
     @ApiModelProperty("用户类别集合")
     protected Set<Integer> userTypeSet;
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", UserQueryDto.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("account='" + account + "'")
+                .add("nickname='" + nickname + "'")
+                .add("sexSet=" + sexSet)
+                .add("avatarUrl='" + avatarUrl + "'")
+                .add("birthdayStarter=" + birthdayStarter)
+                .add("birthdayEnd=" + birthdayEnd)
+                .add("userTypeSet=" + userTypeSet)
+                .toString();
+    }
 }

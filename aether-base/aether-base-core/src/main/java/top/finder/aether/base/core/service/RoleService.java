@@ -1,7 +1,7 @@
 package top.finder.aether.base.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import top.finder.aether.base.api.vo.RoleVo;
+import top.finder.aether.base.core.vo.RoleVo;
 import top.finder.aether.base.core.dto.RoleCreateDto;
 import top.finder.aether.base.core.dto.RoleUpdateDto;
 import top.finder.aether.base.core.entity.Role;
