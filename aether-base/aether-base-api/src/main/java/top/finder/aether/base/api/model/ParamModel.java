@@ -1,26 +1,25 @@
-package top.finder.aether.base.core.vo;
+package top.finder.aether.base.api.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import top.finder.aether.data.common.vo.BaseDataVo;
+import top.finder.aether.data.core.model.IParamModel;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.StringJoiner;
 
 /**
- * <p>系统参数数据展示层</p>
+ * <p>参数模型</p>
  *
  * @author guocq
  * @since 2023/1/9
  */
-@ApiModel(value = "系统参数数据展示层")
-@Getter
 @Setter
-public class ParamVo extends BaseDataVo {
-    private static final long serialVersionUID = 1334359948430520729L;
+@Getter
+@ApiModel("参数模型")
+public class ParamModel implements IParamModel {
+    private static final long serialVersionUID = 5896078517591280922L;
+
     /**
      * 参数类别码值
      */
@@ -51,24 +50,14 @@ public class ParamVo extends BaseDataVo {
     @ApiModelProperty(value = "参数值")
     private String paramValue;
 
-    /**
-     * 参数排序
-     */
-    @ApiModelProperty(value = "参数排序")
-    private Integer paramSort;
-
     @Override
     public String toString() {
-        return new StringJoiner(", ", ParamVo.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", ParamModel.class.getSimpleName() + "[", "]")
                 .add("paramTypeCode='" + paramTypeCode + "'")
                 .add("paramTypeName='" + paramTypeName + "'")
                 .add("paramName='" + paramName + "'")
                 .add("paramCode='" + paramCode + "'")
                 .add("paramValue='" + paramValue + "'")
-                .add("paramSort=" + paramSort)
-                .add("gmtCreate=" + gmtCreate)
-                .add("gmtModify=" + gmtModify)
-                .add("id=" + id)
                 .toString();
     }
 }

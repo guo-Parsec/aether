@@ -11,7 +11,7 @@ import top.finder.aether.base.core.dto.ParamPageQueryDto;
 import top.finder.aether.base.core.dto.ParamQueryDto;
 import top.finder.aether.base.core.dto.ParamUpdateDto;
 import top.finder.aether.base.core.service.ParamService;
-import top.finder.aether.base.core.vo.ParamVo;
+import top.finder.aether.base.api.vo.ParamVo;
 import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 
@@ -68,5 +68,17 @@ public class ParamController {
     public Apis<Void> delete(@RequestBody Set<Long> idSet) {
         service.delete(idSet);
         return Apis.success();
+    }
+
+    @ApiOperation(value = "查询", notes = "根据参数类别码查询参数列表")
+    @GetMapping(value = "/find-param-by-param-type-code")
+    public Apis<List<ParamVo>> findParamByParamTypeCode(@RequestParam(value = "paramTypeCode") String paramTypeCode) {
+        return Apis.success(service.findParamByParamTypeCode(paramTypeCode));
+    }
+
+    @ApiOperation(value = "查询", notes = "根据参数码查询参数")
+    @GetMapping(value = "/find-param-by-param-code")
+    public Apis<ParamVo> findParamByParamCode(@RequestParam(value = "paramCode") String paramCode) {
+        return Apis.success(service.findParamByParamCode(paramCode));
     }
 }

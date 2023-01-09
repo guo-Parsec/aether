@@ -5,7 +5,7 @@ import top.finder.aether.base.core.dto.ParamCreateDto;
 import top.finder.aether.base.core.dto.ParamPageQueryDto;
 import top.finder.aether.base.core.dto.ParamQueryDto;
 import top.finder.aether.base.core.dto.ParamUpdateDto;
-import top.finder.aether.base.core.vo.ParamVo;
+import top.finder.aether.base.api.vo.ParamVo;
 
 import java.util.List;
 import java.util.Set;
@@ -63,4 +63,25 @@ public interface ParamService {
      * @date 2023/1/9 11:15
      */
     void delete(Set<Long> idSet);
+
+    /**
+     * <p>根据参数类别码查询参数列表</p>
+     *
+     * @param paramTypeCode 参数类别码
+     * @return {@link List}
+     * @author guocq
+     * @date 2023/1/9 11:46
+     * @see ParamService#list(ParamQueryDto)
+     */
+    List<ParamVo> findParamByParamTypeCode(String paramTypeCode);
+
+    /**
+     * <p>根据参数码查询参数</p>
+     *
+     * @param paramCode 参数码
+     * @return {@link ParamVo}
+     * @author guocq
+     * @date 2023/1/9 11:46
+     */
+    ParamVo findParamByParamCode(String paramCode);
 }

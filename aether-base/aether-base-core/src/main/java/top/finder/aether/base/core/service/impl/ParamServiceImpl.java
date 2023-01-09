@@ -19,7 +19,8 @@ import top.finder.aether.base.core.dto.ParamUpdateDto;
 import top.finder.aether.base.core.entity.Param;
 import top.finder.aether.base.core.mapper.ParamMapper;
 import top.finder.aether.base.core.service.ParamService;
-import top.finder.aether.base.core.vo.ParamVo;
+import top.finder.aether.base.api.vo.ParamVo;
+import top.finder.aether.common.support.exception.AetherValidException;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.data.core.support.helper.PageHelper;
@@ -142,6 +143,52 @@ public class ParamServiceImpl implements ParamService {
         checkBeforeDelete(idSet);
         mapper.logicBatchDeleteByIds(idSet, System.currentTimeMillis());
         log.debug("系统参数批量删除成功");
+    }
+
+    /**
+     * <p>根据参数类别码查询参数列表</p>
+     *
+     * @param paramTypeCode 参数类别码
+     * @return {@link List}
+     * @author guocq
+     * @date 2023/1/9 11:46
+     * @see ParamService#list(ParamQueryDto)
+     */
+    @Override
+    @Cacheable(cacheNames = "AMS:PARAM:LIST", key = "'paramTypeCode:' + #paramTypeCode", unless = "#result.isEmpty()")
+    public List<ParamVo> findParamByParamTypeCode(String paramTypeCode) {
+        if (StrUtil.isBlank(paramTypeCode)) {
+            log.error("paramTypeCode不能为空");
+            throw new AetherValidException("paramTypeCode不能为空");
+        }
+        ParamQueryDto dto = new ParamPageQueryDto();
+        dto.setParamTypeCode(paramTypeCode);
+        return list(dto);
+    }
+
+    /**
+     * <p>根据参数码查询参数</p>
+     *
+     * @param paramCode 参数码
+     * @return {@link ParamVo}
+     * @author guocq
+     * @date 2023/1/9 11:46
+     */
+    @Override
+    @Cacheable(cacheNames = "AMS:PARAM:SINGLE", key = "'paramCode:' + #paramCode")
+    public ParamVo findParamByParamCode(String paramCode) {
+        if (StrUtil.isBlank(paramCode)) {
+            log.error("paramCode不能为空");
+            throw new AetherValidException("paramCode不能为空");
+        }
+        Wrapper<Param> wrapper = new LambdaQueryWrapper<Param>()
+                .eq(Param::getParamCode, paramCode);
+        Param param = mapper.selectOne(wrapper);
+        if (param == null) {
+            log.warn("根据[paramCode={}]查询参数为空", paramCode);
+            return new ParamVo();
+        }
+        return TransformerHelper.transformer(param, ParamVo.class);
     }
 
     /**
