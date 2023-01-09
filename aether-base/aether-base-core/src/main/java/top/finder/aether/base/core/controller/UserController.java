@@ -9,7 +9,8 @@ import top.finder.aether.base.api.dto.UserCreateDto;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
 import top.finder.aether.base.api.support.pool.BaseConstantPool;
 import top.finder.aether.base.api.vo.UserVo;
-import top.finder.aether.base.api.dto.UserChangePasswordDto;
+import top.finder.aether.base.core.dto.GrantRoleToUserDto;
+import top.finder.aether.base.core.dto.UserChangePasswordDto;
 import top.finder.aether.base.core.dto.UserPageQueryDto;
 import top.finder.aether.base.core.dto.UserUpdateDto;
 import top.finder.aether.base.core.service.UserService;
@@ -43,12 +44,6 @@ public class UserController {
     @FeignApi(AppConstantPool.APP_NAME_AUTH)
     public Apis<UserVo> loadUser(@RequestParam("account") String account, @RequestParam("password") String password) {
         return Apis.success(userService.loadUser(account, password));
-    }
-
-    @ApiOperation(value = "加载用户", notes = "根据主键加载用户")
-    @GetMapping(value = "/find/{id}")
-    public Apis<UserVo> findUserById(@PathVariable("id") Long id) {
-        return Apis.success(userService.findById(id));
     }
 
     @ApiOperation(value = "新增用户", notes = "新增用户信息")
@@ -86,30 +81,37 @@ public class UserController {
     }
 
     @ApiOperation(value = "用户修改密码", notes = "用户修改密码")
-    @GetMapping(value = "/password-change.do")
-    public Apis<Void> changePassword(@Validated UserChangePasswordDto dto) {
+    @PutMapping(value = "/password-change.do")
+    public Apis<Void> changePassword(@Validated @RequestBody UserChangePasswordDto dto) {
         userService.changePassword(dto);
         return Apis.success();
     }
 
     @ApiOperation(value = "重置用户", notes = "重置用户")
-    @GetMapping(value = "/reset.do")
+    @PutMapping(value = "/reset.do")
     public Apis<Void> resetUser(@RequestParam(value = "account") String account) {
         userService.resetUser(account);
         return Apis.success();
     }
 
     @ApiOperation(value = "启用用户", notes = "启用用户")
-    @GetMapping(value = "/enable.do")
+    @PutMapping(value = "/enable.do")
     public Apis<Void> enableUser(@RequestParam(value = "account") String account) {
         userService.changeUserEnableStatus(account, BaseConstantPool.ENABLE_STATUS_ENABLE);
         return Apis.success();
     }
 
     @ApiOperation(value = "禁用用户", notes = "禁用用户")
-    @GetMapping(value = "/disable.do")
+    @PutMapping(value = "/disable.do")
     public Apis<Void> disableUser(@RequestParam(value = "account") String account) {
         userService.changeUserEnableStatus(account, BaseConstantPool.ENABLE_STATUS_DISABLE);
+        return Apis.success();
+    }
+
+    @ApiOperation(value = "为用户赋予角色", notes = "为用户赋予角色")
+    @PutMapping(value = "/grant-role.do")
+    public Apis<Void> grantRoleToUser(@RequestBody @Validated GrantRoleToUserDto dto) {
+        userService.grantRoleToUser(dto);
         return Apis.success();
     }
 }

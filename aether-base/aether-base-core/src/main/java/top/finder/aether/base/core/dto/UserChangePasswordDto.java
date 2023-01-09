@@ -1,4 +1,4 @@
-package top.finder.aether.base.api.dto;
+package top.finder.aether.base.core.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,6 +9,7 @@ import top.finder.aether.common.model.IModel;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import java.util.StringJoiner;
 
 /**
  * <p>用户修改密码参数</p>
@@ -37,4 +38,13 @@ public class UserChangePasswordDto implements IModel {
     @Length(min = 6, max = 16, message = "二次密码长度不能少于6,也不能超过16")
     @Pattern(regexp = "^[A-Za-z0-9_@!.,]+$", message = "二次密码只能包含数字、英文和[_@!.,]内的字符")
     private String checkPassword;
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", UserChangePasswordDto.class.getSimpleName() + "[", "]")
+                .add("account='" + account + "'")
+                .add("password='" + password + "'")
+                .add("checkPassword='" + checkPassword + "'")
+                .toString();
+    }
 }

@@ -20,10 +20,13 @@ import top.finder.aether.base.api.dto.UserCreateDto;
 import top.finder.aether.base.api.support.helper.DictHelper;
 import top.finder.aether.base.api.support.pool.BaseConstantPool;
 import top.finder.aether.base.api.vo.UserVo;
-import top.finder.aether.base.api.dto.UserChangePasswordDto;
+import top.finder.aether.base.core.dto.UserChangePasswordDto;
+import top.finder.aether.base.core.dto.GrantRoleToUserDto;
 import top.finder.aether.base.core.dto.UserPageQueryDto;
 import top.finder.aether.base.core.dto.UserUpdateDto;
+import top.finder.aether.base.core.entity.Role;
 import top.finder.aether.base.core.entity.User;
+import top.finder.aether.base.core.mapper.RoleMapper;
 import top.finder.aether.base.core.mapper.UserMapper;
 import top.finder.aether.base.core.service.UserService;
 import top.finder.aether.common.support.annotation.BlockBean;
@@ -41,6 +44,7 @@ import top.finder.aether.data.security.core.SecurityContext;
 import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <p>用户操作业务实现类</p>
@@ -55,28 +59,13 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private RoleMapper roleMapper;
     private CryptoStrategy defaultCryptoStrategy;
 
     @Autowired
     public void setCryptoStrategy(@Qualifier("md5SaltCrypto") CryptoStrategy cryptoStrategy) {
         this.defaultCryptoStrategy = cryptoStrategy;
-    }
-
-    /**
-     * <p>根据id查询用户数据</p>
-     *
-     * @param id 主键
-     * @return {@link UserVo}
-     * @author guocq
-     * @date 2022/12/14 9:48
-     */
-    @Override
-    @Cacheable(cacheNames = "USER:SINGLE", key = "'ID:' + #id")
-    public UserVo findById(Long id) {
-        User user = userMapper.findById(id);
-        UserVo userVo = TransformerHelper.transformer(user, UserVo.class);
-        DictHelper.translate(userVo);
-        return userVo;
     }
 
     /**
@@ -278,7 +267,7 @@ public class UserServiceImpl implements UserService {
         log.debug("{}用户, 入参[account={},enableStatus={}]", typeMessage, account, enableStatus);
         User user = checkAccountIsExist(account);
         if (ObjectUtil.equals(enableStatus, user.getEnableStatus())) {
-            log.warn("用户[account={}]已被{},将不再次更新",account, typeMessage);
+            log.warn("用户[account={}]已被{},将不再次更新", account, typeMessage);
             return;
         }
         user.setEnableStatus(enableStatus);
@@ -288,6 +277,25 @@ public class UserServiceImpl implements UserService {
         userMapper.update(user, wrapper);
         log.debug("{}用户成功", typeMessage);
         SecurityContext.kickOut(user.getId());
+    }
+
+    /**
+     * <p>为用户赋予角色</p>
+     *
+     * @param dto 入参
+     * @author guocq
+     * @date 2023/1/9 10:14
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void grantRoleToUser(GrantRoleToUserDto dto) {
+        log.debug("为用户赋予角色,入参={}", dto);
+        checkBeforeGrantRoleToUser(dto);
+        Long id = dto.getId();
+        userMapper.unbindRoleOfUser(id);
+        userMapper.bindRoleOfUser(id, dto.getRoleId());
+        log.debug("为用户赋予角色成功");
+        SecurityContext.kickOut(id);
     }
 
     /**
@@ -386,7 +394,6 @@ public class UserServiceImpl implements UserService {
      * <p>更新前校验</p>
      *
      * @param dto 更新入参
-     * @return void
      * @author guocq
      * @date 2023/1/5 17:30
      */
@@ -416,7 +423,6 @@ public class UserServiceImpl implements UserService {
      * <p>删除用户信息前校验</p>
      *
      * @param idSet 主键集合
-     * @return void
      * @author guocq
      * @date 2023/1/5 17:32
      */
@@ -466,5 +472,39 @@ public class UserServiceImpl implements UserService {
             throw new AetherValidException("账户不存在");
         }
         return exists;
+    }
+
+    /**
+     * <p>为用户赋权前校验</p>
+     *
+     * @param dto 入参
+     * @author guocq
+     * @date 2023/1/9 10:27
+     */
+    private void checkBeforeGrantRoleToUser(GrantRoleToUserDto dto) {
+        Long id = dto.getId();
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            log.error("用户[id={}]不存在", id);
+            throw new AetherValidException("用户不存在");
+        }
+        Integer enableStatus = user.getEnableStatus();
+        if (!BaseConstantPool.ENABLE_STATUS_ENABLE.equals(enableStatus)) {
+            log.error("当前用户[id={},account={}]已被禁用，无法授权", id, user.getAccount());
+            throw new AetherValidException(StrUtil.format("当前用户[id={},account={}]已被禁用，无法授权", id, user.getAccount()));
+        }
+        Set<Long> roleId = dto.getRoleId();
+        Wrapper<Role> wrapper = new LambdaQueryWrapper<Role>()
+                .select(Role::getId)
+                .in(Role::getId, roleId);
+        Set<Long> roleIdFormDb = roleMapper.selectList(wrapper).stream().map(Role::getId).collect(Collectors.toSet());
+        if (CollUtil.isEmpty(roleIdFormDb)) {
+            log.error("角色[{}]不存在", roleId);
+            throw new AetherValidException("角色不存在");
+        }
+        if (roleIdFormDb.size() < roleId.size()) {
+            log.warn("当前传入角色id列表[{}]有部分数据不存在，系统默认只添加已存在的角色[{}]", roleId, roleIdFormDb);
+            dto.setRoleId(roleIdFormDb);
+        }
     }
 }

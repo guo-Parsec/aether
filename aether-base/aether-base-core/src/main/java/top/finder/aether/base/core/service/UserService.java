@@ -1,9 +1,10 @@
 package top.finder.aether.base.core.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import top.finder.aether.base.core.dto.UserChangePasswordDto;
 import top.finder.aether.base.api.dto.UserCreateDto;
 import top.finder.aether.base.api.vo.UserVo;
-import top.finder.aether.base.api.dto.UserChangePasswordDto;
+import top.finder.aether.base.core.dto.GrantRoleToUserDto;
 import top.finder.aether.base.core.dto.UserPageQueryDto;
 import top.finder.aether.base.core.dto.UserUpdateDto;
 
@@ -16,16 +17,6 @@ import java.util.Set;
  * @since 2022/12/14
  */
 public interface UserService {
-    /**
-     * <p>根据id查询用户数据</p>
-     *
-     * @param id 主键
-     * @return {@link UserVo}
-     * @author guocq
-     * @date 2022/12/14 9:48
-     */
-    UserVo findById(Long id);
-
     /**
      * <p>根据账户信息加载用户</p>
      *
@@ -111,6 +102,15 @@ public interface UserService {
      * @date 2023/1/9 9:50
      */
     void changeUserEnableStatus(String account, Integer enableStatus);
+
+    /**
+     * <p>为用户赋予角色</p>
+     *
+     * @param dto 入参
+     * @author guocq
+     * @date 2023/1/9 10:14
+     */
+    void grantRoleToUser(GrantRoleToUserDto dto);
 
     /**
      * <p>系统内部用户创建</p>

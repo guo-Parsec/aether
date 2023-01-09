@@ -12,6 +12,7 @@
         <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
         <result column="birthday" jdbcType="DATE" property="birthday"/>
         <result column="user_type" jdbcType="INTEGER" property="userType"/>
+        <result column="enable_status" jdbcType="INTEGER" property="enableStatus"/>
         <result column="delete_at" jdbcType="BIGINT" property="deleteAt"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify"/>
@@ -20,16 +21,30 @@
     <sql id="ams_user_column_list">
         <!--@mbg.generated-->
         <!--@sql select -->
-        au.id, au.account, au.`password`, au.nickname, au.sex, au.avatar_url, au.birthday, au.user_type, au.delete_at,
-        au.gmt_create, au.gmt_modify
+        au.id,
+        au.account,
+        au.`password`,
+        au.nickname,
+        au.sex,
+        au.avatar_url,
+        au.birthday,
+        au.user_type,
+        au.delete_at,
+        au.enable_status,
+        au.gmt_create,
+        au.gmt_modify
         <!--@sql from ams_user au -->
     </sql>
 
-    <select id="findById" resultMap="AmsUserMap" parameterType="java.lang.Long">
-        select
-        <include refid="ams_user_column_list"/>
-        from ams_user au
-        where au.id = #{id,jdbcType=BIGINT}
-        and au.delete_at = 0;
-    </select>
+    <delete id="unbindRoleOfUser" parameterType="long">
+        delete from ams_user_role where user_id = #{userId,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="bindRoleOfUser">
+        insert into ams_user_role (user_id, role_id)
+        values
+        <foreach collection="roleIds" item="roleId" separator=",">
+            (#{userId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
+        </foreach>
+    </insert>
 </mapper>
