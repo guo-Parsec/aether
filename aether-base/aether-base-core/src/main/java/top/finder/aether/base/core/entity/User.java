@@ -55,6 +55,19 @@ public class User extends BaseDataEntity {
      */
     private Integer userType;
 
+    /**
+     * 启用状态
+     */
+    private Integer enableStatus;
+
+    public User() {
+    }
+
+    public User(String account, String password) {
+        this.account = account;
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
@@ -65,6 +78,7 @@ public class User extends BaseDataEntity {
                 .add("avatarUrl='" + avatarUrl + "'")
                 .add("birthday=" + birthday)
                 .add("userType=" + userType)
+                .add("enableStatus=" + enableStatus)
                 .add("deleteAt='" + deleteAt + "'")
                 .add("gmtCreate=" + gmtCreate)
                 .add("gmtModify=" + gmtModify)

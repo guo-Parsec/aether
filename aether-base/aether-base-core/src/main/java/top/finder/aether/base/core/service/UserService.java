@@ -1,8 +1,9 @@
 package top.finder.aether.base.core.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import top.finder.aether.base.api.vo.UserVo;
 import top.finder.aether.base.api.dto.UserCreateDto;
+import top.finder.aether.base.api.vo.UserVo;
+import top.finder.aether.base.api.dto.UserChangePasswordDto;
 import top.finder.aether.base.core.dto.UserPageQueryDto;
 import top.finder.aether.base.core.dto.UserUpdateDto;
 
@@ -82,6 +83,34 @@ public interface UserService {
      * @date 2023/1/5 11:04
      */
     IPage<UserVo> pageQuery(UserPageQueryDto dto);
+
+    /**
+     * <p>用户修改密码</p>
+     *
+     * @param dto 参数
+     * @author guocq
+     * @date 2023/1/9 9:24
+     */
+    void changePassword(UserChangePasswordDto dto);
+
+    /**
+     * <p>重置用户</p>
+     *
+     * @param account 账户信息
+     * @author guocq
+     * @date 2023/1/9 9:41
+     */
+    void resetUser(String account);
+
+    /**
+     * <p>修改用户启用状态</p>
+     *
+     * @param account      账户
+     * @param enableStatus 启用状态
+     * @author guocq
+     * @date 2023/1/9 9:50
+     */
+    void changeUserEnableStatus(String account, Integer enableStatus);
 
     /**
      * <p>系统内部用户创建</p>

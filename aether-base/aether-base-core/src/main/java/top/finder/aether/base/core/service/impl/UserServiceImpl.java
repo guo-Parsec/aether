@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import top.finder.aether.base.api.dto.UserCreateDto;
 import top.finder.aether.base.api.support.helper.DictHelper;
 import top.finder.aether.base.api.support.pool.BaseConstantPool;
 import top.finder.aether.base.api.vo.UserVo;
+import top.finder.aether.base.api.dto.UserChangePasswordDto;
 import top.finder.aether.base.core.dto.UserPageQueryDto;
 import top.finder.aether.base.core.dto.UserUpdateDto;
 import top.finder.aether.base.core.entity.User;
@@ -26,12 +28,15 @@ import top.finder.aether.base.core.mapper.UserMapper;
 import top.finder.aether.base.core.service.UserService;
 import top.finder.aether.common.support.annotation.BlockBean;
 import top.finder.aether.common.support.annotation.BlockMethod;
+import top.finder.aether.common.support.exception.AetherException;
+import top.finder.aether.common.support.exception.AetherValidException;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.support.strategy.Md5SaltCrypto;
 import top.finder.aether.data.core.support.helper.PageHelper;
+import top.finder.aether.data.security.core.SecurityContext;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -201,6 +206,91 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * <p>用户修改密码</p>
+     *
+     * @param dto 参数
+     * @author guocq
+     * @date 2023/1/9 9:24
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void changePassword(UserChangePasswordDto dto) {
+        log.debug("用户修改密码,入参={}", dto);
+        User user = checkBeforeChangePassword(dto);
+        String account = dto.getAccount();
+        String password = dto.getPassword();
+        password = encrypt(account, password);
+        Wrapper<User> wrapper = new LambdaUpdateWrapper<User>()
+                .eq(User::getAccount, account)
+                .set(User::getPassword, password);
+        userMapper.update(new User(account, password), wrapper);
+        log.debug("用户修改密码成功");
+        SecurityContext.kickOut(user.getId());
+    }
+
+    /**
+     * <p>重置用户</p>
+     *
+     * @param account 账户信息
+     * @author guocq
+     * @date 2023/1/9 9:41
+     */
+    @Override
+    @CacheEvict(cacheNames = {"AMS:USER:SINGLE", "AMS:USER:LIST"}, allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    public void resetUser(String account) {
+        log.debug("重置用户, 入参={}", account);
+        User user = checkAccountIsExist(account);
+        user.setPassword(encrypt(account, "abc123456"));
+        user.setEnableStatus(BaseConstantPool.ENABLE_STATUS_ENABLE);
+        Wrapper<User> wrapper = new LambdaUpdateWrapper<User>()
+                .eq(User::getAccount, account)
+                .set(User::getPassword, user.getPassword())
+                .set(User::getEnableStatus, BaseConstantPool.ENABLE_STATUS_ENABLE);
+        userMapper.update(user, wrapper);
+        log.debug("用户重置成功");
+        SecurityContext.kickOut(user.getId());
+    }
+
+    /**
+     * <p>修改用户启用状态</p>
+     *
+     * @param account      账户
+     * @param enableStatus 启用状态
+     * @author guocq
+     * @date 2023/1/9 9:50
+     */
+    @Override
+    @CacheEvict(cacheNames = {"AMS:USER:SINGLE", "AMS:USER:LIST"}, allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    public void changeUserEnableStatus(String account, Integer enableStatus) {
+        String typeMessage = null;
+        if (BaseConstantPool.ENABLE_STATUS_ENABLE.equals(enableStatus)) {
+            typeMessage = "启用";
+        }
+        if (BaseConstantPool.ENABLE_STATUS_DISABLE.equals(enableStatus)) {
+            typeMessage = "禁用";
+        }
+        if (typeMessage == null) {
+            log.error("enableStatus={}不合法", enableStatus);
+            throw new AetherValidException("enableStatus不合法");
+        }
+        log.debug("{}用户, 入参[account={},enableStatus={}]", typeMessage, account, enableStatus);
+        User user = checkAccountIsExist(account);
+        if (ObjectUtil.equals(enableStatus, user.getEnableStatus())) {
+            log.warn("用户[account={}]已被{},将不再次更新",account, typeMessage);
+            return;
+        }
+        user.setEnableStatus(enableStatus);
+        Wrapper<User> wrapper = new LambdaUpdateWrapper<User>()
+                .eq(User::getAccount, account)
+                .set(User::getEnableStatus, enableStatus);
+        userMapper.update(user, wrapper);
+        log.debug("{}用户成功", typeMessage);
+        SecurityContext.kickOut(user.getId());
+    }
+
+    /**
      * <p>系统内部用户创建</p>
      *
      * @param dto 新增用户参数
@@ -341,5 +431,40 @@ public class UserServiceImpl implements UserService {
         if (count < size) {
             log.warn("待删除的idSet={}中部分主键不存在无法删除，系统将删除已存在的数据{}条", idSet, count);
         }
+    }
+
+    /**
+     * <p>修改密码前校验</p>
+     *
+     * @param dto 入参
+     * @author guocq
+     * @date 2023/1/9 9:28
+     */
+    private User checkBeforeChangePassword(UserChangePasswordDto dto) {
+        String account = dto.getAccount();
+        User user = checkAccountIsExist(account);
+        if (!dto.getPassword().equals(dto.getCheckPassword())) {
+            log.error("用户[account={}]两次密码不一致无法修改密码", account);
+            throw new AetherException("两次密码不一致无法修改密码");
+        }
+        return user;
+    }
+
+    /**
+     * <p>检查账户是否存在</p>
+     *
+     * @param account 账户信息
+     * @author guocq
+     * @date 2023/1/9 9:27
+     */
+    private User checkAccountIsExist(String account) {
+        Wrapper<User> wrapper = new LambdaQueryWrapper<User>()
+                .in(User::getAccount, account);
+        User exists = userMapper.selectOne(wrapper);
+        if (exists == null) {
+            log.error("账户[{}]不存在", account);
+            throw new AetherValidException("账户不存在");
+        }
+        return exists;
     }
 }

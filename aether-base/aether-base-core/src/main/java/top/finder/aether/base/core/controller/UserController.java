@@ -7,7 +7,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.finder.aether.base.api.dto.UserCreateDto;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
+import top.finder.aether.base.api.support.pool.BaseConstantPool;
 import top.finder.aether.base.api.vo.UserVo;
+import top.finder.aether.base.api.dto.UserChangePasswordDto;
 import top.finder.aether.base.core.dto.UserPageQueryDto;
 import top.finder.aether.base.core.dto.UserUpdateDto;
 import top.finder.aether.base.core.service.UserService;
@@ -81,5 +83,33 @@ public class UserController {
     @GetMapping(value = "/page/query")
     public Apis<IPage<UserVo>> pageQuery(@Validated UserPageQueryDto dto) {
         return Apis.success(userService.pageQuery(dto));
+    }
+
+    @ApiOperation(value = "用户修改密码", notes = "用户修改密码")
+    @GetMapping(value = "/password-change.do")
+    public Apis<Void> changePassword(@Validated UserChangePasswordDto dto) {
+        userService.changePassword(dto);
+        return Apis.success();
+    }
+
+    @ApiOperation(value = "重置用户", notes = "重置用户")
+    @GetMapping(value = "/reset.do")
+    public Apis<Void> resetUser(@RequestParam(value = "account") String account) {
+        userService.resetUser(account);
+        return Apis.success();
+    }
+
+    @ApiOperation(value = "启用用户", notes = "启用用户")
+    @GetMapping(value = "/enable.do")
+    public Apis<Void> enableUser(@RequestParam(value = "account") String account) {
+        userService.changeUserEnableStatus(account, BaseConstantPool.ENABLE_STATUS_ENABLE);
+        return Apis.success();
+    }
+
+    @ApiOperation(value = "禁用用户", notes = "禁用用户")
+    @GetMapping(value = "/disable.do")
+    public Apis<Void> disableUser(@RequestParam(value = "account") String account) {
+        userService.changeUserEnableStatus(account, BaseConstantPool.ENABLE_STATUS_DISABLE);
+        return Apis.success();
     }
 }

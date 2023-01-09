@@ -26,7 +26,7 @@ public interface UserClient {
      *
      * @param account  账户信息
      * @param password 传入密码
-     * @return {@link Apis<UserVo>}
+     * @return {@link Apis}
      * @author guocq
      * @date 2022/12/28 15:23
      */
@@ -38,7 +38,7 @@ public interface UserClient {
      * <p>创建用户信息</p>
      *
      * @param dto 创建参数
-     * @return top.finder.aether.common.support.api.Apis<java.lang.Void>
+     * @return {@link Apis}
      * @author guocq
      * @date 2023/1/5 16:17
      */

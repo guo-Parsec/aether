@@ -31,4 +31,14 @@ public interface BaseConstantPool {
      * 性别类型 - 女性
      */
     Integer SEX_TYPE_FEMALE = 2;
+
+    /**
+     * 启用状态 - 启用
+     */
+    Integer ENABLE_STATUS_ENABLE = 0;
+
+    /**
+     * 启用状态 - 禁用
+     */
+    Integer ENABLE_STATUS_DISABLE = 1;
 }

@@ -83,6 +83,19 @@ public class UserVo extends BaseDataVo {
     private String userTypeName;
 
     /**
+     * 启用状态
+     */
+    @ApiModelProperty("启用状态")
+    private Integer enableStatus;
+
+    /**
+     * 启用状态转义
+     */
+    @ApiModelProperty("启用状态转义")
+    @DictTranslate(value = "enableStatus", type = "enable_status")
+    private String enableStatusName;
+
+    /**
      * 是否认证过
      */
     @ApiModelProperty("是否认证过")
@@ -106,6 +119,8 @@ public class UserVo extends BaseDataVo {
                 .add("birthday=" + birthday)
                 .add("userType=" + userType)
                 .add("userTypeName='" + userTypeName + "'")
+                .add("enableStatus=" + enableStatus)
+                .add("enableStatusName='" + enableStatusName + "'")
                 .add("certified=" + certified)
                 .add("gmtCreate=" + gmtCreate)
                 .add("gmtModify=" + gmtModify)
