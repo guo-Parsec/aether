@@ -18,5 +18,10 @@
             <groupId>top.finder</groupId>
             <artifactId>aether-data-cache</artifactId>
         </dependency>
+        <dependency>
+            <groupId>top.finder</groupId>
+            <artifactId>aether-data-common</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

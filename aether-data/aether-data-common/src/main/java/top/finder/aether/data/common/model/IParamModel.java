@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.model;
+package top.finder.aether.data.common.model;
 
 import top.finder.aether.common.model.IModel;
 

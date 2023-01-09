@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import top.finder.aether.base.api.model.ParamModel;
 import top.finder.aether.data.common.vo.BaseDataVo;
-import top.finder.aether.data.core.model.IParamModel;
+import top.finder.aether.data.common.model.IParamModel;
 
 import java.util.StringJoiner;
 

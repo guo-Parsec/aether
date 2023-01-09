@@ -23,12 +23,6 @@ import static java.util.concurrent.TimeUnit.HOURS;
  */
 public class SecurityContext {
     private static final Logger log = LoggerFactory.getLogger(SecurityContext.class);
-
-    /**
-     * 默认过期时间 - 小时
-     */
-    private static final Long DEFAULT_EXPIRE_TIME = 6L;
-
     /**
      * <p>登录操作</p>
      *
@@ -46,8 +40,9 @@ public class SecurityContext {
         RedisHelper redisHelper = RedisHelper.getInstance();
         String securityTokenKey = SecurityHelper.generateSecurityTokenKey(tokenId);
         String securityUserKey = SecurityHelper.generateSecurityUserKey(id);
-        redisHelper.set(securityTokenKey, JSON.toJSONString(subject), DEFAULT_EXPIRE_TIME, HOURS);
-        redisHelper.set(securityUserKey, tokenId, DEFAULT_EXPIRE_TIME, HOURS);
+        Long defaultTokenExpireTime = SecurityHelper.getDefaultTokenExpireTime();
+        redisHelper.set(securityTokenKey, JSON.toJSONString(subject), defaultTokenExpireTime, HOURS);
+        redisHelper.set(securityUserKey, tokenId, defaultTokenExpireTime, HOURS);
     }
 
     /**

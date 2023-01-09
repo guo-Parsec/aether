@@ -13,8 +13,8 @@ import top.finder.aether.base.api.vo.ParamVo;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.exception.AetherValidException;
 import top.finder.aether.common.support.pool.AppConstantPool;
-import top.finder.aether.data.core.model.IParamModel;
-import top.finder.aether.data.core.support.access.IParamAccess;
+import top.finder.aether.data.common.model.IParamModel;
+import top.finder.aether.data.common.support.access.IParamAccess;
 
 import java.util.List;
 import java.util.stream.Collectors;

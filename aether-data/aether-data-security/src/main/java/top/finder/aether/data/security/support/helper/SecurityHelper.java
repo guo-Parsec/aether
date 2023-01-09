@@ -5,9 +5,12 @@ import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.helper.CodeHelper;
+import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
+import top.finder.aether.data.common.model.IParamModel;
+import top.finder.aether.data.common.support.access.IParamAccess;
 import top.finder.aether.data.security.core.ISecuritySubject;
 
 /**
@@ -27,6 +30,16 @@ public class SecurityHelper {
     private static final String ANON = "ANON";
 
     private static final String URLS = "URLS";
+
+    /**
+     * 默认令牌过期时间(小时)
+     */
+    private static final String PARAM_DEFAULT_TOKEN_EXPIRE_TIME = "DEFAULT_TOKEN_EXPIRE_TIME";
+
+    /**
+     * 默认过期时间 - 小时
+     */
+    private static final Long DEFAULT_EXPIRE_TIME = 6L;
 
     /**
      * <p>根据用户id生成指定userId的用户认证通过的用户信息存储的key</p>
@@ -115,6 +128,31 @@ public class SecurityHelper {
     public static void checkSecuritySubjectEmpty(ISecuritySubject<?> securitySubject) {
         if (isSecuritySubjectEmpty(securitySubject)) {
             CodeHelper.logAetherError(log, "获取登录凭证信息失败，无法获取到登录信息，可能因为令牌已过期", CommonHttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * <p>获取默认令牌过期时间</p>
+     *
+     * @return java.lang.Long
+     * @author guocq
+     * @date 2023/1/9 16:55
+     */
+    public static Long getDefaultTokenExpireTime() {
+        IParamAccess paramAccess = null;
+        try {
+            paramAccess = SpringBeanHelper.getBean(IParamAccess.class);
+        } catch (Exception e) {
+            return DEFAULT_EXPIRE_TIME;
+        }
+        IParamModel paramModel = paramAccess.queryParamByParamCode(PARAM_DEFAULT_TOKEN_EXPIRE_TIME);
+        if (paramModel == null || StrUtil.isBlank(paramModel.getParamValue())) {
+            return DEFAULT_EXPIRE_TIME;
+        }
+        try {
+            return Long.valueOf(paramModel.getParamValue());
+        } catch (NumberFormatException e) {
+            return DEFAULT_EXPIRE_TIME;
         }
     }
 }

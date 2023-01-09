@@ -1,10 +1,10 @@
-package top.finder.aether.data.core.support.access;
+package top.finder.aether.data.common.support.access;
 
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.finder.aether.data.core.model.IParamModel;
+import top.finder.aether.data.common.model.IParamModel;
 
 import java.util.List;
 import java.util.Map;
