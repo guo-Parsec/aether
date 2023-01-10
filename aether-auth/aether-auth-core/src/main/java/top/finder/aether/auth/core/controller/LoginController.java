@@ -11,6 +11,8 @@ import top.finder.aether.auth.core.service.LoginService;
 import top.finder.aether.auth.core.support.pool.AuthApiConstantPool;
 import top.finder.aether.common.support.annotation.LoginLog;
 import top.finder.aether.common.support.api.Apis;
+import top.finder.aether.data.core.support.annotation.ApiResource;
+import top.finder.aether.data.core.support.enums.ResourceType;
 
 /**
  * <p>登录操作控制器</p>
@@ -28,6 +30,7 @@ public class LoginController {
         this.loginService = loginService;
     }
 
+    @ApiResource(code = "AETHER:AUTH:LOGIN", name = "登录", sort = 270, desc = "用户登录", resourceType = ResourceType.ANON)
     @ApiOperation(value = "登录", notes = "用户登录")
     @PostMapping(value = "/login.do")
     @LoginLog(index = 0)

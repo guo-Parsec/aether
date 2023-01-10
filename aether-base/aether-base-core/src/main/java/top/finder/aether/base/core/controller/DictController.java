@@ -6,14 +6,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
-import top.finder.aether.base.core.vo.DictVo;
 import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
 import top.finder.aether.base.core.entity.Dict;
 import top.finder.aether.base.core.service.DictService;
+import top.finder.aether.base.core.vo.DictVo;
 import top.finder.aether.common.support.annotation.FeignApi;
 import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
+import top.finder.aether.data.core.support.annotation.ApiResource;
 
 import java.util.List;
 import java.util.Set;
@@ -34,19 +35,21 @@ public class DictController {
         this.dictService = dictService;
     }
 
-    @ApiOperation(value = "根据字典类别码值查询字典列表", notes = "根据字典类别码值查询字典列表", hidden = false)
+    @ApiOperation(value = "根据字典类别码值查询字典列表", notes = "根据字典类别码值查询字典列表", hidden = true)
     @GetMapping(value = "/find-dict-list-by-type")
     @FeignApi
     public Apis<List<DictModel>> findDictListByType(@RequestParam("dictTypeCode") String dictTypeCode) {
         return Apis.success(dictService.findDictListByType(dictTypeCode));
     }
 
+    @ApiResource(code = "AMS:DICT:QUERY", name = "查询列表", sort = 100, desc = "字典列表信息查询")
     @ApiOperation(value = "查询列表", notes = "字典列表信息查询")
     @GetMapping(value = "/list")
     public Apis<List<DictVo>> list(Dict dict) {
         return Apis.success(dictService.listQuery(dict));
     }
 
+    @ApiResource(code = "AMS:DICT:CREATE", name = "新增字典", sort = 110, desc = "字典信息新增操作")
     @ApiOperation(value = "新增字典", notes = "字典信息新增操作")
     @PostMapping(value = "/create.do")
     @OperateLog
@@ -55,6 +58,7 @@ public class DictController {
         return Apis.success();
     }
 
+    @ApiResource(code = "AMS:DICT:UPDATE", name = "更新字典", sort = 120, desc = "字典信息更新操作")
     @ApiOperation(value = "更新字典", notes = "字典信息更新操作")
     @PutMapping(value = "/update.do")
     @OperateLog
@@ -63,6 +67,7 @@ public class DictController {
         return Apis.success();
     }
 
+    @ApiResource(code = "AMS:DICT:DELETE", name = "删除字典", sort = 130, desc = "字典信息删除操作")
     @ApiOperation(value = "删除字典", notes = "字典信息删除操作")
     @DeleteMapping(value = "/delete.do")
     @OperateLog

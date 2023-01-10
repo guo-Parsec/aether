@@ -13,6 +13,7 @@ import top.finder.aether.base.core.dto.HiOperateLogQueryDto;
 import top.finder.aether.base.core.service.LogService;
 import top.finder.aether.common.model.LogModel;
 import top.finder.aether.common.support.api.Apis;
+import top.finder.aether.data.core.support.annotation.ApiResource;
 
 /**
  * <p>系统日志管理</p>
@@ -44,12 +45,14 @@ public class LogController {
         return Apis.success();
     }
 
+    @ApiResource(code = "AMS:LOGIN-LOG:QUERY", name = "分页查询登录日志信息", sort = 140, desc = "分页查询登录日志信息")
     @ApiOperation(value = "分页查询登录日志信息", notes = "分页查询登录日志信息")
     @GetMapping(value = "/login-log/page/query")
     public Apis<IPage<HiLoginVo>> loginLogPageQuery(@Validated HiLoginQueryDto dto) {
         return Apis.success(logService.loginLogPageQuery(dto));
     }
 
+    @ApiResource(code = "AMS:OPERATE-LOG:QUERY", name = "分页查询操作日志信息", sort = 150, desc = "分页查询操作日志信息")
     @ApiOperation(value = "分页查询操作日志信息", notes = "分页查询操作日志信息")
     @GetMapping(value = "/operate-log/page/query")
     public Apis<IPage<HiOperateLogVo>> operateLogPageQuery(@Validated HiOperateLogQueryDto dto) {

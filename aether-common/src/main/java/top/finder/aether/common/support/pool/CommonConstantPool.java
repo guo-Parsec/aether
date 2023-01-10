@@ -48,6 +48,11 @@ public interface CommonConstantPool {
     String APP_NAME_KEY = "spring.application.name";
 
     /**
+     * 应用访问统一前缀
+     */
+    String CONTEXT_PATH = "server.servlet.context-path";
+
+    /**
      * User-Agent
      */
     String USER_AGENT_HEAD = "User-Agent";

@@ -16,4 +16,9 @@ public interface SystemSettingConstantPool {
      * 系统配置key
      */
     String SYSTEM_SETTING_KEY = "SYSTEM:SETTING";
+
+    /**
+     * API_MODELS
+     */
+    String API_MODELS = "API-MODELS";
 }

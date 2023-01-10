@@ -16,6 +16,7 @@ import java.util.Collection;
 public class UrlHelper extends URLUtil {
 
     public static final String REQ_PATH_SEPARATOR = "/";
+
     /**
      * 判断url是否与规则配置:
      * ? 表示单个字符;
@@ -56,5 +57,21 @@ public class UrlHelper extends URLUtil {
      */
     public static String autoPopulateRequestRootPath(String orgPath) {
         return orgPath.startsWith(REQ_PATH_SEPARATOR) ? orgPath : REQ_PATH_SEPARATOR + orgPath;
+    }
+
+    /**
+     * <p>自动完善路径规则</p>
+     *
+     * @param rawPath 原始路径
+     * @return java.lang.String
+     * @author guocq
+     * @date 2023/1/10 10:38
+     */
+    public static String autoCompletePath(String rawPath) {
+        String path = autoPopulateRequestRootPath(rawPath);
+        if (path.endsWith(REQ_PATH_SEPARATOR)) {
+            return path.substring(0, path.lastIndexOf(REQ_PATH_SEPARATOR));
+        }
+        return path;
     }
 }

@@ -12,6 +12,7 @@ import top.finder.aether.base.core.entity.Role;
 import top.finder.aether.base.core.service.RoleService;
 import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
+import top.finder.aether.data.core.support.annotation.ApiResource;
 
 import java.util.List;
 import java.util.Set;
@@ -34,10 +35,12 @@ public class RoleController {
 
     @ApiOperation(value = "查询列表", notes = "角色列表信息查询")
     @GetMapping(value = "/list")
+    @ApiResource(code = "AMS:ROLE:QUERY", name = "查询列表", sort = 230, desc = "角色列表信息查询")
     public Apis<List<RoleVo>> list(Role role) {
         return Apis.success(roleService.listQuery(role));
     }
 
+    @ApiResource(code = "AMS:ROLE:CREATE", name = "新增角色", sort = 240, desc = "角色信息新增操作")
     @ApiOperation(value = "新增角色", notes = "角色信息新增操作")
     @PostMapping(value = "/create.do")
     @OperateLog
@@ -46,6 +49,7 @@ public class RoleController {
         return Apis.success();
     }
 
+    @ApiResource(code = "AMS:ROLE:UPDATE", name = "更新角色", sort = 250, desc = "角色信息更新操作")
     @ApiOperation(value = "更新角色", notes = "角色信息更新操作")
     @PutMapping(value = "/update.do")
     @OperateLog
@@ -54,6 +58,7 @@ public class RoleController {
         return Apis.success();
     }
 
+    @ApiResource(code = "AMS:ROLE:DELETE", name = "删除角色", sort = 260, desc = "角色信息删除操作")
     @ApiOperation(value = "删除角色", notes = "角色信息删除操作")
     @DeleteMapping(value = "/delete.do")
     @OperateLog

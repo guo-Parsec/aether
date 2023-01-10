@@ -36,4 +36,9 @@ public interface BaseApiConstantPool {
      * 参数模块网络请求前缀
      */
     String PARAM_WEB_API_PREFIX = BASE_WEB_API_PREFIX + "/param";
+
+    /**
+     * 资源模块网络请求前缀
+     */
+    String RESOURCE_WEB_API_PREFIX = BASE_WEB_API_PREFIX + "/resource";
 }
