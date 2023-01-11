@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,6 @@ import top.finder.aether.base.api.entity.Dict;
 import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.base.api.repository.DictRepository;
 import top.finder.aether.common.support.exception.AetherValidException;
-import top.finder.aether.data.common.utils.WrapperUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,10 +53,7 @@ public class DictAccessImpl implements DictAccess {
             log.error("字典类型码[dictTypeCode]不能为空");
             throw new AetherValidException("字典类型码[dictTypeCode]不能为空");
         }
-        Wrapper<Dict> wrapper = WrapperUtil.<Dict>getLambdaQueryWrapper()
-                .select(Dict::getDictTypeCode, Dict::getDictTypeName, Dict::getDictCode, Dict::getDictName)
-                .eq(Dict::getDictTypeCode, dictTypeCode);
-        List<Dict> dictList = repository.selectList(wrapper);
+        List<Dict> dictList = repository.findDictByType(dictTypeCode);
         if (CollUtil.isEmpty(dictList)) {
             log.debug("根据字典类型[dictTypeCode={}]查询字典列表为空", dictTypeCode);
             return Lists.newArrayList();
