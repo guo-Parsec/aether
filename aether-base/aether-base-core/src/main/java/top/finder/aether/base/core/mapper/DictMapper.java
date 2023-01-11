@@ -1,6 +1,6 @@
 package top.finder.aether.base.core.mapper;
 
-import top.finder.aether.base.core.entity.Dict;
+import top.finder.aether.base.api.entity.Dict;
 import top.finder.aether.data.common.mapper.CommonMapper;
 
 /**

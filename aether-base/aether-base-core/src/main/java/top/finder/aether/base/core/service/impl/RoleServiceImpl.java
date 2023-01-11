@@ -12,7 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.base.api.support.helper.DictHelper;
+import top.finder.aether.base.api.tools.DictTool;
 import top.finder.aether.base.core.vo.RoleVo;
 import top.finder.aether.base.core.dto.RoleCreateDto;
 import top.finder.aether.base.core.dto.RoleUpdateDto;
@@ -110,7 +110,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 .like(StrUtil.isNotBlank(role.getRoleName()), Role::getRoleName, role.getRoleName());
         List<Role> roles = roleMapper.selectList(wrapper);
         return roles.stream().map(ele -> TransformerHelper.transformer(ele, RoleVo.class))
-                .peek(DictHelper::translate).collect(Collectors.toList());
+                .peek(DictTool::translate).collect(Collectors.toList());
     }
 
     /**

@@ -2,13 +2,13 @@ package top.finder.aether.data.cache.support.helper;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.helper.CodeHelper;
-import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 
 import java.io.Serializable;
@@ -470,6 +470,6 @@ public class RedisHelper implements Serializable {
     }
 
     public static RedisHelper getInstance() {
-        return SpringBeanHelper.getBean(RedisHelper.class);
+        return SpringUtil.getBean(RedisHelper.class);
     }
 }

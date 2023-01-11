@@ -1,3 +1,0 @@
-# SpringApplicationRunListener
-org.springframework.boot.SpringApplicationRunListener=\
-top.finder.aether.common.support.listener.ApplicationRunListener

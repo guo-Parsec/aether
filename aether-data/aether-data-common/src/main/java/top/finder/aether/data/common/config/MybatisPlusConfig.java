@@ -19,7 +19,11 @@ import java.time.LocalDateTime;
  * @author guocq
  * @since 2022/12/12
  */
-@MapperScan({"top.finder.aether.**.mapper", "com.baomidou.mybatisplus.samples.quickstart.mapper"})
+@MapperScan({
+        "top.finder.aether.**.mapper",
+        "top.finder.aether.**.api.repository",
+        "com.baomidou.mybatisplus.samples.quickstart.mapper"
+})
 @Configuration
 public class MybatisPlusConfig implements MetaObjectHandler {
     @Bean

@@ -2,10 +2,10 @@ package top.finder.aether.data.security.support.helper;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.helper.CodeHelper;
-import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
@@ -141,7 +141,7 @@ public class SecurityHelper {
     public static Long getDefaultTokenExpireTime() {
         IParamAccess paramAccess = null;
         try {
-            paramAccess = SpringBeanHelper.getBean(IParamAccess.class);
+            paramAccess = SpringUtil.getBean(IParamAccess.class);
         } catch (Exception e) {
             return DEFAULT_EXPIRE_TIME;
         }

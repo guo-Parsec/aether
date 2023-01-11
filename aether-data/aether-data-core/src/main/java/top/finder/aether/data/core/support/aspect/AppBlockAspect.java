@@ -3,6 +3,7 @@ package top.finder.aether.data.core.support.aspect;
 import ch.qos.logback.classic.Level;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,9 +14,7 @@ import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.annotation.AppBlocking;
 import top.finder.aether.common.support.annotation.AppGroup;
 import top.finder.aether.common.support.enums.AppBlockingType;
-import top.finder.aether.common.support.helper.EnvHelper;
 import top.finder.aether.common.support.helper.LoggerHelper;
-import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.data.core.support.helper.AppHelper;
 import top.finder.aether.data.core.support.runner.BlockRegister;
 
@@ -52,7 +51,7 @@ public class AppBlockAspect {
         AppBlockingType value = appBlocking.value();
         boolean allowIntercept = allowIntercept(appBlocking);
         if (!allowIntercept) {
-            String appName = EnvHelper.get(CommonConstantPool.APP_NAME_KEY);
+            String appName = SpringUtil.getApplicationName();
             LoggerHelper.aopLog(log, Level.INFO, point, "{}[appBlocking]对当前应用[" + appName + "]不设置拦截");
             return point.proceed(args);
         }

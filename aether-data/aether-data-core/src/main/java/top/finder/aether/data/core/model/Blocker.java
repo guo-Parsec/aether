@@ -1,6 +1,7 @@
 package top.finder.aether.data.core.model;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.base.CaseFormat;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,6 @@ import org.springframework.core.annotation.AnnotationUtils;
 import top.finder.aether.common.model.IModel;
 import top.finder.aether.common.support.annotation.BlockBean;
 import top.finder.aether.common.support.annotation.BlockMethod;
-import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 
 import java.lang.reflect.Method;
@@ -104,7 +104,7 @@ public class Blocker implements IModel {
         log.info("methodName为{}", methodName);
         final String blockId = StrUtil.join(CommonConstantPool.POINT, beanName, methodName);
         log.info("拦截器id为{}", blockId);
-        Object bean = SpringBeanHelper.getBean(beanClass);
+        Object bean = SpringUtil.getBean(beanClass);
         return new Blocker(blockId, beanClass, method, beanClass.getName(), beanName, methodName, bean);
     }
 

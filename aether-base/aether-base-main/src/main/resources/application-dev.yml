@@ -40,6 +40,7 @@ feign:
 mybatis-plus:
   mapper-locations:
     - classpath*:mapper/**/*Mapper.xml
+    - classpath*:repository/**/*Repository.xml
   configuration:
     map-underscore-to-camel-case: true
 aether:

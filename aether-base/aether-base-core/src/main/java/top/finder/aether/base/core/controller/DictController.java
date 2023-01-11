@@ -8,7 +8,7 @@ import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
 import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
-import top.finder.aether.base.core.entity.Dict;
+import top.finder.aether.base.api.entity.Dict;
 import top.finder.aether.base.core.service.DictService;
 import top.finder.aether.base.core.vo.DictVo;
 import top.finder.aether.common.support.annotation.FeignApi;

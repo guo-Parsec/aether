@@ -2,6 +2,7 @@ package top.finder.aether.data.core.support.runner;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-import top.finder.aether.common.support.helper.EnvHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
@@ -58,7 +58,7 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
      * @date 2023/1/4 16:25
      */
     public void initFeignSecret() {
-        String appName = EnvHelper.get(CommonConstantPool.APP_NAME_KEY);
+        String appName = SpringUtil.getApplicationName();
         log.debug("系统[{}]开始初始化feign密钥", appName);
         final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
         final String secret = IdUtil.fastUUID();
@@ -70,7 +70,7 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
 
     public void initApiModels() {
         ApiRegister.register();
-        String appName = EnvHelper.get(CommonConstantPool.APP_NAME_KEY);
+        String appName = SpringUtil.getApplicationName();
         log.debug("系统[{}]开始初始化api", appName);
         final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
         List<ApiModel> apiModels = ApiRegister.collectApiModels();
@@ -148,7 +148,7 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
 
     @Override
     public void destroy() throws Exception {
-        String appName = EnvHelper.get(CommonConstantPool.APP_NAME_KEY);
+        String appName = SpringUtil.getApplicationName();
         log.info("系统[{}]正在关闭", appName);
         if (DESTROY_SETTING_MAPPING.isEmpty()) {
             return;

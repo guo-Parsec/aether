@@ -3,6 +3,7 @@ package top.finder.aether.base.core.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -17,8 +18,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.finder.aether.base.api.dto.UserCreateDto;
-import top.finder.aether.base.api.support.helper.DictHelper;
 import top.finder.aether.base.api.support.pool.BaseConstantPool;
+import top.finder.aether.base.api.tools.DictTool;
 import top.finder.aether.base.api.vo.ParamVo;
 import top.finder.aether.base.api.vo.UserVo;
 import top.finder.aether.base.core.dto.GrantRoleToUserDto;
@@ -36,7 +37,6 @@ import top.finder.aether.common.support.annotation.BlockMethod;
 import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.exception.AetherValidException;
 import top.finder.aether.common.support.helper.CodeHelper;
-import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.support.strategy.Md5SaltCrypto;
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVo loadUser(String account, String password) {
         // 防止内部调用缓存失效
-        UserVo userVo = SpringBeanHelper.getBean(UserService.class).findUserByAccount(account);
+        UserVo userVo = SpringUtil.getBean(UserService.class).findUserByAccount(account);
         if (userVo == null) {
             return UserVo.emptyUser(account);
         }
@@ -117,9 +117,7 @@ public class UserServiceImpl implements UserService {
             log.error("未找到用户account={}", account);
             return null;
         }
-        UserVo userVo = TransformerHelper.transformer(user, UserVo.class);
-        DictHelper.translate(userVo);
-        return userVo;
+        return DictTool.transformerAndTranslate(user, UserVo.class);
     }
 
     /**
@@ -200,7 +198,7 @@ public class UserServiceImpl implements UserService {
                 .orderByDesc(User::getGmtModify)
                 .orderByDesc(User::getGmtCreate);
         IPage<User> rawPage = userMapper.selectPage(page, wrapper);
-        return rawPage.convert(record -> DictHelper.transformerAndTranslate(record, UserVo.class));
+        return rawPage.convert(record -> DictTool.transformerAndTranslate(record, UserVo.class));
     }
 
     /**
@@ -386,7 +384,7 @@ public class UserServiceImpl implements UserService {
         }
         String paramValue = paramVo.getParamValue();
         try {
-            return SpringBeanHelper.getBean(paramValue, CryptoStrategy.class);
+            return SpringUtil.getBean(paramValue, CryptoStrategy.class);
         } catch (Exception e) {
             log.debug("获取[strategy={}]失败，返回默认策略器", paramValue);
             return defaultCryptoStrategy;
@@ -419,7 +417,7 @@ public class UserServiceImpl implements UserService {
             CodeHelper.logAetherValidError(log, "用户[account={}]的数据已存在，不能重复新增", account);
         }
         // 校验字典信息
-        DictHelper.verifyDictLegitimacy(createDto);
+        DictTool.verifyDictLegitimacy(createDto);
     }
 
     /**
@@ -448,7 +446,7 @@ public class UserServiceImpl implements UserService {
         // 用户信息修改时不能直接修改用户密码
         dto.setPassword(user.getPassword());
         // 校验字典信息
-        DictHelper.verifyDictLegitimacy(dto);
+        DictTool.verifyDictLegitimacy(dto);
     }
 
     /**

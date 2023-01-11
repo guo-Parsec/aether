@@ -2,6 +2,7 @@ package top.finder.aether.data.core.support.aspect;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -20,7 +21,6 @@ import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.helper.LogHelper;
-import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.listener.SysLogListener;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.data.core.support.helper.AppHelper;
@@ -144,9 +144,9 @@ public class LogAspect {
      * @date 2023/1/4 10:08
      */
     private void operateLogAfterProcess(LogModel logModel) {
-        SysLogListener sysLogListener = SpringBeanHelper.getBean(SysLogListener.class);
+        SysLogListener sysLogListener = SpringUtil.getBean(SysLogListener.class);
         // 获取异步线程池
-        Executor asyncTaskExecutor = SpringBeanHelper.getBean("asyncTaskExecutor", Executor.class);
+        Executor asyncTaskExecutor = SpringUtil.getBean("asyncTaskExecutor", Executor.class);
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
             Map<String, String> headers = CodeHelper.getHeaders();
@@ -170,9 +170,9 @@ public class LogAspect {
         if (StrUtil.isBlank(logModel.getUserAccount())) {
             return;
         }
-        SysLogListener sysLogListener = SpringBeanHelper.getBean(SysLogListener.class);
+        SysLogListener sysLogListener = SpringUtil.getBean(SysLogListener.class);
         // 获取异步线程池
-        Executor asyncTaskExecutor = SpringBeanHelper.getBean("asyncTaskExecutor", Executor.class);
+        Executor asyncTaskExecutor = SpringUtil.getBean("asyncTaskExecutor", Executor.class);
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
             Map<String, String> headers = CodeHelper.getHeaders();

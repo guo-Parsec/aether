@@ -2,6 +2,7 @@ package top.finder.aether.common.support.helper;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.useragent.Browser;
 import cn.hutool.http.useragent.OS;
 import cn.hutool.http.useragent.UserAgent;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class LogHelper {
     public static void buildLogModel(LogModel logModel) {
-        String appName = EnvHelper.get(CommonConstantPool.APP_NAME_KEY);
+        String appName = SpringUtil.getApplicationName();
         HttpServletRequest request = CodeHelper.getHttpServletRequest();
         String clientIp = ServletUtil.getClientIP(request);
         logModel.setAccessApp(appName);

@@ -1,11 +1,10 @@
 package top.finder.aether.data.core.support.helper;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.finder.aether.common.support.helper.CodeHelper;
-import top.finder.aether.common.support.helper.EnvHelper;
-import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.data.core.support.runner.SystemSetting;
 
@@ -35,7 +34,7 @@ public class AppHelper {
         String sourceApp = request.getHeader(CommonConstantPool.FEIGN_SOURCE_APP_HEAD_KEY);
         if (StrUtil.isBlank(sourceApp)) {
             log.debug("请求头中不存在[source-app]，代表属于当前服务");
-            return EnvHelper.get(CommonConstantPool.APP_NAME_KEY, StrUtil.EMPTY);
+            return SpringUtil.getApplicationName();
         }
         log.debug("从请求[{}]中获取来源app为[{}]", requestPath, sourceApp);
         return sourceApp;
@@ -56,7 +55,7 @@ public class AppHelper {
             log.error("请求密钥为空，验证失败");
             return false;
         }
-        SystemSetting bean = SpringBeanHelper.getBean(SystemSetting.class);
+        SystemSetting bean = SpringUtil.getBean(SystemSetting.class);
         String feignSecret = StrUtil.toStringOrNull(bean.getAppSetting(sourceApp, FEIGN_SECRET));
         if (!headerFeignSecret.equals(feignSecret)) {
             log.error("请求密钥验证失败");

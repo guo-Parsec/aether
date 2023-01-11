@@ -1,13 +1,13 @@
 package top.finder.aether.data.core.config;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.helper.CodeHelper;
-import top.finder.aether.common.support.helper.EnvHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.data.core.support.runner.SystemSetting;
 
@@ -36,7 +36,7 @@ public class FeignRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         try {
-            String currentAppName = EnvHelper.get(CommonConstantPool.APP_NAME_KEY);
+            String currentAppName = SpringUtil.getApplicationName();
             log.debug("应用[{}]正在进行远程调用", currentAppName);
             requestTemplate.header(CommonConstantPool.FEIGN_SOURCE_APP_HEAD_KEY, currentAppName);
             requestTemplate.header(CommonConstantPool.IS_FROM_GATEWAY, Boolean.TRUE.toString());

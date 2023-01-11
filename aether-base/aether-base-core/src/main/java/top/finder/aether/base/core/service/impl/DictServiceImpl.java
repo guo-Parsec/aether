@@ -12,14 +12,14 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.finder.aether.base.api.entity.Dict;
 import top.finder.aether.base.api.model.DictModel;
-import top.finder.aether.base.api.support.helper.DictHelper;
-import top.finder.aether.base.core.vo.DictVo;
+import top.finder.aether.base.api.tools.DictTool;
 import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
-import top.finder.aether.base.core.entity.Dict;
 import top.finder.aether.base.core.mapper.DictMapper;
 import top.finder.aether.base.core.service.DictService;
+import top.finder.aether.base.core.vo.DictVo;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.helper.TransformerHelper;
 
@@ -27,6 +27,9 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_CACHE_LIST;
+import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_CACHE_SINGLE;
 
 /**
  * <p>数据字典服务接口实现类</p>
@@ -50,7 +53,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * @date 2022/12/29 14:03
      */
     @Override
-    @Cacheable(cacheNames = "AMS:DICT:SINGLE", key = "'dictTypeCode:' + #dictTypeCode")
+    @Cacheable(cacheNames = BASE_DICT_CACHE_LIST, key = "'dictTypeCode:' + #dictTypeCode")
     public List<DictModel> findDictListByType(String dictTypeCode) {
         if (StrUtil.isBlank(dictTypeCode)) {
             CodeHelper.logAetherValidError(log, "字典类别码值不能为空");
@@ -70,14 +73,13 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * @date 2022/12/29 15:03
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:DICT:SINGLE", "AMS:DICT:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {BASE_DICT_CACHE_SINGLE, BASE_DICT_CACHE_LIST}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void create(DictCreateDto createDto) {
         log.debug("新增字典信息, 入参={}", createDto);
         checkBeforeCreate(createDto);
         Dict dict = TransformerHelper.transformer(createDto, Dict.class);
         dictMapper.insert(dict);
-        DictHelper.clearCache(dict.getDictTypeName());
         log.debug("新增字典成功");
     }
 
@@ -89,13 +91,12 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * @date 2022/12/29 15:04
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:DICT:SINGLE", "AMS:DICT:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {BASE_DICT_CACHE_SINGLE, BASE_DICT_CACHE_LIST}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> idSet) {
         log.debug("删除角色信息, 入参={}", idSet);
         checkBeforeDelete(idSet);
         dictMapper.logicBatchDeleteByIds(idSet, System.currentTimeMillis());
-        DictHelper.clearCache();
         log.debug("删除角色成功");
     }
 
@@ -107,14 +108,13 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * @date 2022/12/29 15:03
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:DICT:SINGLE", "AMS:DICT:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {BASE_DICT_CACHE_SINGLE, BASE_DICT_CACHE_LIST}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(DictUpdateDto updateDto) {
         log.debug("更新字典信息, 入参={}", updateDto);
         checkBeforeUpdate(updateDto);
         Dict dict = TransformerHelper.transformer(updateDto, Dict.class);
         dictMapper.updateById(dict);
-        DictHelper.clearCache();
         log.debug("更新字典成功");
     }
 
@@ -127,7 +127,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * @date 2022/12/29 15:03
      */
     @Override
-    @Cacheable(cacheNames = "AMS:DICT:LIST", keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
+    @Cacheable(cacheNames = BASE_DICT_CACHE_LIST, keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
     public List<DictVo> listQuery(Dict dict) {
         Wrapper<Dict> wrapper = new LambdaQueryWrapper<Dict>()
                 .eq(ObjectUtil.isNotEmpty(dict.getId()), Dict::getId, dict.getId())
@@ -137,7 +137,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
                 .like(StrUtil.isNotBlank(dict.getDictName()), Dict::getDictName, dict.getDictName());
         List<Dict> dictList = dictMapper.selectList(wrapper);
         return dictList.stream().map(ele -> TransformerHelper.transformer(ele, DictVo.class))
-                .peek(DictHelper::translate).collect(Collectors.toList());
+                .peek(DictTool::translate).collect(Collectors.toList());
     }
 
     /**

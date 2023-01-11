@@ -1,10 +1,10 @@
 package top.finder.aether.data.common.component;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import top.finder.aether.common.support.helper.SpringBeanHelper;
 import top.finder.aether.data.common.properties.AetherSnowflakeProperties;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +26,7 @@ public class SnowflakeWorker implements IdentifierGenerator {
     }
 
     public static SnowflakeWorker getBean() {
-        return SpringBeanHelper.getBean(SnowflakeWorker.class);
+        return SpringUtil.getBean(SnowflakeWorker.class);
     }
 
     /**
