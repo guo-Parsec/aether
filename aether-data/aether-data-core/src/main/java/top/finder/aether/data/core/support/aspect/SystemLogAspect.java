@@ -14,15 +14,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
+import top.finder.aether.common.facade.SystemLogFacade;
 import top.finder.aether.common.model.SystemLogInfo;
 import top.finder.aether.common.support.annotation.LoginLog;
 import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.helper.CodeHelper;
-import top.finder.aether.common.utils.SystemLogUtil;
-import top.finder.aether.common.support.listener.SysLogListener;
 import top.finder.aether.common.support.pool.CommonConstantPool;
+import top.finder.aether.common.utils.SystemLogUtil;
 import top.finder.aether.data.core.support.helper.AppHelper;
 
 import java.time.LocalDateTime;
@@ -144,7 +144,7 @@ public class SystemLogAspect {
      * @date 2023/1/4 10:08
      */
     private void operateLogAfterProcess(SystemLogInfo systemLogInfo) {
-        SysLogListener sysLogListener = SpringUtil.getBean(SysLogListener.class);
+        SystemLogFacade systemLogFacade = SpringUtil.getBean(SystemLogFacade.class);
         // 获取异步线程池
         Executor asyncTaskExecutor = SpringUtil.getBean("asyncTaskExecutor", Executor.class);
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
@@ -154,7 +154,7 @@ public class SystemLogAspect {
             CompletableFuture.runAsync(() -> {
                 CodeHelper.setHeadersToShare(headers);
                 RequestContextHolder.setRequestAttributes(attributes);
-                sysLogListener.saveOperateLog(systemLogInfo);
+                systemLogFacade.saveOperateLog(systemLogInfo);
             }, asyncTaskExecutor);
         }
     }
@@ -170,7 +170,7 @@ public class SystemLogAspect {
         if (StrUtil.isBlank(systemLogInfo.getUserAccount())) {
             return;
         }
-        SysLogListener sysLogListener = SpringUtil.getBean(SysLogListener.class);
+        SystemLogFacade systemLogFacade = SpringUtil.getBean(SystemLogFacade.class);
         // 获取异步线程池
         Executor asyncTaskExecutor = SpringUtil.getBean("asyncTaskExecutor", Executor.class);
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
@@ -180,7 +180,7 @@ public class SystemLogAspect {
             CompletableFuture.runAsync(() -> {
                 CodeHelper.setHeadersToShare(headers);
                 RequestContextHolder.setRequestAttributes(attributes);
-                sysLogListener.saveLoginLog(systemLogInfo);
+                systemLogFacade.saveLoginLog(systemLogInfo);
             }, asyncTaskExecutor);
         }
     }

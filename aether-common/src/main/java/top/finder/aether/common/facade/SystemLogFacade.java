@@ -1,4 +1,4 @@
-package top.finder.aether.common.support.interfaces;
+package top.finder.aether.common.facade;
 
 import top.finder.aether.common.model.SystemLogInfo;
 
@@ -8,7 +8,7 @@ import top.finder.aether.common.model.SystemLogInfo;
  * @author guocq
  * @since 2022/12/30
  */
-public interface ILogInterface {
+public interface SystemLogFacade {
     /**
      * <p>保存操作日志信息</p>
      *

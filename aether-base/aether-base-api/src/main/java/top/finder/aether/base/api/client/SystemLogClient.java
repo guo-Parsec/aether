@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
 import top.finder.aether.common.model.SystemLogInfo;
 import top.finder.aether.common.support.api.Apis;
-import top.finder.aether.common.support.interfaces.ILogInterface;
+import top.finder.aether.common.facade.SystemLogFacade;
 import top.finder.aether.common.support.pool.AppConstantPool;
 
 /**
@@ -17,7 +17,7 @@ import top.finder.aether.common.support.pool.AppConstantPool;
  * @since 2022/12/30
  */
 @FeignClient(name = AppConstantPool.APP_BASE + BaseApiConstantPool.LOG_WEB_API_PREFIX, contextId = "logClient")
-public interface LogClient extends ILogInterface {
+public interface SystemLogClient extends SystemLogFacade {
     /**
      * <p>保存操作日志信息</p>
      *
