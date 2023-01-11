@@ -12,7 +12,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.base.api.client.ParamClient;
 import top.finder.aether.base.core.dto.ParamCreateDto;
 import top.finder.aether.base.core.dto.ParamPageQueryDto;
 import top.finder.aether.base.core.dto.ParamQueryDto;
@@ -43,8 +42,6 @@ public class ParamServiceImpl implements ParamService {
 
     @Resource
     private ParamMapper mapper;
-    @Resource
-    private ParamClient paramClient;
 
     /**
      * <p>根据字典查询参数列表</p>
@@ -110,10 +107,6 @@ public class ParamServiceImpl implements ParamService {
         checkBeforeCreate(dto);
         Param param = TransformerHelper.transformer(dto, Param.class);
         mapper.insert(param);
-        paramClient.clearParamModelMapping(dto.getParamCode());
-        if (StrUtil.isNotBlank(dto.getParamTypeCode())) {
-            paramClient.clearParamModelsMapping(dto.getParamTypeCode());
-        }
         log.debug("系统参数新增成功");
     }
 
@@ -132,10 +125,6 @@ public class ParamServiceImpl implements ParamService {
         checkBeforeUpdate(dto);
         Param param = TransformerHelper.transformer(dto, Param.class);
         mapper.updateById(param);
-        paramClient.clearParamModelMapping(dto.getParamCode());
-        if (StrUtil.isNotBlank(dto.getParamTypeCode())) {
-            paramClient.clearParamModelsMapping(dto.getParamTypeCode());
-        }
         log.debug("系统参数更新成功");
     }
 
@@ -153,8 +142,6 @@ public class ParamServiceImpl implements ParamService {
         log.debug("系统参数批量删除, 入参={}", idSet);
         checkBeforeDelete(idSet);
         mapper.logicBatchDeleteByIds(idSet, System.currentTimeMillis());
-        paramClient.clearParamModelMapping();
-        paramClient.clearParamModelsMapping();
         log.debug("系统参数批量删除成功");
     }
 

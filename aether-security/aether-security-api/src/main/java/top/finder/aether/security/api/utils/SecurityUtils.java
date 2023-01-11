@@ -4,14 +4,16 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
+import top.finder.aether.base.api.access.ParamAccess;
+import top.finder.aether.base.api.model.ParamModel;
 import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
-import top.finder.aether.data.common.model.IParamModel;
-import top.finder.aether.data.common.support.access.IParamAccess;
 import top.finder.aether.security.api.entity.SecuritySignature;
+
+import java.util.Optional;
 
 /**
  * <p>安全认证辅助类</p>
@@ -139,18 +141,18 @@ public class SecurityUtils {
      * @date 2023/1/9 16:55
      */
     public static Long getDefaultTokenExpireTime() {
-        IParamAccess paramAccess = null;
+        ParamAccess paramAccess = null;
         try {
-            paramAccess = SpringUtil.getBean(IParamAccess.class);
+            paramAccess = SpringUtil.getBean(ParamAccess.class);
         } catch (Exception e) {
             return DEFAULT_EXPIRE_TIME;
         }
-        IParamModel paramModel = paramAccess.queryParamByParamCode(PARAM_DEFAULT_TOKEN_EXPIRE_TIME);
-        if (paramModel == null || StrUtil.isBlank(paramModel.getParamValue())) {
+        Optional<ParamModel> optional = paramAccess.findParamByParamCode(PARAM_DEFAULT_TOKEN_EXPIRE_TIME);
+        if (!optional.isPresent()) {
             return DEFAULT_EXPIRE_TIME;
         }
         try {
-            return Long.valueOf(paramModel.getParamValue());
+            return Long.valueOf(optional.get().getParamValue());
         } catch (NumberFormatException e) {
             return DEFAULT_EXPIRE_TIME;
         }

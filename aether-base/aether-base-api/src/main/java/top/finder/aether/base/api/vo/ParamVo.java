@@ -4,9 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import top.finder.aether.base.api.model.ParamModel;
 import top.finder.aether.data.common.vo.BaseDataVo;
-import top.finder.aether.data.common.model.IParamModel;
 
 import java.util.StringJoiner;
 
@@ -56,23 +54,6 @@ public class ParamVo extends BaseDataVo {
      */
     @ApiModelProperty(value = "参数排序")
     private Integer paramSort;
-
-    /**
-     * <p>转换为IParamModel</p>
-     *
-     * @return {@link IParamModel}
-     * @author guocq
-     * @date 2023/1/9 14:03
-     */
-    public IParamModel toParamModel() {
-        IParamModel paramModel = new ParamModel();
-        paramModel.setParamTypeCode(paramTypeCode);
-        paramModel.setParamTypeName(paramTypeName);
-        paramModel.setParamName(paramName);
-        paramModel.setParamCode(paramCode);
-        paramModel.setParamValue(paramValue);
-        return paramModel;
-    }
 
     @Override
     public String toString() {
