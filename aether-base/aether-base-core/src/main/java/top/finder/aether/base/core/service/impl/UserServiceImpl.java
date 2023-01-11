@@ -18,9 +18,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.finder.aether.base.api.dto.UserCreateDto;
+import top.finder.aether.base.api.facade.ParamFacade;
+import top.finder.aether.base.api.model.ParamModel;
 import top.finder.aether.base.api.support.pool.BaseConstantPool;
 import top.finder.aether.base.api.tools.DictTool;
-import top.finder.aether.base.api.vo.ParamVo;
 import top.finder.aether.base.api.vo.UserVo;
 import top.finder.aether.base.core.dto.GrantRoleToUserDto;
 import top.finder.aether.base.core.dto.UserChangePasswordDto;
@@ -30,7 +31,6 @@ import top.finder.aether.base.core.entity.Role;
 import top.finder.aether.base.core.entity.User;
 import top.finder.aether.base.core.mapper.RoleMapper;
 import top.finder.aether.base.core.mapper.UserMapper;
-import top.finder.aether.base.core.service.ParamService;
 import top.finder.aether.base.core.service.UserService;
 import top.finder.aether.common.support.annotation.BlockBean;
 import top.finder.aether.common.support.annotation.BlockMethod;
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Resource
     private RoleMapper roleMapper;
     private CryptoStrategy defaultCryptoStrategy;
-    private ParamService paramService;
+    private ParamFacade paramFacade;
 
     @Autowired
     public void setCryptoStrategy(@Qualifier("md5SaltCrypto") CryptoStrategy cryptoStrategy) {
@@ -73,8 +73,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Autowired
-    public void setParamService(ParamService paramService) {
-        this.paramService = paramService;
+    public void setParamFacade(ParamFacade paramFacade) {
+        this.paramFacade = paramFacade;
     }
 
     /**
@@ -378,11 +378,11 @@ public class UserServiceImpl implements UserService {
      * @date 2023/1/9 15:25
      */
     private CryptoStrategy findDefaultCryptoStrategy() {
-        ParamVo paramVo = paramService.findParamByParamCode(BaseConstantPool.PARAM_DEFAULT_USER_PASSWORD_CRYPTO_STRATEGY);
-        if (paramVo == null || StrUtil.isBlank(paramVo.getParamValue())) {
+        Optional<ParamModel> optional = paramFacade.findParamByParamCode(BaseConstantPool.PARAM_DEFAULT_USER_PASSWORD_CRYPTO_STRATEGY);
+        if (!optional.isPresent()) {
             return defaultCryptoStrategy;
         }
-        String paramValue = paramVo.getParamValue();
+        String paramValue = optional.get().getParamValue();
         try {
             return SpringUtil.getBean(paramValue, CryptoStrategy.class);
         } catch (Exception e) {
@@ -546,7 +546,7 @@ public class UserServiceImpl implements UserService {
      * @date 2023/1/9 14:38
      */
     private String getDefaultPassword() {
-        return Optional.ofNullable(paramService.findParamByParamCode(BaseConstantPool.PARAM_DEFAULT_PASSWORD)).map(ParamVo::getParamValue)
+        return paramFacade.findParamByParamCode(BaseConstantPool.PARAM_DEFAULT_PASSWORD).map(ParamModel::getParamValue)
                 .orElse("abc123456");
     }
 }

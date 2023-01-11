@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.finder.aether.base.api.facade.ParamFacade;
@@ -14,6 +15,9 @@ import top.finder.aether.common.support.exception.AetherValidException;
 
 import java.util.List;
 import java.util.Optional;
+
+import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_PARAM_MODEL_CACHE_LIST;
+import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_PARAM_MODEL_CACHE_SINGLE;
 
 /**
  * <p>系统参数Facade接口实现</p>
@@ -41,6 +45,7 @@ public class ParamFacadeImpl implements ParamFacade {
      * @date 2023/1/11 13:46
      */
     @Override
+    @Cacheable(cacheNames = BASE_PARAM_MODEL_CACHE_LIST, key = "'paramTypeCode:' + #paramTypeCode")
     public List<ParamModel> findParamByType(String paramTypeCode) {
         log.debug("根据参数类型[paramTypeCode={}]查询系统参数列表", paramTypeCode);
         if (StrUtil.isBlank(paramTypeCode)) {
@@ -64,6 +69,7 @@ public class ParamFacadeImpl implements ParamFacade {
      * @date 2023/1/11 13:46
      */
     @Override
+    @Cacheable(cacheNames = BASE_PARAM_MODEL_CACHE_SINGLE, key = "'paramCode:' + #paramCode")
     public Optional<ParamModel> findParamByParamCode(String paramCode) {
         log.debug("根据参数码[paramCode={}]查询系统参数", paramCode);
         if (StrUtil.isBlank(paramCode)) {

@@ -4,14 +4,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
 import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
 import top.finder.aether.base.core.entity.Dict;
 import top.finder.aether.base.core.service.DictService;
 import top.finder.aether.base.core.vo.DictVo;
-import top.finder.aether.common.support.annotation.FeignApi;
 import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.data.core.support.annotation.ApiResource;
@@ -33,13 +31,6 @@ public class DictController {
 
     public DictController(DictService dictService) {
         this.dictService = dictService;
-    }
-
-    @ApiOperation(value = "根据字典类别码值查询字典列表", notes = "根据字典类别码值查询字典列表", hidden = true)
-    @GetMapping(value = "/find-dict-list-by-type")
-    @FeignApi
-    public Apis<List<DictModel>> findDictListByType(@RequestParam("dictTypeCode") String dictTypeCode) {
-        return Apis.success(dictService.findDictListByType(dictTypeCode));
     }
 
     @ApiResource(code = "AMS:DICT:QUERY", name = "查询列表", sort = 100, desc = "字典列表信息查询")

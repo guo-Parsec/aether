@@ -20,7 +20,6 @@ import top.finder.aether.base.core.dto.ParamUpdateDto;
 import top.finder.aether.base.core.entity.Param;
 import top.finder.aether.base.core.mapper.ParamMapper;
 import top.finder.aether.base.core.service.ParamService;
-import top.finder.aether.common.support.exception.AetherValidException;
 import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.utils.Loggers;
 import top.finder.aether.data.core.support.helper.PageHelper;
@@ -29,6 +28,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.*;
 
 /**
  * <p>系统参数服务接口实现类</p>
@@ -52,7 +53,7 @@ public class ParamServiceImpl implements ParamService {
      * @date 2023/1/9 11:13
      */
     @Override
-    @Cacheable(cacheNames = "AMS:PARAM:LIST", keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
+    @Cacheable(cacheNames = BASE_PARAM_CACHE_LIST, keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
     public List<ParamVo> list(ParamQueryDto dto) {
         log.debug("根据字典查询参数列表, 入参={}", dto);
         List<Param> params = mapper.selectList(findQueryWrapper(dto));
@@ -101,7 +102,7 @@ public class ParamServiceImpl implements ParamService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AMS:PARAM:SINGLE", "AMS:PARAM:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {BASE_PARAM_CACHE_SINGLE, BASE_PARAM_CACHE_LIST, BASE_PARAM_MODEL_CACHE_SINGLE, BASE_PARAM_MODEL_CACHE_LIST}, allEntries = true)
     public void create(ParamCreateDto dto) {
         log.debug("系统参数新增, 入参={}", dto);
         checkBeforeCreate(dto);
@@ -119,7 +120,7 @@ public class ParamServiceImpl implements ParamService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AMS:PARAM:SINGLE", "AMS:PARAM:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {BASE_PARAM_CACHE_SINGLE, BASE_PARAM_CACHE_LIST, BASE_PARAM_MODEL_CACHE_SINGLE, BASE_PARAM_MODEL_CACHE_LIST}, allEntries = true)
     public void update(ParamUpdateDto dto) {
         log.debug("系统参数更新, 入参={}", dto);
         checkBeforeUpdate(dto);
@@ -137,58 +138,12 @@ public class ParamServiceImpl implements ParamService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {"AMS:PARAM:SINGLE", "AMS:PARAM:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {BASE_PARAM_CACHE_SINGLE, BASE_PARAM_CACHE_LIST, BASE_PARAM_MODEL_CACHE_SINGLE, BASE_PARAM_MODEL_CACHE_LIST}, allEntries = true)
     public void delete(Set<Long> idSet) {
         log.debug("系统参数批量删除, 入参={}", idSet);
         checkBeforeDelete(idSet);
         mapper.logicBatchDeleteByIds(idSet, System.currentTimeMillis());
         log.debug("系统参数批量删除成功");
-    }
-
-    /**
-     * <p>根据参数类别码查询参数列表</p>
-     *
-     * @param paramTypeCode 参数类别码
-     * @return {@link List}
-     * @author guocq
-     * @date 2023/1/9 11:46
-     * @see ParamService#list(ParamQueryDto)
-     */
-    @Override
-    @Cacheable(cacheNames = "AMS:PARAM:LIST", key = "'paramTypeCode:' + #paramTypeCode", unless = "#result.isEmpty()")
-    public List<ParamVo> findParamByParamTypeCode(String paramTypeCode) {
-        if (StrUtil.isBlank(paramTypeCode)) {
-            log.error("paramTypeCode不能为空");
-            throw new AetherValidException("paramTypeCode不能为空");
-        }
-        ParamQueryDto dto = new ParamPageQueryDto();
-        dto.setParamTypeCode(paramTypeCode);
-        return list(dto);
-    }
-
-    /**
-     * <p>根据参数码查询参数</p>
-     *
-     * @param paramCode 参数码
-     * @return {@link ParamVo}
-     * @author guocq
-     * @date 2023/1/9 11:46
-     */
-    @Override
-    @Cacheable(cacheNames = "AMS:PARAM:SINGLE", key = "'paramCode:' + #paramCode")
-    public ParamVo findParamByParamCode(String paramCode) {
-        if (StrUtil.isBlank(paramCode)) {
-            log.error("paramCode不能为空");
-            throw new AetherValidException("paramCode不能为空");
-        }
-        Wrapper<Param> wrapper = new LambdaQueryWrapper<Param>()
-                .eq(Param::getParamCode, paramCode);
-        Param param = mapper.selectOne(wrapper);
-        if (param == null) {
-            log.warn("根据[paramCode={}]查询参数为空", paramCode);
-            return new ParamVo();
-        }
-        return TransformerHelper.transformer(param, ParamVo.class);
     }
 
     /**

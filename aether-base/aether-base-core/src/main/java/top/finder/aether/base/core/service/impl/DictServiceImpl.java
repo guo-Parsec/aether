@@ -12,7 +12,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.base.api.tools.DictTool;
 import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
@@ -28,8 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_CACHE_LIST;
-import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_CACHE_SINGLE;
+import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.*;
 
 /**
  * <p>数据字典服务接口实现类</p>
@@ -45,27 +43,6 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     private DictMapper dictMapper;
 
     /**
-     * <p>根据字典类别码值获取字典模型列表</p>
-     *
-     * @param dictTypeCode 字典类别码值
-     * @return {@link List <IDictModel>} 字典模型列表
-     * @author guocq
-     * @date 2022/12/29 14:03
-     */
-    @Override
-    @Cacheable(cacheNames = BASE_DICT_CACHE_LIST, key = "'dictTypeCode:' + #dictTypeCode")
-    public List<DictModel> findDictListByType(String dictTypeCode) {
-        if (StrUtil.isBlank(dictTypeCode)) {
-            Loggers.logAetherValidError(log, "字典类别码值不能为空");
-        }
-        Wrapper<Dict> wrapper = new LambdaQueryWrapper<Dict>()
-                .select(Dict::getDictTypeCode, Dict::getDictTypeName, Dict::getDictCode, Dict::getDictName)
-                .eq(Dict::getDictTypeCode, dictTypeCode);
-        List<Dict> dictList = dictMapper.selectList(wrapper);
-        return dictList.stream().map(Dict::toDictModel).collect(Collectors.toList());
-    }
-
-    /**
      * <p>新增：字典信息</p>
      *
      * @param createDto 新增入参
@@ -73,7 +50,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * @date 2022/12/29 15:03
      */
     @Override
-    @CacheEvict(cacheNames = {BASE_DICT_CACHE_SINGLE, BASE_DICT_CACHE_LIST}, allEntries = true)
+    @CacheEvict(cacheNames = {BASE_DICT_CACHE_SINGLE, BASE_DICT_CACHE_LIST, BASE_DICT_MODEL_CACHE_SINGLE, BASE_DICT_MODEL_CACHE_LIST}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void create(DictCreateDto createDto) {
         log.debug("新增字典信息, 入参={}", createDto);
@@ -91,7 +68,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * @date 2022/12/29 15:04
      */
     @Override
-    @CacheEvict(cacheNames = {BASE_DICT_CACHE_SINGLE, BASE_DICT_CACHE_LIST}, allEntries = true)
+    @CacheEvict(cacheNames = {BASE_DICT_CACHE_SINGLE, BASE_DICT_CACHE_LIST, BASE_DICT_MODEL_CACHE_SINGLE, BASE_DICT_MODEL_CACHE_LIST}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> idSet) {
         log.debug("删除角色信息, 入参={}", idSet);
@@ -108,7 +85,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * @date 2022/12/29 15:03
      */
     @Override
-    @CacheEvict(cacheNames = {BASE_DICT_CACHE_SINGLE, BASE_DICT_CACHE_LIST}, allEntries = true)
+    @CacheEvict(cacheNames = {BASE_DICT_CACHE_SINGLE, BASE_DICT_CACHE_LIST, BASE_DICT_MODEL_CACHE_SINGLE, BASE_DICT_MODEL_CACHE_LIST}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(DictUpdateDto updateDto) {
         log.debug("更新字典信息, 入参={}", updateDto);

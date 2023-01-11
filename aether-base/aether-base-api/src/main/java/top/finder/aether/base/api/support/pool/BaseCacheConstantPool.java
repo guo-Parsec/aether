@@ -14,12 +14,12 @@ public interface BaseCacheConstantPool {
     /**
      * BASE模块缓存前缀
      */
-    String BASE_CACHE_PREFIX = "BASE";
+    String BASE_CACHE_PREFIX = "base";
 
     /**
      * BASE-DICT服务缓存前缀
      */
-    String BASE_DICT_CACHE_PREFIX = BASE_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "DICT";
+    String BASE_DICT_CACHE_PREFIX = BASE_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "dict";
 
     /**
      * BASE-DICT服务缓存单条结果
@@ -30,4 +30,39 @@ public interface BaseCacheConstantPool {
      * BASE-DICT服务缓存列表结果
      */
     String BASE_DICT_CACHE_LIST = BASE_DICT_CACHE_PREFIX + REDIS_KEY_SEPARATOR + CACHE_RESULT_LIST;
+
+    /**
+     * BASE-DICT-MODEL服务缓存单条结果
+     */
+    String BASE_DICT_MODEL_CACHE_SINGLE = BASE_DICT_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "model" + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+
+    /**
+     * BASE-DICT-MODEL服务缓存列表结果
+     */
+    String BASE_DICT_MODEL_CACHE_LIST = BASE_DICT_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "model" + REDIS_KEY_SEPARATOR + CACHE_RESULT_LIST;
+
+    /**
+     * BASE-PARAM服务缓存前缀
+     */
+    String BASE_PARAM_CACHE_PREFIX = BASE_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "param";
+
+    /**
+     * BASE-PARAM服务缓存单条结果
+     */
+    String BASE_PARAM_CACHE_SINGLE = BASE_PARAM_CACHE_PREFIX + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+
+    /**
+     * BASE-PARAM服务缓存列表结果
+     */
+    String BASE_PARAM_CACHE_LIST = BASE_PARAM_CACHE_PREFIX + REDIS_KEY_SEPARATOR + CACHE_RESULT_LIST;
+
+    /**
+     * BASE-PARAM-MODEL服务缓存单条结果
+     */
+    String BASE_PARAM_MODEL_CACHE_SINGLE = BASE_PARAM_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "model" + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+
+    /**
+     * BASE-PARAM-MODEL服务缓存列表结果
+     */
+    String BASE_PARAM_MODEL_CACHE_LIST = BASE_PARAM_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "model" + REDIS_KEY_SEPARATOR + CACHE_RESULT_LIST;
 }

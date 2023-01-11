@@ -18,8 +18,7 @@ import top.finder.aether.common.support.exception.AetherValidException;
 import java.util.List;
 import java.util.Optional;
 
-import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_CACHE_LIST;
-import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_CACHE_SINGLE;
+import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.*;
 
 /**
  * <p>数据字典Facade接口实现</p>
@@ -46,7 +45,7 @@ public class DictFacadeImpl implements DictFacade {
      * @date 2023/1/11 9:20
      */
     @Override
-    @Cacheable(cacheNames = BASE_DICT_CACHE_LIST, key = "'dictTypeCode:' + #dictTypeCode")
+    @Cacheable(cacheNames = BASE_DICT_MODEL_CACHE_LIST, key = "'dictTypeCode:' + #dictTypeCode")
     public List<DictModel> findDictByType(String dictTypeCode) {
         log.debug("根据字典类型[dictTypeCode={}]查询字典列表", dictTypeCode);
         if (StrUtil.isBlank(dictTypeCode)) {
@@ -71,7 +70,7 @@ public class DictFacadeImpl implements DictFacade {
      * @date 2023/1/11 9:43
      */
     @Override
-    @Cacheable(cacheNames = BASE_DICT_CACHE_SINGLE, key = "'dictTypeCode:' + #dictTypeCode + ':dictCode:' + #dictCode")
+    @Cacheable(cacheNames = BASE_DICT_MODEL_CACHE_SINGLE, key = "'dictTypeCode:' + #dictTypeCode + ':dictCode:' + #dictCode")
     public Optional<DictModel> findDictByTypeAndCode(String dictTypeCode, Integer dictCode) {
         log.debug("根据字典类型[dictTypeCode={}]和字典码[dictCode={}]查询数据字典", dictTypeCode, dictCode);
         if (StrUtil.isBlank(dictTypeCode)) {

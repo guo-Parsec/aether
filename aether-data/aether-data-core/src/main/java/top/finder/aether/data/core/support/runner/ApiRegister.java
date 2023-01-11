@@ -54,7 +54,7 @@ public class ApiRegister {
         Arrays.stream(basePackages).forEach(basePackage -> {
             apiClassSet.addAll(ClassUtil.scanPackage(basePackage, clazz -> clazz.isAnnotationPresent(RestController.class)));
         });
-        log.info("扫描到的api类共{}个", apiClassSet.size());
+        log.debug("扫描到的api类共{}个", apiClassSet.size());
         apiModelMap = CollUtil.isEmpty(apiModelMap) ? Maps.newHashMap() : apiModelMap;
         apiClassSet.forEach(apiClass -> {
             List<Method> methods = ClassUtil.getPublicMethods(apiClass, method -> method.isAnnotationPresent(ApiResource.class));
@@ -65,7 +65,7 @@ public class ApiRegister {
                     log.error("当前API[{}]的id[{}]与已被注册的API[{}]重复，请确认API名称的唯一性", apiModel, id, apiModelMap.get(id));
                     throw new IllegalStateException("API已被注册");
                 }
-                log.info("api成功注册[{}]", apiModel);
+                log.trace("api成功注册[{}]", apiModel);
                 apiModelMap.put(id, apiModel);
             });
         });

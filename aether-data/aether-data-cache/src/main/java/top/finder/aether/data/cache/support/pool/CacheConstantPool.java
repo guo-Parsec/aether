@@ -10,10 +10,10 @@ public interface CacheConstantPool {
     /**
      * 缓存单个结果
      */
-    String CACHE_RESULT_SINGLE = "SINGLE";
+    String CACHE_RESULT_SINGLE = "single";
 
     /**
      * 缓存列表结果
      */
-    String CACHE_RESULT_LIST = "LIST";
+    String CACHE_RESULT_LIST = "list";
 }

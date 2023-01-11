@@ -75,18 +75,4 @@ public class ParamController {
         service.delete(idSet);
         return Apis.success();
     }
-
-    @ApiResource(code = "AMS:PARAM:QUERY", name = "根据参数类别码查询参数列表", sort = 210, desc = "根据参数类别码查询参数列表")
-    @ApiOperation(value = "查询", notes = "根据参数类别码查询参数列表")
-    @GetMapping(value = "/find-param-by-param-type-code")
-    public Apis<List<ParamVo>> findParamByParamTypeCode(@RequestParam(value = "paramTypeCode") String paramTypeCode) {
-        return Apis.success(service.findParamByParamTypeCode(paramTypeCode));
-    }
-
-    @ApiResource(code = "AMS:PARAM:QUERY", name = "根据参数码查询参数", sort = 220, desc = "根据参数码查询参数")
-    @ApiOperation(value = "查询", notes = "根据参数码查询参数")
-    @GetMapping(value = "/find-param-by-param-code")
-    public Apis<ParamVo> findParamByParamCode(@RequestParam(value = "paramCode") String paramCode) {
-        return Apis.success(service.findParamByParamCode(paramCode));
-    }
 }

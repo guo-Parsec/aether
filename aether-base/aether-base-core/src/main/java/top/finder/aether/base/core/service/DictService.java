@@ -1,11 +1,10 @@
 package top.finder.aether.base.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import top.finder.aether.base.api.model.DictModel;
-import top.finder.aether.base.core.vo.DictVo;
 import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
 import top.finder.aether.base.core.entity.Dict;
+import top.finder.aether.base.core.vo.DictVo;
 
 import java.util.List;
 import java.util.Set;
@@ -53,14 +52,4 @@ public interface DictService extends IService<Dict> {
      * @date 2022/12/29 15:03
      */
     List<DictVo> listQuery(Dict dict);
-
-    /**
-     * <p>根据字典类别码值获取字典模型列表</p>
-     *
-     * @param dictTypeCode 字典类别码值
-     * @return {@link List< DictModel >} 字典模型列表
-     * @author guocq
-     * @date 2022/12/29 14:03
-     */
-    List<DictModel> findDictListByType(String dictTypeCode);
 }
