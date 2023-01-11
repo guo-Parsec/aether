@@ -3,7 +3,8 @@ package top.finder.aether.security.api.utils;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import top.finder.aether.base.api.facade.ParamFacade;
 import top.finder.aether.base.api.model.ParamModel;
 import top.finder.aether.common.support.api.CommonHttpStatus;
@@ -15,34 +16,16 @@ import top.finder.aether.security.api.entity.SecuritySignature;
 
 import java.util.Optional;
 
+import static top.finder.aether.security.api.utils.SecurityInnerPool.*;
+
 /**
  * <p>安全认证辅助类</p>
  *
  * @author guocq
  * @since 2022/12/27
  */
-@Slf4j
 public class SecurityUtils {
-    private static final String SECURITY = "SECURITY";
-
-    private static final String USER = "USER";
-
-    private static final String TOKEN = "TOKEN";
-
-    private static final String ANON = "ANON";
-
-    private static final String URLS = "URLS";
-
-    /**
-     * 默认令牌过期时间(小时)
-     */
-    private static final String PARAM_DEFAULT_TOKEN_EXPIRE_TIME = "DEFAULT_TOKEN_EXPIRE_TIME";
-
-    /**
-     * 默认过期时间 - 小时
-     */
-    private static final Long DEFAULT_EXPIRE_TIME = 6L;
-
+    private static final Logger log = LoggerFactory.getLogger(SecurityUtils.class);
     /**
      * <p>根据用户id生成指定userId的用户认证通过的用户信息存储的key</p>
      * <p>e.g. AETHER:SECURITY:USER:{userId}</p>
@@ -160,4 +143,26 @@ public class SecurityUtils {
             return DEFAULT_EXPIRE_TIME;
         }
     }
+}
+
+interface SecurityInnerPool {
+   String SECURITY = "SECURITY";
+
+    String USER = "USER";
+
+    String TOKEN = "TOKEN";
+
+    String ANON = "ANON";
+
+    String URLS = "URLS";
+
+    /**
+     * 默认令牌过期时间(小时)
+     */
+    String PARAM_DEFAULT_TOKEN_EXPIRE_TIME = "DEFAULT_TOKEN_EXPIRE_TIME";
+
+    /**
+     * 默认过期时间 - 小时
+     */
+    Long DEFAULT_EXPIRE_TIME = 6L;
 }
