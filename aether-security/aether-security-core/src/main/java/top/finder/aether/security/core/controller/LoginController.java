@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.finder.aether.security.core.model.SecuritySubject;
-import top.finder.aether.security.core.service.LoginService;
-import top.finder.aether.security.core.support.pool.SecurityApiConstantPool;
 import top.finder.aether.common.support.annotation.LoginLog;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.data.core.support.annotation.ApiResource;
 import top.finder.aether.data.core.support.enums.ResourceType;
+import top.finder.aether.security.api.entity.SecuritySignature;
+import top.finder.aether.security.core.service.LoginService;
+import top.finder.aether.security.core.support.pool.SecurityApiConstantPool;
 
 /**
  * <p>登录操作控制器</p>
@@ -34,8 +34,8 @@ public class LoginController {
     @ApiOperation(value = "登录", notes = "用户登录")
     @PostMapping(value = "/login.do")
     @LoginLog(index = 0)
-    public Apis<SecuritySubject> login(@RequestParam("account") String account, @RequestParam("password") String password,
-                                       @RequestParam(value = "verifyCode", required = false) String verifyCode) {
+    public Apis<SecuritySignature> login(@RequestParam("account") String account, @RequestParam("password") String password,
+                                         @RequestParam(value = "verifyCode", required = false) String verifyCode) {
         return Apis.success(loginService.login(account, password, verifyCode));
     }
 }

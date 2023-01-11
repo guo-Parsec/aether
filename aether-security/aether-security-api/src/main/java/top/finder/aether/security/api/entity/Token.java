@@ -1,4 +1,4 @@
-package top.finder.aether.data.security.core;
+package top.finder.aether.security.api.entity;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -7,9 +7,9 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import top.finder.aether.data.security.support.helper.WebfluxHelper;
-import top.finder.aether.data.security.support.webflux.SecurityWebfluxContext;
+import top.finder.aether.data.common.utils.WebfluxUtil;
 import top.finder.aether.gateway.properties.WhiteListProperties;
+import top.finder.aether.security.api.facade.SecurityWebfluxFacade;
 
 import java.util.List;
 
@@ -38,12 +38,12 @@ public class SecurityFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         List<String> urls = whiteListProperties.getUrls();
-        if (SecurityWebfluxContext.isReleaseAllowed(exchange, urls)) {
+        if (SecurityWebfluxFacade.isReleaseAllowed(exchange, urls)) {
             ServerHttpRequest newRequest = exchange.getRequest().mutate().header(IS_FROM_GATEWAY, Boolean.TRUE.toString()).build();
             exchange = exchange.mutate().request(newRequest).build();
             return chain.filter(exchange);
         }
-        return WebfluxHelper.unauthorizedWrite(exchange.getResponse());
+        return WebfluxUtil.unauthorizedWrite(exchange.getResponse());
     }
 
     @Override

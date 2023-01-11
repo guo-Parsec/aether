@@ -59,17 +59,7 @@
         </dependency>
         <dependency>
             <groupId>top.finder</groupId>
-            <artifactId>aether-data-security</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>top.finder</groupId>
-                    <artifactId>aether-data-cache</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>top.finder</groupId>
-                    <artifactId>aether-common</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>aether-security-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

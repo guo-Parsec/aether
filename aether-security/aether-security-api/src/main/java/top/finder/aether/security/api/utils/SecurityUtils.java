@@ -1,4 +1,4 @@
-package top.finder.aether.data.security.support.helper;
+package top.finder.aether.security.api.utils;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -11,7 +11,7 @@ import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
 import top.finder.aether.data.common.model.IParamModel;
 import top.finder.aether.data.common.support.access.IParamAccess;
-import top.finder.aether.data.security.core.ISecuritySubject;
+import top.finder.aether.security.api.entity.SecuritySignature;
 
 /**
  * <p>安全认证辅助类</p>
@@ -20,7 +20,7 @@ import top.finder.aether.data.security.core.ISecuritySubject;
  * @since 2022/12/27
  */
 @Slf4j
-public class SecurityHelper {
+public class SecurityUtils {
     private static final String SECURITY = "SECURITY";
 
     private static final String USER = "USER";
@@ -107,28 +107,28 @@ public class SecurityHelper {
     }
 
     /**
-     * <p>判断安全认证主体是否为空</p>
+     * <p>校验安全认证签名是否为空</p>
      *
-     * @param securitySubject 安全认证主体
+     * @param signature 安全认证签名
+     * @author guocq
+     * @date 2022/12/28 10:16
+     */
+    public static void checkSecuritySignatureEmpty(SecuritySignature signature) {
+        if (isSecuritySignatureEmpty(signature)) {
+            CodeHelper.logAetherError(log, "获取登录凭证信息失败，无法获取到登录信息，可能因为令牌已过期", CommonHttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * <p>判断安全认证签名是否为空</p>
+     *
+     * @param signature 安全认证签名
      * @return boolean true:表示为空 false:表示非空
      * @author guocq
      * @date 2022/12/28 10:14
      */
-    public static boolean isSecuritySubjectEmpty(ISecuritySubject<?> securitySubject) {
-        return ObjectUtil.isNull(securitySubject) || ObjectUtil.isNull(securitySubject.getSignature());
-    }
-
-    /**
-     * <p>校验安全认证主体是否为空</p>
-     *
-     * @param securitySubject 安全认证主体
-     * @author guocq
-     * @date 2022/12/28 10:16
-     */
-    public static void checkSecuritySubjectEmpty(ISecuritySubject<?> securitySubject) {
-        if (isSecuritySubjectEmpty(securitySubject)) {
-            CodeHelper.logAetherError(log, "获取登录凭证信息失败，无法获取到登录信息，可能因为令牌已过期", CommonHttpStatus.UNAUTHORIZED);
-        }
+    public static boolean isSecuritySignatureEmpty(SecuritySignature signature) {
+        return ObjectUtil.isNull(signature) || ObjectUtil.isNull(signature.getDetails());
     }
 
     /**

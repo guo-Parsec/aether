@@ -149,12 +149,6 @@
             <!-- 数据服务认证模块 -->
             <dependency>
                 <groupId>top.finder</groupId>
-                <artifactId>aether-data-security</artifactId>
-                <version>${aether.version}</version>
-            </dependency>
-            <!-- 数据服务认证模块 -->
-            <dependency>
-                <groupId>top.finder</groupId>
                 <artifactId>aether-data-core</artifactId>
                 <version>${aether.version}</version>
             </dependency>

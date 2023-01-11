@@ -41,7 +41,7 @@ import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.support.strategy.Md5SaltCrypto;
 import top.finder.aether.data.core.support.helper.PageHelper;
-import top.finder.aether.data.security.core.SecurityContext;
+import top.finder.aether.security.api.facade.SecurityFacade;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
                 .set(User::getPassword, password);
         userMapper.update(new User(account, password), wrapper);
         log.debug("用户修改密码成功");
-        SecurityContext.kickOut(user.getId());
+        SecurityFacade.kickOut(user.getId());
     }
 
     /**
@@ -245,7 +245,7 @@ public class UserServiceImpl implements UserService {
                 .set(User::getEnableStatus, BaseConstantPool.ENABLE_STATUS_ENABLE);
         userMapper.update(user, wrapper);
         log.debug("用户重置成功");
-        SecurityContext.kickOut(user.getId());
+        SecurityFacade.kickOut(user.getId());
     }
 
     /**
@@ -283,7 +283,7 @@ public class UserServiceImpl implements UserService {
                 .set(User::getEnableStatus, enableStatus);
         userMapper.update(user, wrapper);
         log.debug("{}用户成功", typeMessage);
-        SecurityContext.kickOut(user.getId());
+        SecurityFacade.kickOut(user.getId());
     }
 
     /**
@@ -302,7 +302,7 @@ public class UserServiceImpl implements UserService {
         userMapper.unbindRoleOfUser(id);
         userMapper.bindRoleOfUser(id, dto.getRoleId());
         log.debug("为用户赋予角色成功");
-        SecurityContext.kickOut(id);
+        SecurityFacade.kickOut(id);
     }
 
     /**

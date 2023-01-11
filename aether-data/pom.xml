@@ -15,7 +15,6 @@
     <modules>
         <module>aether-data-common</module>
         <module>aether-data-cache</module>
-        <module>aether-data-security</module>
         <module>aether-data-core</module>
     </modules>
 

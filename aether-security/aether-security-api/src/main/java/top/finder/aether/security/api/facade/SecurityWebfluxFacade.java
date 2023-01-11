@@ -1,4 +1,4 @@
-package top.finder.aether.data.security.support.webflux;
+package top.finder.aether.security.api.facade;
 
 import cn.hutool.core.collection.CollUtil;
 import com.google.common.collect.Sets;
@@ -11,9 +11,8 @@ import org.springframework.web.server.ServerWebExchange;
 import top.finder.aether.common.support.helper.UrlHelper;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
-import top.finder.aether.data.security.core.ISecuritySubject;
-import top.finder.aether.data.security.core.SecurityContext;
-import top.finder.aether.data.security.support.helper.SecurityHelper;
+import top.finder.aether.security.api.utils.SecurityUtils;
+import top.finder.aether.security.api.entity.SecuritySignature;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,14 +20,13 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * <p>安全认证WebFlux上下文</p>
+ * <p>安全认证Facade(为WebFlux专用)</p>
  *
  * @author guocq
- * @see SecurityContext
- * @since 2022/12/28
+ * @since 2023/1/11
  */
-public class SecurityWebfluxContext {
-    private static final Logger log = LoggerFactory.getLogger(SecurityWebfluxContext.class);
+public class SecurityWebfluxFacade {
+    private static final Logger log = LoggerFactory.getLogger(SecurityWebfluxFacade.class);
 
     /**
      * <p>是否允许放行</p>
@@ -62,12 +60,12 @@ public class SecurityWebfluxContext {
      * @date 2022/12/28 11:05
      */
     private static <U extends Serializable> boolean pendingCertifiedRelease(RequestPath requestPath, String tokenText) {
-        if (!SecurityContext.isLogin(tokenText)) {
+        if (!SecurityFacade.isLogin(tokenText)) {
             log.error("当前用户未登录系统，不能访问请求[{}]，系统拒绝放行", requestPath);
             return false;
         }
-        ISecuritySubject<U> securitySubject = SecurityContext.findSecuritySubject(tokenText);
-        Set<String> urls = securitySubject.getUrls();
+        SecuritySignature signature = SecurityFacade.findSecuritySignature(tokenText);
+        Set<String> urls = signature.getUrls();
         String reqUrl = UrlHelper.autoPopulateRequestRootPath(requestPath.toString());
         if (!UrlHelper.matches(reqUrl, urls)) {
             log.error("当前用户没有访问请求[{}]的权限，系统拒绝放行", requestPath);
@@ -87,7 +85,7 @@ public class SecurityWebfluxContext {
      */
     private static boolean anonRelease(RequestPath requestPath, List<String> whiteList) {
         Assert.notNull(requestPath, "当前请求为null");
-        String anonUrlsKey = SecurityHelper.generateAnonUrlsKey();
+        String anonUrlsKey = SecurityUtils.generateAnonUrlsKey();
         @SuppressWarnings("unchecked")
         Set<String> anonUrls = RedisHelper.getInstance().get(anonUrlsKey, Set.class);
         anonUrls = Optional.ofNullable(anonUrls).map(urls -> Sets.newHashSet(CollUtil.addAll(urls, whiteList))).orElse(Sets.newHashSet(whiteList));

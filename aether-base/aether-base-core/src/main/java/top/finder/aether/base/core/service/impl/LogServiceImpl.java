@@ -9,9 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.base.core.vo.HiLoginVo;
-import top.finder.aether.base.core.vo.HiOperateLogVo;
-import top.finder.aether.base.api.vo.UserVo;
 import top.finder.aether.base.core.dto.HiLoginQueryDto;
 import top.finder.aether.base.core.dto.HiOperateLogQueryDto;
 import top.finder.aether.base.core.entity.HiLogin;
@@ -19,10 +16,12 @@ import top.finder.aether.base.core.entity.HiOperateLog;
 import top.finder.aether.base.core.mapper.HiLoginMapper;
 import top.finder.aether.base.core.mapper.HiOperateLogMapper;
 import top.finder.aether.base.core.service.LogService;
+import top.finder.aether.base.core.vo.HiLoginVo;
+import top.finder.aether.base.core.vo.HiOperateLogVo;
 import top.finder.aether.common.model.LogModel;
 import top.finder.aether.common.support.helper.TransformerHelper;
-import top.finder.aether.data.security.core.ISecuritySubject;
-import top.finder.aether.data.security.core.SecurityContext;
+import top.finder.aether.security.api.entity.SecuritySignature;
+import top.finder.aether.security.api.facade.SecurityFacade;
 
 import javax.annotation.Resource;
 
@@ -113,10 +112,10 @@ public class LogServiceImpl implements LogService {
     }
 
     private void setLoginInfo(LogModel logModel) {
-        if (SecurityContext.isLogin()) {
-            ISecuritySubject<UserVo> subject = SecurityContext.findSecuritySubject();
-            logModel.setUserId(subject.getId());
-            logModel.setUserAccount(subject.getAccount());
+        if (SecurityFacade.isLogin()) {
+            SecuritySignature signature = SecurityFacade.findSecuritySignature();
+            logModel.setUserId(signature.getId());
+            logModel.setUserAccount(signature.getAccount());
         }
     }
 }

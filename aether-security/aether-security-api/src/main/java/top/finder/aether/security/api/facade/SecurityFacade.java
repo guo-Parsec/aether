@@ -1,8 +1,7 @@
-package top.finder.aether.data.security.core;
+package top.finder.aether.security.api.facade;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -11,73 +10,73 @@ import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
-import top.finder.aether.data.security.support.helper.SecurityHelper;
+import top.finder.aether.security.api.entity.SecuritySignature;
+import top.finder.aether.security.api.utils.SecurityUtils;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 
 /**
- * <p>安全认证上下文</p>
+ * <p>安全认证Facade</p>
  *
  * @author guocq
- * @since 2022/12/27
+ * @since 2023/1/11
  */
-public class SecurityContext {
-    private static final Logger log = LoggerFactory.getLogger(SecurityContext.class);
+public class SecurityFacade {
+    private static final Logger log = LoggerFactory.getLogger(SecurityFacade.class);
+
     /**
      * <p>登录操作</p>
      *
-     * @param subject 安全认证主体
+     * @param signature 安全认证签名
      * @author guocq
      * @date 2022/12/27 17:00
      */
-    public static <U> void login(final ISecuritySubject<U> subject) {
-        log.debug("登录操作开始, 当前登录人={}", subject);
+    public static <U> void login(final SecuritySignature signature) {
+        log.debug("开始登录, 当前签名为[{}]", signature);
         String tokenId = IdUtil.fastSimpleUUID();
-        subject.setTokenId(tokenId);
-        Long id = subject.getId();
+        signature.setTokenId(tokenId);
+        Long id = signature.getId();
         // 登录时先踢出当前用户
         kickOut(id);
         RedisHelper redisHelper = RedisHelper.getInstance();
-        String securityTokenKey = SecurityHelper.generateSecurityTokenKey(tokenId);
-        String securityUserKey = SecurityHelper.generateSecurityUserKey(id);
-        Long defaultTokenExpireTime = SecurityHelper.getDefaultTokenExpireTime();
-        redisHelper.set(securityTokenKey, JSON.toJSONString(subject), defaultTokenExpireTime, HOURS);
+        String securityTokenKey = SecurityUtils.generateSecurityTokenKey(tokenId);
+        String securityUserKey = SecurityUtils.generateSecurityUserKey(id);
+        Long defaultTokenExpireTime = SecurityUtils.getDefaultTokenExpireTime();
+        redisHelper.set(securityTokenKey, signature, defaultTokenExpireTime, HOURS);
         redisHelper.set(securityUserKey, tokenId, defaultTokenExpireTime, HOURS);
     }
 
     /**
-     * <p>获取当前请求的安全认证主体</p>
+     * <p>获取当前请求的安全认证签名</p>
      *
-     * @return {@link ISecuritySubject}
+     * @return {@link SecuritySignature}
      * @author guocq
      * @date 2022/12/27 17:27
      */
-    public static <U> ISecuritySubject<U> findSecuritySubject() {
+    public static SecuritySignature findSecuritySignature() {
         String tokenText = CodeHelper.getHttpServletRequest().getHeader(SecurityConstantPool.TOKEN_IN_HEAD_KEY);
-        return findSecuritySubject(tokenText);
+        return findSecuritySignature(tokenText);
     }
 
     /**
-     * <p>根据从请求头中获取的原生的令牌文本获取安全认证主体</p>
+     * <p>根据从请求头中获取的原生的令牌文本获取安全认证签名</p>
      *
      * @param tokenText 从请求头中获取的原生的令牌文本
-     * @return {@link ISecuritySubject}
+     * @return {@link SecuritySignature}
      * @author guocq
      * @date 2022/12/27 17:19
      */
-    public static <U> ISecuritySubject<U> findSecuritySubject(String tokenText) {
-        log.debug("根据令牌文本={}获取安全认证主体", tokenText);
+    public static SecuritySignature findSecuritySignature(String tokenText) {
+        log.debug("根据令牌文本={}获取安全认证签名", tokenText);
         if (StrUtil.isBlank(tokenText)) {
             CodeHelper.logAetherError(log, "tokenText不能为空", CommonHttpStatus.UNAUTHORIZED);
         }
-        String effectiveTokenId = SecurityHelper.findEffectiveTokenId(tokenText);
+        String effectiveTokenId = SecurityUtils.findEffectiveTokenId(tokenText);
         RedisHelper redisHelper = RedisHelper.getInstance();
-        String securityUserKey = SecurityHelper.generateSecurityTokenKey(effectiveTokenId);
-        String subjectJsonStr = redisHelper.get(securityUserKey, String.class);
-        @SuppressWarnings("unchecked")
-        ISecuritySubject<U> securitySubject = JSON.parseObject(subjectJsonStr, ISecuritySubject.class);
-        SecurityHelper.checkSecuritySubjectEmpty(securitySubject);
-        return securitySubject;
+        String securityUserKey = SecurityUtils.generateSecurityTokenKey(effectiveTokenId);
+        SecuritySignature signature = redisHelper.get(securityUserKey, SecuritySignature.class);
+        SecurityUtils.checkSecuritySignatureEmpty(signature);
+        return signature;
     }
 
     /**
@@ -103,7 +102,7 @@ public class SecurityContext {
     public static boolean isLogin(String tokenText) {
         log.debug("根据令牌文本={}判断当前请求是否登录过", tokenText);
         try {
-            findSecuritySubject(tokenText);
+            findSecuritySignature(tokenText);
         } catch (AetherException aetherException) {
             log.error("根据令牌文本={}判断结果为：当前请求尚未登录", tokenText);
             return false;
@@ -118,10 +117,10 @@ public class SecurityContext {
      * @date 2022/12/27 17:34
      */
     public static <U> void logout() {
-        ISecuritySubject<U> subject;
+        SecuritySignature signature;
         try {
-            subject = findSecuritySubject();
-            kickOut(subject.getId());
+            signature = findSecuritySignature();
+            kickOut(signature.getId());
         } catch (AetherException aetherException) {
             log.error("当前用户已退出系统");
         }
@@ -138,11 +137,11 @@ public class SecurityContext {
         log.debug("id为{}的用户将被踢下线", userId);
         Assert.notNull(userId, "userId不能为空");
         RedisHelper redisHelper = RedisHelper.getInstance();
-        String securityUserKey = SecurityHelper.generateSecurityUserKey(userId);
+        String securityUserKey = SecurityUtils.generateSecurityUserKey(userId);
         boolean exist = redisHelper.hasKey(securityUserKey);
         if (exist) {
             String tokenId = redisHelper.get(securityUserKey, String.class);
-            String securityTokenKey = SecurityHelper.generateSecurityTokenKey(tokenId);
+            String securityTokenKey = SecurityUtils.generateSecurityTokenKey(tokenId);
             redisHelper.delete(securityTokenKey);
         }
         redisHelper.delete(securityUserKey);

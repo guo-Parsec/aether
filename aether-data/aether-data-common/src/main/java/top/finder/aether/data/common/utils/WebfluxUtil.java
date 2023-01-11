@@ -1,4 +1,4 @@
-package top.finder.aether.data.security.support.helper;
+package top.finder.aether.data.common.utils;
 
 import cn.hutool.json.JSONUtil;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -17,7 +17,7 @@ import top.finder.aether.common.support.api.IHttpStatus;
  * @author guocq
  * @since 2022/12/28
  */
-public class WebfluxHelper {
+public class WebfluxUtil {
 
     /**
      * <p>失败写入</p>
