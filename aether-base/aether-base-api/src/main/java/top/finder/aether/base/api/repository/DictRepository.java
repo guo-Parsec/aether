@@ -2,7 +2,7 @@ package top.finder.aether.base.api.repository;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import top.finder.aether.base.api.entity.Dict;
+import top.finder.aether.base.api.model.DictModel;
 
 import java.util.List;
 
@@ -22,5 +22,5 @@ public interface DictRepository {
      * @author guocq
      * @date 2023/1/11 11:21
      */
-    List<Dict> findDictByType(@Param("dictTypeCode") String dictTypeCode);
+    List<DictModel> findDictByType(@Param("dictTypeCode") String dictTypeCode);
 }

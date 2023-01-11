@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.finder.aether.base.api.repository.ParamRepository">
+    <resultMap id="ParamModelMap" type="top.finder.aether.base.api.model.ParamModel">
+        <!--@mbg.generated-->
+        <!--@Table ams_param-->
+        <result column="param_type_code" jdbcType="VARCHAR" property="paramTypeCode" />
+        <result column="param_type_name" jdbcType="VARCHAR" property="paramTypeName" />
+        <result column="param_name" jdbcType="VARCHAR" property="paramName" />
+        <result column="param_code" jdbcType="VARCHAR" property="paramCode" />
+        <result column="param_value" jdbcType="VARCHAR" property="paramValue" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@sql select -->
+        param.id,
+        param.param_type_code,
+        param.param_type_name,
+        param.param_name,
+        param.param_code,
+        param.param_value,
+        param.param_sort,
+        param.delete_at,
+        param.gmt_create,
+        param.gmt_modify
+        <!--@sql from ams_param param-->
+    </sql>
+    
+    <select id="findParamByType" parameterType="java.lang.String" resultMap="ParamModelMap">
+        select  param.param_type_code,
+                param.param_type_name,
+                param.param_name,
+                param.param_code,
+                param.param_value
+        from ams_param param
+        where param.delete_at = 0
+        and param.param_type_code = #{paramTypeCode,jdbcType=VARCHAR}
+        order by param.param_type_code, param.param_sort, param.gmt_modify desc
+    </select>
+
+    <select id="findParamByParamCode" parameterType="java.lang.String" resultMap="ParamModelMap">
+        select param.param_type_code,
+               param.param_type_name,
+               param.param_name,
+               param.param_code,
+               param.param_value
+        from ams_param param
+        where param.delete_at = 0
+          and param.param_code = #{paramCode,jdbcType=VARCHAR}
+        limit 1
+    </select>
+</mapper>

@@ -27,7 +27,7 @@ public interface DictAccess {
      *
      * @param dictTypeCode 字典类型
      * @param dictCode     字典码
-     * @return {@link DictModel}
+     * @return {@link Optional}
      * @author guocq
      * @date 2023/1/11 9:43
      */

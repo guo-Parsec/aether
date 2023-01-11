@@ -9,15 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.finder.aether.base.api.access.DictAccess;
-import top.finder.aether.base.api.entity.Dict;
 import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.base.api.repository.DictRepository;
 import top.finder.aether.common.support.exception.AetherValidException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_CACHE_LIST;
 import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_CACHE_SINGLE;
@@ -28,6 +27,7 @@ import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE
  * @author guocq
  * @since 2023/1/11
  */
+@Transactional(readOnly = true)
 @Service(value = "dictAccess")
 public class DictAccessImpl implements DictAccess {
     private static final Logger log = LoggerFactory.getLogger(DictAccessImpl.class);
@@ -53,12 +53,12 @@ public class DictAccessImpl implements DictAccess {
             log.error("字典类型码[dictTypeCode]不能为空");
             throw new AetherValidException("字典类型码[dictTypeCode]不能为空");
         }
-        List<Dict> dictList = repository.findDictByType(dictTypeCode);
+        List<DictModel> dictList = repository.findDictByType(dictTypeCode);
         if (CollUtil.isEmpty(dictList)) {
             log.debug("根据字典类型[dictTypeCode={}]查询字典列表为空", dictTypeCode);
             return Lists.newArrayList();
         }
-        return dictList.stream().map(Dict::toDictModel).collect(Collectors.toList());
+        return dictList;
     }
 
     /**
@@ -66,13 +66,14 @@ public class DictAccessImpl implements DictAccess {
      *
      * @param dictTypeCode 字典类型
      * @param dictCode     字典码
-     * @return {@link DictModel}
+     * @return {@link Optional}
      * @author guocq
      * @date 2023/1/11 9:43
      */
     @Override
     @Cacheable(cacheNames = BASE_DICT_CACHE_SINGLE, key = "'dictTypeCode:' + #dictTypeCode + ':dictCode:' + #dictCode")
     public Optional<DictModel> findDictByTypeAndCode(String dictTypeCode, Integer dictCode) {
+        log.debug("根据字典类型[dictTypeCode={}]和字典码[dictCode={}]查询数据字典", dictTypeCode, dictCode);
         if (StrUtil.isBlank(dictTypeCode)) {
             log.error("字典类型码[dictTypeCode]不能为空");
             throw new AetherValidException("字典类型码[dictTypeCode]不能为空");
