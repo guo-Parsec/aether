@@ -16,7 +16,7 @@ import java.util.StringJoiner;
  */
 @Setter
 @Getter
-public class LogModel implements IModel {
+public class SystemLogInfo implements IModel {
     private static final long serialVersionUID = -1560408447041120209L;
 
     /**
@@ -87,7 +87,7 @@ public class LogModel implements IModel {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", LogModel.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", SystemLogInfo.class.getSimpleName() + "[", "]")
                 .add("accessUrl='" + accessUrl + "'")
                 .add("accessApp='" + accessApp + "'")
                 .add("userId=" + userId)

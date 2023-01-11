@@ -18,7 +18,7 @@ import top.finder.aether.base.core.mapper.HiOperateLogMapper;
 import top.finder.aether.base.core.service.LogService;
 import top.finder.aether.base.core.vo.HiLoginVo;
 import top.finder.aether.base.core.vo.HiOperateLogVo;
-import top.finder.aether.common.model.LogModel;
+import top.finder.aether.common.model.SystemLogInfo;
 import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.security.api.entity.SecuritySignature;
 import top.finder.aether.security.api.facade.SecurityFacade;
@@ -43,31 +43,31 @@ public class LogServiceImpl implements LogService {
     /**
      * <p>保存操作日志信息</p>
      *
-     * @param logModel 日志信息
+     * @param systemLogInfo 日志信息
      * @author guocq
      * @date 2022/12/30 10:31
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveOperateLog(LogModel logModel) {
-        log.debug("保存操作日志信息开始，入参={}", logModel);
-        setLoginInfo(logModel);
-        hiOperateLogMapper.insert(HiOperateLog.transformToHiOperateLog(logModel));
+    public void saveOperateLog(SystemLogInfo systemLogInfo) {
+        log.debug("保存操作日志信息开始，入参={}", systemLogInfo);
+        setLoginInfo(systemLogInfo);
+        hiOperateLogMapper.insert(HiOperateLog.transformToHiOperateLog(systemLogInfo));
         log.debug("保存操作日志信息成功");
     }
 
     /**
      * <p>保存登录日志信息</p>
      *
-     * @param logModel 日志信息
+     * @param systemLogInfo 日志信息
      * @author guocq
      * @date 2023/1/4 10:28
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveLoginLog(LogModel logModel) {
-        log.debug("保存登录日志信息开始，入参={}", logModel);
-        hiLoginMapper.insert(HiLogin.transformToHiLoginLog(logModel));
+    public void saveLoginLog(SystemLogInfo systemLogInfo) {
+        log.debug("保存登录日志信息开始，入参={}", systemLogInfo);
+        hiLoginMapper.insert(HiLogin.transformToHiLoginLog(systemLogInfo));
         log.debug("保存登录日志信息成功");
     }
 
@@ -111,11 +111,11 @@ public class LogServiceImpl implements LogService {
         return rawPage.convert(record -> TransformerHelper.transformer(record, HiLoginVo.class));
     }
 
-    private void setLoginInfo(LogModel logModel) {
+    private void setLoginInfo(SystemLogInfo systemLogInfo) {
         if (SecurityFacade.isLogin()) {
             SecuritySignature signature = SecurityFacade.findSecuritySignature();
-            logModel.setUserId(signature.getId());
-            logModel.setUserAccount(signature.getAccount());
+            systemLogInfo.setUserId(signature.getId());
+            systemLogInfo.setUserAccount(signature.getAccount());
         }
     }
 }

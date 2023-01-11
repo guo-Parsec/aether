@@ -11,7 +11,7 @@ import top.finder.aether.base.core.vo.HiOperateLogVo;
 import top.finder.aether.base.core.dto.HiLoginQueryDto;
 import top.finder.aether.base.core.dto.HiOperateLogQueryDto;
 import top.finder.aether.base.core.service.LogService;
-import top.finder.aether.common.model.LogModel;
+import top.finder.aether.common.model.SystemLogInfo;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.data.core.support.annotation.ApiResource;
 
@@ -33,15 +33,15 @@ public class LogController {
 
     @ApiOperation(value = "保存操作日志信息", notes = "保存操作日志信息", hidden = true)
     @PostMapping(value = "/operate-log/save.do")
-    public Apis<Void> doSaveOperateLog(@RequestBody @Validated LogModel logModel) {
-        logService.saveOperateLog(logModel);
+    public Apis<Void> doSaveOperateLog(@RequestBody @Validated SystemLogInfo systemLogInfo) {
+        logService.saveOperateLog(systemLogInfo);
         return Apis.success();
     }
 
     @ApiOperation(value = "保存登录日志信息", notes = "保存登录日志信息", hidden = true)
     @PostMapping(value = "/login-log/save.do")
-    public Apis<Void> doSaveLoginLog(@RequestBody @Validated LogModel logModel) {
-        logService.saveLoginLog(logModel);
+    public Apis<Void> doSaveLoginLog(@RequestBody @Validated SystemLogInfo systemLogInfo) {
+        logService.saveLoginLog(systemLogInfo);
         return Apis.success();
     }
 

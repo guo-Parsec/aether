@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.finder.aether.common.model.LogModel;
+import top.finder.aether.common.model.SystemLogInfo;
 import top.finder.aether.data.common.entity.BaseEntity;
 
 import java.time.LocalDateTime;
@@ -86,21 +86,21 @@ public class HiLogin extends BaseEntity {
     /**
      * <p>logModel转化为HiLogin</p>
      *
-     * @param logModel 日志模型
+     * @param systemLogInfo 日志模型
      * @return {@link HiLogin}
      * @author guocq
      * @date 2023/01/04 10:26
      */
-    public static HiLogin transformToHiLoginLog(LogModel logModel) {
+    public static HiLogin transformToHiLoginLog(SystemLogInfo systemLogInfo) {
         HiLogin loginLog = new HiLogin();
-        loginLog.setLoginIp(logModel.getIp());
-        loginLog.setLoginAccount(logModel.getUserAccount());
-        loginLog.setLoginResult(logModel.getResult());
-        loginLog.setDeviceName(logModel.getDeviceName());
-        loginLog.setTimeConsuming(logModel.getTimeConsuming());
-        loginLog.setErrorCode(logModel.getErrorCode());
-        loginLog.setErrorMessage(logModel.getErrorMessage());
-        loginLog.setGmtCreate(logModel.getLogTime());
+        loginLog.setLoginIp(systemLogInfo.getIp());
+        loginLog.setLoginAccount(systemLogInfo.getUserAccount());
+        loginLog.setLoginResult(systemLogInfo.getResult());
+        loginLog.setDeviceName(systemLogInfo.getDeviceName());
+        loginLog.setTimeConsuming(systemLogInfo.getTimeConsuming());
+        loginLog.setErrorCode(systemLogInfo.getErrorCode());
+        loginLog.setErrorMessage(systemLogInfo.getErrorMessage());
+        loginLog.setGmtCreate(systemLogInfo.getLogTime());
         log.debug("转换后的类型为{}", loginLog);
         return loginLog;
     }

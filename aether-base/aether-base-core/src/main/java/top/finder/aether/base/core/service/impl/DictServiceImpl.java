@@ -12,16 +12,16 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.base.core.entity.Dict;
 import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.base.api.tools.DictTool;
 import top.finder.aether.base.core.dto.DictCreateDto;
 import top.finder.aether.base.core.dto.DictUpdateDto;
+import top.finder.aether.base.core.entity.Dict;
 import top.finder.aether.base.core.mapper.DictMapper;
 import top.finder.aether.base.core.service.DictService;
 import top.finder.aether.base.core.vo.DictVo;
-import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.helper.TransformerHelper;
+import top.finder.aether.common.utils.Loggers;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -56,7 +56,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     @Cacheable(cacheNames = BASE_DICT_CACHE_LIST, key = "'dictTypeCode:' + #dictTypeCode")
     public List<DictModel> findDictListByType(String dictTypeCode) {
         if (StrUtil.isBlank(dictTypeCode)) {
-            CodeHelper.logAetherValidError(log, "字典类别码值不能为空");
+            Loggers.logAetherValidError(log, "字典类别码值不能为空");
         }
         Wrapper<Dict> wrapper = new LambdaQueryWrapper<Dict>()
                 .select(Dict::getDictTypeCode, Dict::getDictTypeName, Dict::getDictCode, Dict::getDictName)
@@ -155,7 +155,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
                 .eq(Dict::getDictCode, dictCode);
         boolean exists = dictMapper.exists(wrapper);
         if (exists) {
-            CodeHelper.logAetherValidError(log, "字典数据[dictTypeCode={},dictCode={}]的数据已存在，不能重复新增", dictTypeCode, dictCode);
+            Loggers.logAetherValidError(log, "字典数据[dictTypeCode={},dictCode={}]的数据已存在，不能重复新增", dictTypeCode, dictCode);
         }
     }
 
@@ -168,14 +168,14 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      */
     private void checkBeforeDelete(Set<Long> idSet) {
         if (CollUtil.isEmpty(idSet)) {
-            CodeHelper.logAetherValidError(log, "删除时主键集合不能为空", idSet);
+            Loggers.logAetherValidError(log, "删除时主键集合不能为空", idSet);
         }
         Wrapper<Dict> wrapper = new LambdaQueryWrapper<Dict>()
                 .in(Dict::getId, idSet);
         Long count = dictMapper.selectCount(wrapper);
         int size = idSet.size();
         if (count == 0) {
-            CodeHelper.logAetherValidError(log, "待删除的idSet={}中没有找到相应的数据，无法删除", idSet);
+            Loggers.logAetherValidError(log, "待删除的idSet={}中没有找到相应的数据，无法删除", idSet);
         }
         if (count < size) {
             log.warn("待删除的idSet={}中部分主键不存在无法删除，系统将删除已存在的数据{}条", idSet, count);
@@ -194,7 +194,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         Dict dictFromDb = dictMapper.selectById(id);
         boolean exists = dictFromDb != null && ObjectUtil.equals(id, dictFromDb.getId());
         if (!exists) {
-            CodeHelper.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
+            Loggers.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
             return;
         }
         String dictTypeCode = StrUtil.isBlank(updateDto.getDictTypeCode()) ? dictFromDb.getDictTypeCode() : updateDto.getDictTypeCode();
@@ -205,7 +205,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
                 .ne(Dict::getId, id);
         exists = dictMapper.exists(wrapper);
         if (exists) {
-            CodeHelper.logAetherValidError(log, "字典数据[dictTypeCode={},dictCode={}]的数据已存在，不能重复新增", dictTypeCode, dictCode);
+            Loggers.logAetherValidError(log, "字典数据[dictTypeCode={},dictCode={}]的数据已存在，不能重复新增", dictTypeCode, dictCode);
         }
     }
 }

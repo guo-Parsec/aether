@@ -69,7 +69,8 @@ public class SecurityFacade {
     public static SecuritySignature findSecuritySignature(String tokenText) {
         log.debug("根据令牌文本={}获取安全认证签名", tokenText);
         if (StrUtil.isBlank(tokenText)) {
-            CodeHelper.logAetherError(log, "tokenText不能为空", CommonHttpStatus.UNAUTHORIZED);
+            log.error("tokenText不能为空");
+            throw new AetherException(CommonHttpStatus.UNAUTHORIZED, "tokenText不能为空");
         }
         String effectiveTokenId = SecurityUtils.findEffectiveTokenId(tokenText);
         RedisHelper redisHelper = RedisHelper.getInstance();

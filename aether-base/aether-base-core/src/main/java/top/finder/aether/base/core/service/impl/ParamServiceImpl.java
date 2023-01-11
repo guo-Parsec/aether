@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.finder.aether.base.api.vo.ParamVo;
 import top.finder.aether.base.core.dto.ParamCreateDto;
 import top.finder.aether.base.core.dto.ParamPageQueryDto;
 import top.finder.aether.base.core.dto.ParamQueryDto;
@@ -19,10 +20,9 @@ import top.finder.aether.base.core.dto.ParamUpdateDto;
 import top.finder.aether.base.core.entity.Param;
 import top.finder.aether.base.core.mapper.ParamMapper;
 import top.finder.aether.base.core.service.ParamService;
-import top.finder.aether.base.api.vo.ParamVo;
 import top.finder.aether.common.support.exception.AetherValidException;
-import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.helper.TransformerHelper;
+import top.finder.aether.common.utils.Loggers;
 import top.finder.aether.data.core.support.helper.PageHelper;
 
 import javax.annotation.Resource;
@@ -204,7 +204,7 @@ public class ParamServiceImpl implements ParamService {
                 .eq(Param::getParamCode, paramCode);
         boolean exists = mapper.exists(wrapper);
         if (exists) {
-            CodeHelper.logAetherValidError(log, "参数编码为[paramCode={}]的数据已存在，不能重复新增", paramCode);
+            Loggers.logAetherValidError(log, "参数编码为[paramCode={}]的数据已存在，不能重复新增", paramCode);
         }
     }
 
@@ -221,7 +221,7 @@ public class ParamServiceImpl implements ParamService {
                 .eq(Param::getId, id);
         boolean exists = mapper.exists(wrapper);
         if (!exists) {
-            CodeHelper.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
+            Loggers.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
         }
         String paramCode = dto.getParamCode();
         if (StrUtil.isNotBlank(paramCode)) {
@@ -230,7 +230,7 @@ public class ParamServiceImpl implements ParamService {
                     .ne(Param::getId, id);
             exists = mapper.exists(wrapper);
             if (exists) {
-                CodeHelper.logAetherValidError(log, "参数编码为[paramCode={}]的数据已存在，不能重复更新", paramCode);
+                Loggers.logAetherValidError(log, "参数编码为[paramCode={}]的数据已存在，不能重复更新", paramCode);
             }
         }
     }
@@ -244,7 +244,7 @@ public class ParamServiceImpl implements ParamService {
      */
     private void checkBeforeDelete(Set<Long> idSet) {
         if (CollUtil.isEmpty(idSet)) {
-            CodeHelper.logAetherValidError(log, "删除时主键集合不能为空", idSet);
+            Loggers.logAetherValidError(log, "删除时主键集合不能为空", idSet);
         }
         Wrapper<Param> wrapper = new LambdaQueryWrapper<Param>()
                 .in(Param::getId, idSet);

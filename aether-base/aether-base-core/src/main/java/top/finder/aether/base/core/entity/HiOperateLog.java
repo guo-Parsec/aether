@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.finder.aether.common.model.LogModel;
+import top.finder.aether.common.model.SystemLogInfo;
 import top.finder.aether.data.common.entity.BaseEntity;
 
 import java.time.LocalDateTime;
@@ -114,25 +114,25 @@ public class HiOperateLog extends BaseEntity {
     /**
      * <p>logModel转化为HiOperateLog</p>
      *
-     * @param logModel 日志模型
+     * @param systemLogInfo 日志模型
      * @return {@link HiOperateLog}
      * @author guocq
      * @date 2022/12/30 11:33
      */
-    public static HiOperateLog transformToHiOperateLog(LogModel logModel) {
+    public static HiOperateLog transformToHiOperateLog(SystemLogInfo systemLogInfo) {
         HiOperateLog opLog = new HiOperateLog();
-        opLog.setAccessUrl(logModel.getAccessUrl());
-        opLog.setAccessApp(logModel.getAccessApp());
-        opLog.setOperateUserId(logModel.getUserId());
-        opLog.setOperateUserAccount(logModel.getUserAccount());
-        opLog.setOperateIp(logModel.getIp());
-        opLog.setDeviceName(logModel.getDeviceName());
-        opLog.setTimeConsuming(logModel.getTimeConsuming());
-        opLog.setMethodType(logModel.getMethodType());
-        opLog.setAccessResult(logModel.getResult());
-        opLog.setErrorCode(logModel.getErrorCode());
-        opLog.setErrorMessage(logModel.getErrorMessage());
-        opLog.setGmtCreate(logModel.getLogTime());
+        opLog.setAccessUrl(systemLogInfo.getAccessUrl());
+        opLog.setAccessApp(systemLogInfo.getAccessApp());
+        opLog.setOperateUserId(systemLogInfo.getUserId());
+        opLog.setOperateUserAccount(systemLogInfo.getUserAccount());
+        opLog.setOperateIp(systemLogInfo.getIp());
+        opLog.setDeviceName(systemLogInfo.getDeviceName());
+        opLog.setTimeConsuming(systemLogInfo.getTimeConsuming());
+        opLog.setMethodType(systemLogInfo.getMethodType());
+        opLog.setAccessResult(systemLogInfo.getResult());
+        opLog.setErrorCode(systemLogInfo.getErrorCode());
+        opLog.setErrorMessage(systemLogInfo.getErrorMessage());
+        opLog.setGmtCreate(systemLogInfo.getLogTime());
         log.debug("转换后的类型为{}", opLog);
         return opLog;
     }

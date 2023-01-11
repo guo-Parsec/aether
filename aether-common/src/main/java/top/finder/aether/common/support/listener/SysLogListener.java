@@ -1,7 +1,7 @@
 package top.finder.aether.common.support.listener;
 
 import org.springframework.stereotype.Component;
-import top.finder.aether.common.model.LogModel;
+import top.finder.aether.common.model.SystemLogInfo;
 import top.finder.aether.common.support.interfaces.ILogInterface;
 
 import javax.annotation.Resource;
@@ -20,24 +20,24 @@ public class SysLogListener {
     /**
      * <p>保存操作日志信息</p>
      *
-     * @param logModel 日志模型
+     * @param systemLogInfo 日志模型
      * @author guocq
      * @date 2022/12/30 16:34
      */
-    public void saveOperateLog(LogModel logModel) {
-        logInterface.saveOperateLog(logModel);
+    public void saveOperateLog(SystemLogInfo systemLogInfo) {
+        logInterface.saveOperateLog(systemLogInfo);
     }
 
     /**
      * <p>保存登录日志信息</p>
      *
-     * @param logModel 日志模型
+     * @param systemLogInfo 日志模型
      * @return void
      * @author guocq
      * @date 2023/1/4 10:55
      */
-    public void saveLoginLog(LogModel logModel) {
-        logInterface.saveLoginLog(logModel);
+    public void saveLoginLog(SystemLogInfo systemLogInfo) {
+        logInterface.saveLoginLog(systemLogInfo);
     }
 
 }

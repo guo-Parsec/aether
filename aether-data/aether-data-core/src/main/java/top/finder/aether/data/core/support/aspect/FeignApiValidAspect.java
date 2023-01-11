@@ -12,7 +12,7 @@ import top.finder.aether.common.support.annotation.FeignApi;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.helper.CodeHelper;
-import top.finder.aether.common.support.helper.LoggerHelper;
+import top.finder.aether.common.utils.Loggers;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.data.core.support.runner.SystemSetting;
 
@@ -41,10 +41,10 @@ public class FeignApiValidAspect {
 
     @Around("@annotation(feignApi)")
     public Object around(ProceedingJoinPoint point, FeignApi feignApi) throws Throwable {
-        LoggerHelper.aopLog(log, point, "feignApi校验{}开始");
+        Loggers.aopLog(log, point, "feignApi校验{}开始");
         if (validCurrentAppIsAccessible(feignApi)) {
             log.debug("feignApi校验成功");
-            LoggerHelper.aopLog(log, point, "feignApi校验{}开始");
+            Loggers.aopLog(log, point, "feignApi校验{}开始");
             return point.proceed(point.getArgs());
         }
         return Apis.failed(CommonHttpStatus.ILLEGAL_REQUESTS);

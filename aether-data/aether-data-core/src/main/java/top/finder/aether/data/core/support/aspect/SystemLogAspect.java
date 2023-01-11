@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-import top.finder.aether.common.model.LogModel;
+import top.finder.aether.common.model.SystemLogInfo;
 import top.finder.aether.common.support.annotation.LoginLog;
 import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.helper.CodeHelper;
-import top.finder.aether.common.support.helper.LogHelper;
+import top.finder.aether.common.utils.SystemLogUtil;
 import top.finder.aether.common.support.listener.SysLogListener;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.data.core.support.helper.AppHelper;
@@ -38,8 +38,8 @@ import java.util.concurrent.Executor;
  */
 @Aspect
 @Component
-public class LogAspect {
-    private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
+public class SystemLogAspect {
+    private static final Logger log = LoggerFactory.getLogger(SystemLogAspect.class);
 
     /**
      * <p>操作日志记录环绕方法</p>
@@ -55,11 +55,11 @@ public class LogAspect {
         if (AppHelper.isFeignRequest()) {
             return point.proceed(point.getArgs());
         }
-        LogModel logModel = beforeProcess(point);
-        ProcessResult processed = processed(point, logModel);
+        SystemLogInfo systemLogInfo = beforeProcess(point);
+        ProcessResult processed = processed(point, systemLogInfo);
         Object result = processed.getResult();
-        LogHelper.buildLogModel(logModel);
-        operateLogAfterProcess(logModel);
+        SystemLogUtil.buildLogModel(systemLogInfo);
+        operateLogAfterProcess(systemLogInfo);
         return result;
     }
 
@@ -74,15 +74,15 @@ public class LogAspect {
      */
     @Around("@annotation(loginLog)")
     public Object around(ProceedingJoinPoint point, LoginLog loginLog) {
-        LogModel logModel = beforeProcess(point);
-        ProcessResult processed = processed(point, logModel);
+        SystemLogInfo systemLogInfo = beforeProcess(point);
+        ProcessResult processed = processed(point, systemLogInfo);
         Object result = processed.getResult();
-        LogHelper.buildLogModel(logModel);
+        SystemLogUtil.buildLogModel(systemLogInfo);
         Object[] args = point.getArgs();
         if (ArrayUtil.isNotEmpty(args)) {
             Object account = args[loginLog.index()];
-            logModel.setUserAccount(StrUtil.toStringOrNull(account));
-            loginLogAfterProcess(logModel);
+            systemLogInfo.setUserAccount(StrUtil.toStringOrNull(account));
+            loginLogAfterProcess(systemLogInfo);
         }
         return result;
     }
@@ -91,59 +91,59 @@ public class LogAspect {
      * <p>前置处理</p>
      *
      * @param point 切入点
-     * @return {@link LogModel}
+     * @return {@link SystemLogInfo}
      * @author guocq
      * @date 2023/1/4 10:09
      */
-    private LogModel beforeProcess(ProceedingJoinPoint point) {
-        LogModel logModel = new LogModel();
-        logModel.setLogTime(LocalDateTime.now());
+    private SystemLogInfo beforeProcess(ProceedingJoinPoint point) {
+        SystemLogInfo systemLogInfo = new SystemLogInfo();
+        systemLogInfo.setLogTime(LocalDateTime.now());
         String className = point.getTarget().getClass().getName();
         String methodName = point.getSignature().getName();
         log.debug("{}#{}正在记录日志", className, methodName);
-        return logModel;
+        return systemLogInfo;
     }
 
     /**
      * <p>核心处理</p>
      *
      * @param point    切入点
-     * @param logModel 日志模型
+     * @param systemLogInfo 日志模型
      * @return {@link ProcessResult}
      * @author guocq
      * @date 2023/1/4 9:53
      */
-    private ProcessResult processed(ProceedingJoinPoint point, LogModel logModel) {
+    private ProcessResult processed(ProceedingJoinPoint point, SystemLogInfo systemLogInfo) {
         Object result;
         AetherException error = null;
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("记录请求时间");
         try {
             result = point.proceed();
-            logModel.setResult(CommonConstantPool.SUCCESS);
+            systemLogInfo.setResult(CommonConstantPool.SUCCESS);
         } catch (AetherException exception) {
             error = exception;
             result = Apis.failed(exception);
-            logModel.error(error);
+            systemLogInfo.error(error);
         } catch (Throwable exception) {
             error = new AetherException(exception, exception.getMessage());
             result = Apis.failed(error);
-            logModel.error(error);
+            systemLogInfo.error(error);
         }
         stopWatch.stop();
         long totalTimeMillis = stopWatch.getTotalTimeMillis();
-        logModel.setTimeConsuming(totalTimeMillis);
+        systemLogInfo.setTimeConsuming(totalTimeMillis);
         return new ProcessResult(error, result);
     }
 
     /**
      * <p>操作日志后置处理</p>
      *
-     * @param logModel 日志模型
+     * @param systemLogInfo 日志模型
      * @author guocq
      * @date 2023/1/4 10:08
      */
-    private void operateLogAfterProcess(LogModel logModel) {
+    private void operateLogAfterProcess(SystemLogInfo systemLogInfo) {
         SysLogListener sysLogListener = SpringUtil.getBean(SysLogListener.class);
         // 获取异步线程池
         Executor asyncTaskExecutor = SpringUtil.getBean("asyncTaskExecutor", Executor.class);
@@ -154,7 +154,7 @@ public class LogAspect {
             CompletableFuture.runAsync(() -> {
                 CodeHelper.setHeadersToShare(headers);
                 RequestContextHolder.setRequestAttributes(attributes);
-                sysLogListener.saveOperateLog(logModel);
+                sysLogListener.saveOperateLog(systemLogInfo);
             }, asyncTaskExecutor);
         }
     }
@@ -162,12 +162,12 @@ public class LogAspect {
     /**
      * <p>登录日志后置处理</p>
      *
-     * @param logModel 日志模型
+     * @param systemLogInfo 日志模型
      * @author guocq
      * @date 2023/1/4 10:08
      */
-    private void loginLogAfterProcess(LogModel logModel) {
-        if (StrUtil.isBlank(logModel.getUserAccount())) {
+    private void loginLogAfterProcess(SystemLogInfo systemLogInfo) {
+        if (StrUtil.isBlank(systemLogInfo.getUserAccount())) {
             return;
         }
         SysLogListener sysLogListener = SpringUtil.getBean(SysLogListener.class);
@@ -180,7 +180,7 @@ public class LogAspect {
             CompletableFuture.runAsync(() -> {
                 CodeHelper.setHeadersToShare(headers);
                 RequestContextHolder.setRequestAttributes(attributes);
-                sysLogListener.saveLoginLog(logModel);
+                sysLogListener.saveLoginLog(systemLogInfo);
             }, asyncTaskExecutor);
         }
     }
