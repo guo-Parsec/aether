@@ -1,0 +1,7 @@
+server:
+  port: 16100
+  servlet:
+    context-path: /security
+spring:
+  profiles:
+    active: dev

@@ -18,12 +18,12 @@ public interface AppConstantPool {
     String APP_BASE = APP_NAME_BASE + "/base";
 
     /**
-     * APP名称 - AUTH
+     * APP名称 - SECURITY
      */
-    String APP_NAME_AUTH = "aether-auth";
+    String APP_NAME_SECURITY = "aether-security";
 
     /**
      * 用于feign的authApp
      */
-    String APP_AUTH = APP_NAME_AUTH + "/auth";
+    String APP_SECURITY = APP_NAME_SECURITY + "/security";
 }

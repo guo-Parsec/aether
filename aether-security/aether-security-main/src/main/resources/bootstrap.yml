@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: aether-security
+  profiles:
+    active: dev

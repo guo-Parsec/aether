@@ -42,7 +42,7 @@ public class UserController {
 
     @ApiOperation(value = "加载用户", notes = "加载用户信息并验证是否匹配", hidden = true)
     @GetMapping(value = "/load")
-    @FeignApi(AppConstantPool.APP_NAME_AUTH)
+    @FeignApi(AppConstantPool.APP_NAME_SECURITY)
     public Apis<UserVo> loadUser(@RequestParam("account") String account, @RequestParam("password") String password) {
         return Apis.success(userService.loadUser(account, password));
     }
@@ -52,7 +52,7 @@ public class UserController {
     @PostMapping(value = "create.do")
     @AppGroup(blocking = {
             @AppBlocking(appNames = {AppConstantPool.APP_NAME_BASE}, blockerId = "userService.systemInnerUserCreate"),
-            @AppBlocking(appNames = {AppConstantPool.APP_NAME_AUTH}, blockerId = "userService.registeredUserCreate")
+            @AppBlocking(appNames = {AppConstantPool.APP_NAME_SECURITY}, blockerId = "userService.registeredUserCreate")
     })
     @OperateLog
     public Apis<Void> create(@RequestBody @Validated UserCreateDto dto) {

@@ -10,10 +10,10 @@ spring:
           uri: lb://aether-base
           predicates:
             - Path=/base/**
-        - id: aether-auth
-          uri: lb://aether-auth
+        - id: aether-security
+          uri: lb://aether-security
           predicates:
-            - Path=/auth/**
+            - Path=/security/**
   redis:
     database: 0
     host: 127.0.0.1
@@ -27,7 +27,7 @@ aether:
   gateway:
     white:
       urls:
-        - /auth/**
+        - /security/**
         - "/swagger-resources/**"
         - "/swagger/**"
         - /webjars/**

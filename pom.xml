@@ -21,7 +21,7 @@
         <module>aether-data</module>
         <module>aether-base</module>
         <module>aether-gateway</module>
-        <module>aether-auth</module>
+        <module>aether-security</module>
     </modules>
 
     <properties>
