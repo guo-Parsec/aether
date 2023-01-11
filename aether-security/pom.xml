@@ -15,6 +15,7 @@
     <modules>
         <module>aether-security-main</module>
         <module>aether-security-core</module>
+        <module>aether-security-api</module>
     </modules>
 
     <dependencyManagement>

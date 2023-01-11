@@ -164,6 +164,12 @@
                 <artifactId>aether-base-api</artifactId>
                 <version>${aether.version}</version>
             </dependency>
+            <!-- 安全服务模块api -->
+            <dependency>
+                <groupId>top.finder</groupId>
+                <artifactId>aether-security-api</artifactId>
+                <version>${aether.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
