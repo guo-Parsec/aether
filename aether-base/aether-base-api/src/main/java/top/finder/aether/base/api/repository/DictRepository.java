@@ -7,7 +7,7 @@ import top.finder.aether.base.api.model.DictModel;
 import java.util.List;
 
 /**
- * <p>数据字典查询接口</p>
+ * <p>数据字典持久化接口</p>
  *
  * @author guocq
  * @since 2023/1/11

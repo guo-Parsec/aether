@@ -7,7 +7,7 @@ import top.finder.aether.base.api.model.ParamModel;
 import java.util.List;
 
 /**
- * <p>系统参数查询接口</p>
+ * <p>系统参数持久化接口</p>
  *
  * @author guocq
  * @since 2023/1/11
