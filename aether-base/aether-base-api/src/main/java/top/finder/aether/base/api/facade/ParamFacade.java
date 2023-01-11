@@ -1,4 +1,4 @@
-package top.finder.aether.base.api.access;
+package top.finder.aether.base.api.facade;
 
 import top.finder.aether.base.api.model.ParamModel;
 
@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * <p>系统参数访问接口</p>
+ * <p>系统参数Facade接口</p>
  *
  * @author guocq
  * @since 2023/1/11
  */
-public interface ParamAccess {
+public interface ParamFacade {
     /**
      * <p>根据参数类型查询系统参数</p>
      *

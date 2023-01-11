@@ -1,4 +1,4 @@
-package top.finder.aether.base.api.access.impl;
+package top.finder.aether.base.api.facade.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.base.api.access.DictAccess;
+import top.finder.aether.base.api.facade.DictFacade;
 import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.base.api.repository.DictRepository;
 import top.finder.aether.common.support.exception.AetherValidException;
@@ -22,18 +22,18 @@ import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE
 import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_CACHE_SINGLE;
 
 /**
- * <p>数据字典访问接口实现</p>
+ * <p>数据字典Facade接口实现</p>
  *
  * @author guocq
  * @since 2023/1/11
  */
 @Transactional(readOnly = true)
-@Service(value = "dictAccess")
-public class DictAccessImpl implements DictAccess {
-    private static final Logger log = LoggerFactory.getLogger(DictAccessImpl.class);
+@Service(value = "dictFacade")
+public class DictFacadeImpl implements DictFacade {
+    private static final Logger log = LoggerFactory.getLogger(DictFacadeImpl.class);
     private final DictRepository repository;
 
-    public DictAccessImpl(DictRepository repository) {
+    public DictFacadeImpl(DictRepository repository) {
         this.repository = repository;
     }
 
@@ -82,8 +82,8 @@ public class DictAccessImpl implements DictAccess {
             log.error("字典码[dictCode]不能为空");
             throw new AetherValidException("字典码[dictCode]不能为空");
         }
-        DictAccess dictAccess = SpringUtil.getBean(DictAccess.class);
-        List<DictModel> dictModelList = dictAccess.findDictByType(dictTypeCode);
+        DictFacade dictFacade = SpringUtil.getBean(DictFacade.class);
+        List<DictModel> dictModelList = dictFacade.findDictByType(dictTypeCode);
         if (CollUtil.isEmpty(dictModelList)) {
             return Optional.empty();
         }

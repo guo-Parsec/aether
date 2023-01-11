@@ -1,4 +1,4 @@
-package top.finder.aether.base.api.access.impl;
+package top.finder.aether.base.api.facade.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.base.api.access.ParamAccess;
+import top.finder.aether.base.api.facade.ParamFacade;
 import top.finder.aether.base.api.model.ParamModel;
 import top.finder.aether.base.api.repository.ParamRepository;
 import top.finder.aether.common.support.exception.AetherValidException;
@@ -16,19 +16,19 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * <p></p>
+ * <p>系统参数Facade接口实现</p>
  *
  * @author guocq
  * @since 2023/1/11
  */
 @Transactional(readOnly = true)
-@Service(value = "paramAccess")
-public class ParamAccessImpl implements ParamAccess {
-    private static final Logger log = LoggerFactory.getLogger(ParamAccessImpl.class);
+@Service(value = "paramFacade")
+public class ParamFacadeImpl implements ParamFacade {
+    private static final Logger log = LoggerFactory.getLogger(ParamFacadeImpl.class);
 
     private final ParamRepository repository;
 
-    public ParamAccessImpl(ParamRepository repository) {
+    public ParamFacadeImpl(ParamRepository repository) {
         this.repository = repository;
     }
 

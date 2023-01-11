@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
-import top.finder.aether.base.api.access.ParamAccess;
+import top.finder.aether.base.api.facade.ParamFacade;
 import top.finder.aether.base.api.model.ParamModel;
 import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.helper.CodeHelper;
@@ -141,13 +141,13 @@ public class SecurityUtils {
      * @date 2023/1/9 16:55
      */
     public static Long getDefaultTokenExpireTime() {
-        ParamAccess paramAccess = null;
+        ParamFacade paramFacade = null;
         try {
-            paramAccess = SpringUtil.getBean(ParamAccess.class);
+            paramFacade = SpringUtil.getBean(ParamFacade.class);
         } catch (Exception e) {
             return DEFAULT_EXPIRE_TIME;
         }
-        Optional<ParamModel> optional = paramAccess.findParamByParamCode(PARAM_DEFAULT_TOKEN_EXPIRE_TIME);
+        Optional<ParamModel> optional = paramFacade.findParamByParamCode(PARAM_DEFAULT_TOKEN_EXPIRE_TIME);
         if (!optional.isPresent()) {
             return DEFAULT_EXPIRE_TIME;
         }

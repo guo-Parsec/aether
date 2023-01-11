@@ -11,6 +11,7 @@ import top.finder.aether.common.support.helper.UrlHelper;
 import top.finder.aether.data.core.support.annotation.ApiResource;
 import top.finder.aether.data.core.support.enums.ResourceType;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -25,7 +26,8 @@ import java.util.stream.Collectors;
  */
 @Setter
 @Getter
-public class ApiModel {
+public class ApiModel implements Serializable {
+    private static final long serialVersionUID = 730598291937178983L;
     /**
      * 唯一标识
      */

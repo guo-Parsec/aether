@@ -1,4 +1,4 @@
-package top.finder.aether.base.api.access;
+package top.finder.aether.base.api.facade;
 
 import top.finder.aether.base.api.model.DictModel;
 
@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * <p>字典访问接口</p>
+ * <p>字典Facade接口</p>
  *
  * @author guocq
  * @since 2023/1/11
  */
-public interface DictAccess {
+public interface DictFacade {
     /**
      * <p>根据字典类型查询字典列表</p>
      *
