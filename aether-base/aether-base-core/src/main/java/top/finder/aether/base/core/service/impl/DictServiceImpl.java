@@ -172,7 +172,6 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         boolean exists = dictFromDb != null && ObjectUtil.equals(id, dictFromDb.getId());
         if (!exists) {
             throw LoggerUtil.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
-            return;
         }
         String dictTypeCode = StrUtil.isBlank(updateDto.getDictTypeCode()) ? dictFromDb.getDictTypeCode() : updateDto.getDictTypeCode();
         Integer dictCode = updateDto.getDictCode() == null ? dictFromDb.getDictCode() : updateDto.getDictCode();
