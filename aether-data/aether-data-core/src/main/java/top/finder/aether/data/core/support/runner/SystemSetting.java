@@ -14,6 +14,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
+import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
 import top.finder.aether.data.core.access.ApiAccess;
 import top.finder.aether.data.core.entity.ResourceMapping;
@@ -69,6 +70,11 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
         String appName = SpringUtil.getApplicationName();
         log.debug("系统[{}]开始初始化feign密钥", appName);
         final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
+        if (redisHelper.hasHashKey(systemSettingKey, FEIGN_SECRET)) {
+            DESTROY_SETTING_MAPPING.add(FEIGN_SECRET);
+            log.debug("[{}]feign密钥已存在无须生成", appName);
+            return;
+        }
         final String secret = IdUtil.fastUUID();
         final String feignSecret = cryptoStrategy.encrypt(secret);
         log.debug("系统[{}]初始化feign密钥为[feignSecret={}]", appName, feignSecret);
@@ -85,6 +91,12 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
     public void initResource() {
         String appName = SpringUtil.getApplicationName();
         log.debug("系统[{}]开始初始化资源信息", appName);
+        final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
+        if (redisHelper.hasHashKey(systemSettingKey, RESOURCE_MAPPING)) {
+            DESTROY_SETTING_MAPPING.add(RESOURCE_MAPPING);
+            log.debug("[{}]资源信息已存在无须生成", appName);
+            return;
+        }
         List<ResourceMapping> resourceMappingList = apiAccess.getResourceMappingList();
         String contextPath = SpringUtil.getProperty(CONTEXT_PATH);
         List<ResourceMapping> resourceMappings = Lists.newArrayListWithCapacity(resourceMappingList.size());
@@ -98,7 +110,7 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
             resourceMappings.addAll(resourceMappingSet);
         });
         log.debug("共初始化资源{}条", resourceMappings.size());
-        final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
+
         redisHelper.hashSet(systemSettingKey, RESOURCE_MAPPING, resourceMappings);
         DESTROY_SETTING_MAPPING.add(RESOURCE_MAPPING);
     }
@@ -159,6 +171,28 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
         }
         log.warn("systemSettingKey-{}不存在", key);
         return defaultVal;
+    }
+
+    /**
+     * <p>为应用配置内容</p>
+     *
+     * @param appName 应用名称
+     * @param key     键
+     * @param value   值
+     * @author guocq
+     * @date 2023/1/12 15:44
+     */
+    public void set(String appName, String key, Object value) {
+        if (value == null) {
+            throw LoggerUtil.logAetherError(log, "value不可为空");
+        }
+        String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
+        boolean hasKey = redisHelper.hasHashKey(systemSettingKey, key);
+        if (hasKey) {
+            log.debug("当前应用[{}]的配置项[{}]已存在，请勿重复生成", appName, key);
+            return;
+        }
+        redisHelper.hashSet(systemSettingKey, key, value);
     }
 
     @Autowired

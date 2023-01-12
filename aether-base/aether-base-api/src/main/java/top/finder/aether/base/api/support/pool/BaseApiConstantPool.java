@@ -10,7 +10,7 @@ public interface BaseApiConstantPool {
     /**
      * 基础模块网络请求前缀
      */
-    String BASE_WEB_API_PREFIX = "/ams";
+    String BASE_WEB_API_PREFIX = "/sys";
 
     /**
      * 用户模块网络请求前缀
@@ -41,4 +41,9 @@ public interface BaseApiConstantPool {
      * 资源模块网络请求前缀
      */
     String RESOURCE_WEB_API_PREFIX = BASE_WEB_API_PREFIX + "/resource";
+
+    /**
+     * 系统配置模块网络请求前缀
+     */
+    String SYSTEM_SETTING_WEB_API_PREFIX = BASE_WEB_API_PREFIX + "/system-setting";
 }
