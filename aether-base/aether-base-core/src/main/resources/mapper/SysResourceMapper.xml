@@ -10,17 +10,24 @@
     <result column="resource_code" jdbcType="VARCHAR" property="resourceCode" />
     <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
     <result column="resource_url" jdbcType="VARCHAR" property="resourceUrl" />
-    <result column="resource_sort" jdbcType="INTEGER" property="resourceSort" />
     <result column="resource_desc" jdbcType="VARCHAR" property="resourceDesc" />
     <result column="delete_at" jdbcType="BIGINT" property="deleteAt" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
   </resultMap>
   <sql id="Base_Column_List">
-    <!--@sql select-->
-    id, resource_type_code, resource_type_name, resource_code, resource_name, resource_url, 
-    resource_sort, resource_desc, delete_at, gmt_create, gmt_modify
-    <!--@sql from sys_resource -->
+      <!--@sql select-->
+      id,
+      resource_type_code,
+      resource_type_name,
+      resource_code,
+      resource_name,
+      resource_url,
+      resource_desc,
+      delete_at,
+      gmt_create,
+      gmt_modify
+      <!--@sql from sys_resource -->
   </sql>
 
   <delete id="deleteWithResourceCode">

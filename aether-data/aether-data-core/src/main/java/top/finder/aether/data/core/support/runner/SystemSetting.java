@@ -3,6 +3,7 @@ package top.finder.aether.data.core.support.runner;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +17,17 @@ import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
+import top.finder.aether.data.core.access.ApiAccess;
+import top.finder.aether.data.core.entity.ResourceMapping;
 import top.finder.aether.data.core.support.helper.SystemConfigHelper;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import static top.finder.aether.common.support.pool.CommonConstantPool.FIRST_PRIORITY;
+import static top.finder.aether.common.support.pool.CommonConstantPool.CONTEXT_PATH;
 import static top.finder.aether.data.core.support.pool.SystemSettingConstantPool.FEIGN_SECRET;
+import static top.finder.aether.data.core.support.pool.SystemSettingConstantPool.RESOURCE_MAPPING;
 
 /**
  * <p>系统设置配置</p>
@@ -38,13 +44,21 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
 
     private CryptoStrategy cryptoStrategy;
 
+    private ApiAccess apiAccess;
+
     public SystemSetting(RedisHelper redisHelper) {
         this.redisHelper = redisHelper;
+    }
+
+    @Autowired
+    public void setApiAccess(ApiAccess apiAccess) {
+        this.apiAccess = apiAccess;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         initFeignSecret();
+        initResource();
     }
 
     /**
@@ -62,6 +76,32 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
         log.debug("系统[{}]初始化feign密钥为[feignSecret={}]", appName, feignSecret);
         redisHelper.hashSet(systemSettingKey, FEIGN_SECRET, feignSecret);
         DESTROY_SETTING_MAPPING.put(systemSettingKey, FEIGN_SECRET);
+    }
+
+    /**
+     * <p>初始化资源信息</p>
+     *
+     * @author guocq
+     * @date 2023/1/12 11:50
+     */
+    public void initResource() {
+        String appName = SpringUtil.getApplicationName();
+        log.debug("系统[{}]开始初始化资源信息", appName);
+        List<ResourceMapping> resourceMappingList = apiAccess.getResourceMappingList();
+        String contextPath = SpringUtil.getProperty(CONTEXT_PATH);
+        List<ResourceMapping> resourceMappings = Lists.newArrayListWithCapacity(resourceMappingList.size());
+        resourceMappingList.forEach(resourceMapping -> {
+            List<ResourceMapping> resourceMappingSet = resourceMapping.getResourceUrlSet().stream().map(url -> {
+                resourceMapping.setResourceUrlSet(null);
+                resourceMapping.setResourceUrl(contextPath + url);
+                resourceMapping.setResourceCode(resourceMapping.getResourceUrl());
+                return resourceMapping;
+            }).collect(Collectors.toList());
+            resourceMappings.addAll(resourceMappingSet);
+        });
+        log.debug("共初始化资源{}条", resourceMappings.size());
+        final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
+        redisHelper.hashSet(systemSettingKey, RESOURCE_MAPPING, resourceMappings);
     }
 
     /**
@@ -129,7 +169,7 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
 
     @Override
     public int getOrder() {
-        return FIRST_PRIORITY;
+        return Integer.MAX_VALUE;
     }
 
     @Override

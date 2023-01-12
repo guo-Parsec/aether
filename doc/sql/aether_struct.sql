@@ -103,7 +103,6 @@ CREATE TABLE `sys_resource` (
   `resource_code` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '权限码值',
   `resource_name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '权限名称',
   `resource_url` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '资源路径',
-  `resource_sort` int NOT NULL DEFAULT '10' COMMENT '资源排序',
   `resource_desc` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '资源描述',
   `delete_at` bigint NOT NULL DEFAULT '0' COMMENT '数据删除时间(未删除时为0)',
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

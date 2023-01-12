@@ -44,11 +44,6 @@ public class SysResource extends BaseDataEntity {
     private String resourceUrl;
 
     /**
-     * 资源排序
-     */
-    private Integer resourceSort;
-
-    /**
      * 资源描述
      */
     private String resourceDesc;
@@ -61,7 +56,6 @@ public class SysResource extends BaseDataEntity {
                 .add("resourceCode='" + resourceCode + "'")
                 .add("resourceName='" + resourceName + "'")
                 .add("resourceUrl='" + resourceUrl + "'")
-                .add("resourceSort=" + resourceSort)
                 .add("resourceDesc='" + resourceDesc + "'")
                 .add("deleteAt=" + deleteAt)
                 .add("gmtCreate=" + gmtCreate)

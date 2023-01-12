@@ -2,6 +2,9 @@ package top.finder.aether.data.core.support.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 /**
  * <p>资源类型</p>
  *
@@ -32,5 +35,18 @@ public enum ResourceType {
     ResourceType(String code, String name) {
         this.code = code;
         this.name = name;
+    }
+
+    /**
+     * <p>根据code查询资源类型枚举</p>
+     *
+     * @param code 资源类型码
+     * @return {@link Optional}
+     * @author guocq
+     * @date 2023/1/12 10:41
+     */
+    public static Optional<ResourceType> findByCode(String code) {
+        return Arrays.stream(ResourceType.values()).filter(resourceType -> resourceType.code.equals(code))
+                .findFirst();
     }
 }

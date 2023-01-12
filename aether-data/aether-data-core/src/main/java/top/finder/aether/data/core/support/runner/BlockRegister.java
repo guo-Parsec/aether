@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import top.finder.aether.common.support.annotation.BlockBean;
 import top.finder.aether.common.support.annotation.BlockMethod;
-import top.finder.aether.data.core.model.Blocker;
+import top.finder.aether.data.core.entity.Blocker;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

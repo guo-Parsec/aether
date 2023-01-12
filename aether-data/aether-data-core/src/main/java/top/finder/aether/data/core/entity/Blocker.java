@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.model;
+package top.finder.aether.data.core.entity;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;

@@ -31,27 +31,27 @@ public class SysDictController {
         this.service = service;
     }
 
-    @ApiOperation(value = "查询列表", notes = "字典列表信息查询")
+    @ApiOperation(value = "查询字典列表", notes = "字典列表信息查询")
     @GetMapping(value = "/list")
     public Apis<List<SysDictVo>> list(SysDict sysDict) {
         return Apis.success(service.listQuery(sysDict));
     }
 
-    @ApiOperation(value = "新增字典", notes = "字典信息新增操作")
+    @ApiOperation(value = "新增数据字典", notes = "字典信息新增操作")
     @PostMapping(value = "/create.do")
     public Apis<Void> create(@RequestBody @Validated SysDictCreateDto createDto) {
         service.create(createDto);
         return Apis.success();
     }
 
-    @ApiOperation(value = "更新字典", notes = "字典信息更新操作")
+    @ApiOperation(value = "更新数据字典", notes = "字典信息更新操作")
     @PutMapping(value = "/update.do")
     public Apis<Void> update(@RequestBody @Validated SysDictUpdateDto updateDto) {
         service.update(updateDto);
         return Apis.success();
     }
 
-    @ApiOperation(value = "删除字典", notes = "字典信息删除操作")
+    @ApiOperation(value = "删除数据字典", notes = "字典信息删除操作")
     @DeleteMapping(value = "/delete.do")
     public Apis<Void> delete(@RequestBody @Validated Set<Long> idSet) {
         service.delete(idSet);

@@ -31,27 +31,27 @@ public class SysRoleController {
         this.service = service;
     }
 
-    @ApiOperation(value = "查询列表", notes = "角色列表信息查询")
+    @ApiOperation(value = "查询角色列表", notes = "角色列表信息查询")
     @GetMapping(value = "/list")
     public Apis<List<SysRoleVo>> list(SysRole sysRole) {
         return Apis.success(service.listQuery(sysRole));
     }
 
-    @ApiOperation(value = "新增角色", notes = "角色信息新增操作")
+    @ApiOperation(value = "新增系统角色", notes = "角色信息新增操作")
     @PostMapping(value = "/create.do")
     public Apis<Void> create(@RequestBody @Validated SysRoleCreateDto createDto) {
         service.create(createDto);
         return Apis.success();
     }
 
-    @ApiOperation(value = "更新角色", notes = "角色信息更新操作")
+    @ApiOperation(value = "更新系统角色", notes = "角色信息更新操作")
     @PutMapping(value = "/update.do")
     public Apis<Void> update(@RequestBody @Validated SysRoleUpdateDto updateDto) {
         service.update(updateDto);
         return Apis.success();
     }
 
-    @ApiOperation(value = "删除角色", notes = "角色信息删除操作")
+    @ApiOperation(value = "删除系统角色", notes = "角色信息删除操作")
     @DeleteMapping(value = "/delete.do")
     public Apis<Void> delete(@RequestBody @Validated Set<Long> idSet) {
         service.delete(idSet);

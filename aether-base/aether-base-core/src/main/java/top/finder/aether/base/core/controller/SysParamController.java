@@ -34,33 +34,33 @@ public class SysParamController {
     }
 
 
-    @ApiOperation(value = "查询", notes = "查询参数")
+    @ApiOperation(value = "查询参数列表", notes = "查询参数")
     @GetMapping(value = "/list")
     public Apis<List<SysParamVo>> list(SysParamQueryDto dto) {
         return Apis.success(service.list(dto));
     }
 
-    @ApiOperation(value = "分页", notes = "分页查询参数")
+    @ApiOperation(value = "分页查询参数", notes = "分页查询参数")
     @GetMapping(value = "/page")
     public Apis<IPage<SysParamVo>> page(@Validated SysSysParamPageQueryDto dto) {
         return Apis.success(service.page(dto));
     }
 
-    @ApiOperation(value = "新增", notes = "新增系统参数")
+    @ApiOperation(value = "新增系统参数", notes = "新增系统参数")
     @PostMapping(value = "/create.do")
     public Apis<Void> create(@RequestBody @Validated SysParamCreateDto dto) {
         service.create(dto);
         return Apis.success();
     }
 
-    @ApiOperation(value = "更新", notes = "更新系统参数")
+    @ApiOperation(value = "更新系统参数", notes = "更新系统参数")
     @PutMapping(value = "/update.do")
     public Apis<Void> update(@RequestBody @Validated SysParamUpdateDto dto) {
         service.update(dto);
         return Apis.success();
     }
 
-    @ApiOperation(value = "删除", notes = "删除系统参数")
+    @ApiOperation(value = "删除系统参数", notes = "删除系统参数")
     @DeleteMapping(value = "/delete.do")
     public Apis<Void> delete(@RequestBody Set<Long> idSet) {
         service.delete(idSet);
