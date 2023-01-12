@@ -3,7 +3,7 @@ package top.finder.aether.data.core.support.runner;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -19,9 +19,8 @@ import top.finder.aether.data.core.access.ApiAccess;
 import top.finder.aether.data.core.entity.ResourceMapping;
 import top.finder.aether.data.core.support.helper.SystemConfigHelper;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static top.finder.aether.common.support.pool.CommonConstantPool.CONTEXT_PATH;
@@ -37,7 +36,7 @@ import static top.finder.aether.data.core.support.pool.SystemSettingConstantPool
 @Component(value = "systemSetting")
 public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered {
     private static final Logger log = LoggerFactory.getLogger(SystemSetting.class);
-    private static final Map<String, String> DESTROY_SETTING_MAPPING = Maps.newConcurrentMap();
+    private static final Set<String> DESTROY_SETTING_MAPPING = Sets.newConcurrentHashSet();
 
     private final RedisHelper redisHelper;
 
@@ -74,7 +73,7 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
         final String feignSecret = cryptoStrategy.encrypt(secret);
         log.debug("系统[{}]初始化feign密钥为[feignSecret={}]", appName, feignSecret);
         redisHelper.hashSet(systemSettingKey, FEIGN_SECRET, feignSecret);
-        DESTROY_SETTING_MAPPING.put(systemSettingKey, FEIGN_SECRET);
+        DESTROY_SETTING_MAPPING.add(FEIGN_SECRET);
     }
 
     /**
@@ -101,7 +100,7 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
         log.debug("共初始化资源{}条", resourceMappings.size());
         final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
         redisHelper.hashSet(systemSettingKey, RESOURCE_MAPPING, resourceMappings);
-        DESTROY_SETTING_MAPPING.put(systemSettingKey, RESOURCE_MAPPING);
+        DESTROY_SETTING_MAPPING.add(RESOURCE_MAPPING);
     }
 
     /**
@@ -179,22 +178,11 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
         if (DESTROY_SETTING_MAPPING.isEmpty()) {
             return;
         }
-        final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
-        Collection<String> values = DESTROY_SETTING_MAPPING.values();
-        Object[] hashKeys = values.stream().map(ele -> (Object) ele).toArray();
-        this.destroy(systemSettingKey, hashKeys);
-    }
-
-    /**
-     * <p>销毁配置</p>
-     *
-     * @param key     key
-     * @param hashKey hashKey
-     * @author guocq
-     * @date 2023/1/4 16:30
-     */
-    private void destroy(String key, Object... hashKey) {
-        log.info("[key={},hashKey={}]的配置信息将完全销毁", key, hashKey);
-        redisHelper.hashDelete(key, hashKey);
+        if (log.isDebugEnabled()) {
+            log.debug("待销毁的配置为{}", DESTROY_SETTING_MAPPING);
+        } else {
+            log.info("待销毁的配置共{}条", DESTROY_SETTING_MAPPING.size());
+        }
+        redisHelper.hashDelete(SystemConfigHelper.generateSystemSettingKey(appName), DESTROY_SETTING_MAPPING.toArray());
     }
 }

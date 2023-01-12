@@ -2,9 +2,9 @@ package top.finder.aether.base.core.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
 import top.finder.aether.base.core.service.SysResourceService;
@@ -27,8 +27,8 @@ public class SysResourceController {
     }
 
     @ApiOperation(value = "自动生成系统资源数据", notes = "根据applicationName自动生成不同应用的系统资源数据")
-    @PostMapping(value = "/auto-generate/{applicationName}")
-    public Apis<Void> autoGenerateSysResource(@PathVariable String applicationName) {
+    @PostMapping(value = "/auto-generate")
+    public Apis<Void> autoGenerateSysResource(@RequestParam(value = "applicationName") String applicationName) {
         service.autoGenerateSysResource(applicationName);
         return Apis.success();
     }
