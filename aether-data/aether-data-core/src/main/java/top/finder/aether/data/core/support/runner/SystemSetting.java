@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
-import top.finder.aether.data.core.access.ApiAccess;
 import top.finder.aether.data.core.entity.ResourceMapping;
+import top.finder.aether.data.core.facade.ResourceMappingFacade;
 import top.finder.aether.data.core.support.helper.SystemConfigHelper;
 
 import java.util.List;
@@ -43,15 +43,15 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
 
     private CryptoStrategy cryptoStrategy;
 
-    private ApiAccess apiAccess;
+    private ResourceMappingFacade resourceMappingFacade;
 
     public SystemSetting(RedisHelper redisHelper) {
         this.redisHelper = redisHelper;
     }
 
     @Autowired
-    public void setApiAccess(ApiAccess apiAccess) {
-        this.apiAccess = apiAccess;
+    public void setApiAccess(ResourceMappingFacade resourceMappingFacade) {
+        this.resourceMappingFacade = resourceMappingFacade;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
             log.debug("[{}]资源信息已存在无须生成", appName);
             return;
         }
-        List<ResourceMapping> resourceMappingList = apiAccess.getResourceMappingList();
+        List<ResourceMapping> resourceMappingList = resourceMappingFacade.getResourceMappingList();
         String contextPath = SpringUtil.getProperty(CONTEXT_PATH);
         List<ResourceMapping> resourceMappings = Lists.newArrayListWithCapacity(resourceMappingList.size());
         resourceMappingList.forEach(resourceMapping -> {
@@ -110,7 +110,6 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
             resourceMappings.addAll(resourceMappingSet);
         });
         log.debug("共初始化资源{}条", resourceMappings.size());
-
         redisHelper.hashSet(systemSettingKey, RESOURCE_MAPPING, resourceMappings);
         DESTROY_SETTING_MAPPING.add(RESOURCE_MAPPING);
     }

@@ -1,4 +1,4 @@
-package top.finder.aether.data.core.access;
+package top.finder.aether.data.core.facade.impl;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import top.finder.aether.common.support.helper.UrlHelper;
 import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.core.entity.ResourceMapping;
+import top.finder.aether.data.core.facade.ResourceMappingFacade;
 import top.finder.aether.data.core.support.enums.ResourceType;
 
 import java.util.List;
@@ -25,17 +26,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * <p>API访问类</p>
+ * <p>资源映射Facade实现</p>
  *
  * @author guocq
  * @since 2023/1/12
  */
-@Component
-public class ApiAccess {
-    private static final Logger log = LoggerFactory.getLogger(ApiAccess.class);
+@Component(value = "resourceMappingFacade")
+public class ResourceMappingFacadeImpl implements ResourceMappingFacade {
+    private static final Logger log = LoggerFactory.getLogger(ResourceMappingFacadeImpl.class);
     private final WebApplicationContext context;
 
-    public ApiAccess(WebApplicationContext context) {
+    public ResourceMappingFacadeImpl(WebApplicationContext context) {
         this.context = context;
     }
 
@@ -46,6 +47,7 @@ public class ApiAccess {
      * @author guocq
      * @date 2023/1/12 10:53
      */
+    @Override
     public List<ResourceMapping> getResourceMappingList() {
         // 获取请求适配器
         RequestMappingHandlerMapping mapping = context.getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
