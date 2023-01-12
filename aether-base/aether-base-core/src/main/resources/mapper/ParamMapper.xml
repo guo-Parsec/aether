@@ -3,7 +3,7 @@
 <mapper namespace="top.finder.aether.base.core.mapper.ParamMapper">
   <resultMap id="BaseResultMap" type="top.finder.aether.base.core.entity.Param">
     <!--@mbg.generated-->
-    <!--@Table ams_param-->
+    <!--@Table sys_param-->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="param_type_code" jdbcType="VARCHAR" property="paramTypeCode" />
     <result column="param_type_name" jdbcType="VARCHAR" property="paramTypeName" />

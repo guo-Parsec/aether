@@ -3,7 +3,7 @@
 <mapper namespace="top.finder.aether.base.core.mapper.RoleMapper">
     <resultMap id="BaseResultMap" type="top.finder.aether.base.core.entity.Role">
         <!--@mbg.generated-->
-        <!--@Table ams_role-->
+        <!--@Table sys_role-->
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="role_code" jdbcType="VARCHAR" property="roleCode"/>
         <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
@@ -24,13 +24,13 @@
         role.delete_at,
         role.gmt_create,
         role.gmt_modify
-        <!--@sql from ams_role role -->
+        <!--@sql from sys_role role -->
     </sql>
 
     <select id="findRoleCodeByUserId" parameterType="java.lang.Long" resultType="java.lang.String">
         select role.role_code
-        from ams_role role
-        left join ams_user_role aur on role.id = aur.role_id
+        from sys_role role
+        left join sys_user_role aur on role.id = aur.role_id
         where role.delete_at = 0
         and aur.user_id = #{userId,jdbcType=BIGINT}
     </select>

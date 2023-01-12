@@ -16,7 +16,7 @@ import java.util.StringJoiner;
  */
 @Setter
 @Getter
-@TableName(value = "ams_user")
+@TableName(value = "sys_user")
 public class User extends BaseDataEntity {
     private static final long serialVersionUID = 8261509168956698339L;
 

@@ -21,7 +21,7 @@ import java.util.StringJoiner;
 @ApiModel(value = "系统资源表")
 @Getter
 @Setter
-@TableName(value = "ams_resource")
+@TableName(value = "sys_resource")
 public class Resource extends BaseDataEntity {
     private static final long serialVersionUID = 7796147232012279094L;
     /**

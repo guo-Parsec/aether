@@ -16,7 +16,7 @@ import java.util.StringJoiner;
  */
 @Getter
 @Setter
-@TableName(value = "ams_role")
+@TableName(value = "sys_role")
 public class Role extends BaseDataEntity {
     private static final long serialVersionUID = -6190533409194671514L;
     /**

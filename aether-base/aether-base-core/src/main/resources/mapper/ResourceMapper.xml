@@ -3,7 +3,7 @@
 <mapper namespace="top.finder.aether.base.core.mapper.ResourceMapper">
   <resultMap id="BaseResultMap" type="top.finder.aether.base.core.entity.Resource">
     <!--@mbg.generated-->
-    <!--@Table ams_resource-->
+    <!--@Table sys_resource-->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="resource_type_code" jdbcType="VARCHAR" property="resourceTypeCode" />
     <result column="resource_type_name" jdbcType="VARCHAR" property="resourceTypeName" />
@@ -20,11 +20,11 @@
     <!--@sql select-->
     id, resource_type_code, resource_type_name, resource_code, resource_name, resource_url, 
     resource_sort, resource_desc, delete_at, gmt_create, gmt_modify
-    <!--@sql from ams_resource -->
+    <!--@sql from sys_resource -->
   </sql>
 
   <delete id="deleteWithResourceCode">
-    delete from ams_resource where delete_at = 0 and resource_code in
+    delete from sys_resource where delete_at = 0 and resource_code in
     <foreach collection="resourceCodeSet" item="resourceCode" open="(" close=")" separator=",">
       #{resourceCode,jdbcType=VARCHAR}
     </foreach>

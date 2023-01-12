@@ -17,7 +17,7 @@ import java.util.StringJoiner;
  */
 @Getter
 @Setter
-@TableName(value = "ams_dict")
+@TableName(value = "sys_dict")
 public class Dict extends BaseDataEntity {
     private static final long serialVersionUID = 4389620667398620107L;
     /**

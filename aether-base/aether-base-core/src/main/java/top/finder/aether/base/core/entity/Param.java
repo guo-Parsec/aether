@@ -18,7 +18,7 @@ import java.util.StringJoiner;
 @ApiModel(value = "系统参数表")
 @Getter
 @Setter
-@TableName(value = "ams_param")
+@TableName(value = "sys_param")
 public class Param extends BaseDataEntity {
     private static final long serialVersionUID = 1334359948430520729L;
     /**

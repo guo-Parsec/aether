@@ -3,7 +3,7 @@
 <mapper namespace="top.finder.aether.base.core.mapper.DictMapper">
   <resultMap id="BaseResultMap" type="top.finder.aether.base.core.entity.Dict">
     <!--@mbg.generated-->
-    <!--@Table ams_dict-->
+    <!--@Table sys_dict-->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="dict_type_code" jdbcType="VARCHAR" property="dictTypeCode" />
     <result column="dict_type_name" jdbcType="VARCHAR" property="dictTypeName" />

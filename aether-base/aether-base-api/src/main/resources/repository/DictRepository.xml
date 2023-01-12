@@ -3,7 +3,7 @@
 <mapper namespace="top.finder.aether.base.api.repository.DictRepository">
   <resultMap id="BaseResultMap" type="top.finder.aether.base.api.model.DictModel">
     <!--@mbg.generated-->
-    <!--@Table ams_dict-->
+    <!--@Table sys_dict-->
     <result column="dict_type_code" jdbcType="VARCHAR" property="dictTypeCode" />
     <result column="dict_type_name" jdbcType="VARCHAR" property="dictTypeName" />
     <result column="dict_name" jdbcType="VARCHAR" property="dictName" />
@@ -21,7 +21,7 @@
       dict.delete_at,
       dict.gmt_create,
       dict.gmt_modify
-      <!--@sql from ams_dict dict-->
+      <!--@sql from sys_dict dict-->
   </sql>
 
     <select id="findDictByType" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -29,7 +29,7 @@
                dict.dict_type_name,
                dict.dict_name,
                dict.dict_code
-        from ams_dict dict
+        from sys_dict dict
         where dict.delete_at = 0
           and dict.dict_type_code = #{dictTypeCode,jdbcType=VARCHAR}
         order by dict.dict_type_code, dict.dict_sort, dict.gmt_modify desc

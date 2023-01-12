@@ -3,7 +3,7 @@
 <mapper namespace="top.finder.aether.base.api.repository.ParamRepository">
     <resultMap id="ParamModelMap" type="top.finder.aether.base.api.model.ParamModel">
         <!--@mbg.generated-->
-        <!--@Table ams_param-->
+        <!--@Table sys_param-->
         <result column="param_type_code" jdbcType="VARCHAR" property="paramTypeCode" />
         <result column="param_type_name" jdbcType="VARCHAR" property="paramTypeName" />
         <result column="param_name" jdbcType="VARCHAR" property="paramName" />
@@ -22,7 +22,7 @@
         param.delete_at,
         param.gmt_create,
         param.gmt_modify
-        <!--@sql from ams_param param-->
+        <!--@sql from sys_param param-->
     </sql>
     
     <select id="findParamByType" parameterType="java.lang.String" resultMap="ParamModelMap">
@@ -31,7 +31,7 @@
                 param.param_name,
                 param.param_code,
                 param.param_value
-        from ams_param param
+        from sys_param param
         where param.delete_at = 0
         and param.param_type_code = #{paramTypeCode,jdbcType=VARCHAR}
         order by param.param_type_code, param.param_sort, param.gmt_modify desc
@@ -43,7 +43,7 @@
                param.param_name,
                param.param_code,
                param.param_value
-        from ams_param param
+        from sys_param param
         where param.delete_at = 0
           and param.param_code = #{paramCode,jdbcType=VARCHAR}
         limit 1
