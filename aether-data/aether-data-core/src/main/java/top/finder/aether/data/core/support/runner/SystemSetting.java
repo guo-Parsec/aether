@@ -1,7 +1,6 @@
 package top.finder.aether.data.core.support.runner;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -14,13 +13,13 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
 import top.finder.aether.data.core.access.ApiAccess;
 import top.finder.aether.data.core.entity.ResourceMapping;
 import top.finder.aether.data.core.support.helper.SystemConfigHelper;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -102,6 +101,7 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
         log.debug("共初始化资源{}条", resourceMappings.size());
         final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
         redisHelper.hashSet(systemSettingKey, RESOURCE_MAPPING, resourceMappings);
+        DESTROY_SETTING_MAPPING.put(systemSettingKey, RESOURCE_MAPPING);
     }
 
     /**
@@ -179,7 +179,10 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
         if (DESTROY_SETTING_MAPPING.isEmpty()) {
             return;
         }
-        DESTROY_SETTING_MAPPING.forEach(this::destroy);
+        final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
+        Collection<String> values = DESTROY_SETTING_MAPPING.values();
+        Object[] hashKeys = values.stream().map(ele -> (Object) ele).toArray();
+        this.destroy(systemSettingKey, hashKeys);
     }
 
     /**
@@ -190,16 +193,7 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
      * @author guocq
      * @date 2023/1/4 16:30
      */
-    private void destroy(String key, String hashKey) {
-        if (StrUtil.hasBlank(key, hashKey)) {
-            log.error("无法销毁[key={},hashKey={}]", key, hashKey);
-            return;
-        }
-        if (CommonConstantPool.ALL_TEXT.equals(hashKey)) {
-            log.info("key={}的配置信息将完全销毁", key);
-            redisHelper.delete(key);
-            return;
-        }
+    private void destroy(String key, Object... hashKey) {
         log.info("[key={},hashKey={}]的配置信息将完全销毁", key, hashKey);
         redisHelper.hashDelete(key, hashKey);
     }

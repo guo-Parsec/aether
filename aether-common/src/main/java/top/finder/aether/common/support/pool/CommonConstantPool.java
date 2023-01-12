@@ -91,4 +91,9 @@ public interface CommonConstantPool {
      * 最高优先级
      */
     Integer FIRST_PRIORITY = Integer.MIN_VALUE;
+
+    /**
+     * 最小批量数据
+     */
+    Integer MIN_BATCH_SIZE = 100;
 }

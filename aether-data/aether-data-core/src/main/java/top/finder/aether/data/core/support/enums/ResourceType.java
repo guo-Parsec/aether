@@ -3,6 +3,7 @@ package top.finder.aether.data.core.support.enums;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -46,7 +47,8 @@ public enum ResourceType {
      * @date 2023/1/12 10:41
      */
     public static Optional<ResourceType> findByCode(String code) {
-        return Arrays.stream(ResourceType.values()).filter(resourceType -> resourceType.code.equals(code))
+        final String lowerCaseCode = code.toLowerCase(Locale.ROOT);
+        return Arrays.stream(ResourceType.values()).filter(resourceType -> resourceType.code.equals(lowerCaseCode))
                 .findFirst();
     }
 }

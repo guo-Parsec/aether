@@ -4,13 +4,17 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>代码辅助类</p>
@@ -37,6 +41,27 @@ public class CodeHelper {
             throw new IllegalArgumentException("目标对象[source]和转换类对象[vClass]不能为空");
         }
         return vClass.cast(source);
+    }
+
+    /**
+     * <p>将目标对象转换为List集合</p>
+     *
+     * @param source 源对象
+     * @param vClass 目标类对象
+     * @return java.util.List<V>
+     * @author guocq
+     * @date 2023/1/12 13:51
+     */
+    public static <V> List<V> castToList(Object source, Class<V> vClass) {
+        if (source instanceof Collection) {
+            try {
+                Collection<?> collection = (Collection<?>) source;
+                return collection.stream().map(ele -> cast(ele, vClass)).collect(Collectors.toList());
+            } catch (Exception e) {
+                return Lists.newArrayList();
+            }
+        }
+        return Lists.newArrayList();
     }
 
     /**

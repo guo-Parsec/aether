@@ -7,6 +7,7 @@ import top.finder.aether.data.common.entity.BaseEntity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * <p>通用mapper</p>
@@ -35,4 +36,13 @@ public interface CommonMapper<T extends BaseEntity> extends BaseMapper<T> {
      */
     void logicBatchDeleteByIds(@Param(Constants.COLL) Collection<?> idList,
                                @Param("nowTime") long nowTime);
+
+    /**
+     * <p>批量新增</p>
+     *
+     * @param entityList 实体列表
+     * @author guocq
+     * @date 2023/1/12 13:55
+     */
+    void batchInsert(@Param(Constants.LIST) List<T> entityList);
 }

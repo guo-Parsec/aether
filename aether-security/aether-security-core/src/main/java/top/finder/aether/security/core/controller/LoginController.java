@@ -27,7 +27,7 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @ApiOperation(value = "登录", notes = "用户登录")
+    @ApiOperation(value = "用户登录", notes = "用户登录", nickname = "anon")
     @PostMapping(value = "/login.do")
     public Apis<SecuritySignature> login(@RequestParam("account") String account, @RequestParam("password") String password,
                                          @RequestParam(value = "verifyCode", required = false) String verifyCode) {

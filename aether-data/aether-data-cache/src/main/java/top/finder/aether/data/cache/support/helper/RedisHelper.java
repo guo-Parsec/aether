@@ -3,7 +3,6 @@ package top.finder.aether.data.cache.support.helper;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -435,9 +434,15 @@ public class RedisHelper implements Serializable {
      * @author guocq
      * @date 2022/12/15 16:49
      */
-    public long hashDelete(String key, String... hashKey) {
-        List<Object> hashKeyList = Lists.newArrayList(hashKey).stream().map(ele -> (Object) ele).collect(Collectors.toList());
-        return redisTemplate.opsForHash().delete(key, hashKeyList);
+    // @Deprecated
+    // public long hashDelete(String key, String... hashKey) {
+    //     List<Object> hashKeyList = Lists.newArrayList(hashKey).stream().map(ele -> (Object) ele).collect(Collectors.toList());
+    //     return redisTemplate.opsForHash().delete(key, hashKeyList);
+    // }
+
+    public void hashDelete(String key, Object... hashKey) {
+        log.info("hash[key={}]结构删除hashKey={}", key, hashKey);
+        redisTemplate.opsForHash().delete(key, hashKey);
     }
 
     /**

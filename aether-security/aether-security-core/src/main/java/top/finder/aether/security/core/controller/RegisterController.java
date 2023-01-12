@@ -27,7 +27,7 @@ public class RegisterController {
     @Resource
     private SysUserClient sysUserClient;
 
-    @ApiOperation(value = "注册用户", notes = "注册用户信息")
+    @ApiOperation(value = "注册用户", notes = "注册用户信息", nickname = "anon")
     @PostMapping(value = "register.do")
     public Apis<Void> register(@RequestBody @Validated RegisterDto dto) {
         return sysUserClient.create(dto.toUserCreateDto());
