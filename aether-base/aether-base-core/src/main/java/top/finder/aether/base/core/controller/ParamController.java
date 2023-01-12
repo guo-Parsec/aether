@@ -6,13 +6,12 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
+import top.finder.aether.base.api.vo.ParamVo;
 import top.finder.aether.base.core.dto.ParamCreateDto;
 import top.finder.aether.base.core.dto.ParamPageQueryDto;
 import top.finder.aether.base.core.dto.ParamQueryDto;
 import top.finder.aether.base.core.dto.ParamUpdateDto;
 import top.finder.aether.base.core.service.ParamService;
-import top.finder.aether.base.api.vo.ParamVo;
-import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.data.core.support.annotation.ApiResource;
 
@@ -52,7 +51,6 @@ public class ParamController {
     @ApiResource(code = "AMS:PARAM:CREATE", name = "新增系统参数", sort = 180, desc = "新增系统参数")
     @ApiOperation(value = "新增", notes = "新增系统参数")
     @PostMapping(value = "/create.do")
-    @OperateLog
     public Apis<Void> create(@RequestBody @Validated ParamCreateDto dto) {
         service.create(dto);
         return Apis.success();
@@ -61,7 +59,6 @@ public class ParamController {
     @ApiResource(code = "AMS:PARAM:UPDATE", name = "更新系统参数", sort = 190, desc = "更新系统参数")
     @ApiOperation(value = "更新", notes = "更新系统参数")
     @PutMapping(value = "/update.do")
-    @OperateLog
     public Apis<Void> update(@RequestBody @Validated ParamUpdateDto dto) {
         service.update(dto);
         return Apis.success();
@@ -70,7 +67,6 @@ public class ParamController {
     @ApiResource(code = "AMS:PARAM:DELETE", name = "删除系统参数", sort = 200, desc = "删除系统参数")
     @ApiOperation(value = "删除", notes = "删除系统参数")
     @DeleteMapping(value = "/delete.do")
-    @OperateLog
     public Apis<Void> delete(@RequestBody Set<Long> idSet) {
         service.delete(idSet);
         return Apis.success();

@@ -17,7 +17,6 @@ import top.finder.aether.base.core.service.UserService;
 import top.finder.aether.common.support.annotation.AppBlocking;
 import top.finder.aether.common.support.annotation.AppGroup;
 import top.finder.aether.common.support.annotation.FeignApi;
-import top.finder.aether.common.support.annotation.OperateLog;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.pool.AppConstantPool;
 import top.finder.aether.data.core.support.annotation.ApiResource;
@@ -54,7 +53,6 @@ public class UserController {
             @AppBlocking(appNames = {AppConstantPool.APP_NAME_BASE}, blockerId = "userService.systemInnerUserCreate"),
             @AppBlocking(appNames = {AppConstantPool.APP_NAME_SECURITY}, blockerId = "userService.registeredUserCreate")
     })
-    @OperateLog
     public Apis<Void> create(@RequestBody @Validated UserCreateDto dto) {
         userService.create(dto);
         return Apis.success();
@@ -63,7 +61,6 @@ public class UserController {
     @ApiResource(code = "AMS:USER:UPDATE", name = "更新用户", sort = 20, desc = "更新用户信息")
     @ApiOperation(value = "更新用户", notes = "更新用户信息")
     @PutMapping(value = "update.do")
-    @OperateLog
     public Apis<Void> update(@RequestBody @Validated UserUpdateDto dto) {
         userService.update(dto);
         return Apis.success();
@@ -72,7 +69,6 @@ public class UserController {
     @ApiResource(code = "AMS:USER:DELETE", name = "删除用户", sort = 30, desc = "删除用户信息")
     @ApiOperation(value = "删除用户", notes = "删除用户信息")
     @DeleteMapping(value = "delete.do")
-    @OperateLog
     public Apis<Void> delete(@RequestBody Set<Long> idSet) {
         userService.delete(idSet);
         return Apis.success();

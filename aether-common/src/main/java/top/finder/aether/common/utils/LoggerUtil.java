@@ -15,7 +15,7 @@ import top.finder.aether.common.support.exception.AetherValidException;
  * @author guocq
  * @since 2023/1/11
  */
-public final class LoggerUtil extends Loggers {
+public final class LoggerUtil {
     /**
      * <p>打印错误日志信息并返回Runtime异常</p>
      *
