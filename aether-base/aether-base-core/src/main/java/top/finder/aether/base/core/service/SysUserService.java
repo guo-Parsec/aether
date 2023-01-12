@@ -7,6 +7,7 @@ import top.finder.aether.base.api.vo.SysUserVo;
 import top.finder.aether.base.core.dto.GrantRoleToUserDto;
 import top.finder.aether.base.core.dto.SysSysUserPageQueryDto;
 import top.finder.aether.base.core.dto.SysUserUpdateDto;
+import top.finder.aether.data.core.entity.UserDetails;
 
 import java.util.Set;
 
@@ -22,11 +23,11 @@ public interface SysUserService {
      *
      * @param account  登陆账户
      * @param password 传入需要验证的密码
-     * @return {@link SysUserVo}
+     * @return {@link UserDetails}
      * @author guocq
      * @date 2022/12/28 14:55
      */
-    SysUserVo loadUser(String account, String password);
+    UserDetails loadUser(String account, String password);
 
     /**
      * <p>根据用户名查询用户</p>
@@ -36,7 +37,7 @@ public interface SysUserService {
      * @author guocq
      * @date 2022/12/28 16:08
      */
-    SysUserVo findUserByAccount(String account);
+    UserDetails findUserByAccount(String account);
 
     /**
      * <p>新增：用户信息</p>

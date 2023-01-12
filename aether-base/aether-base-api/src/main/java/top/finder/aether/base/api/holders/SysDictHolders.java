@@ -3,6 +3,7 @@ package top.finder.aether.base.api.holders;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import top.finder.aether.common.model.IModel;
 
 /**
  * <p>数据字典模型</p>
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class SysDictHolders {
+public class SysDictHolders implements IModel {
     private static final long serialVersionUID = -3868623617781745586L;
     /**
      * 字典类别码值

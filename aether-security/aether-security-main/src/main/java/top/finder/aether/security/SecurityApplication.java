@@ -16,8 +16,8 @@ import top.finder.aether.data.core.support.annotation.EnableBlock;
 @ComponentScan({
         "top.finder.aether.common",
         "top.finder.aether.data",
-        "top.finder.aether.base",
-        "top.finder.aether.security"
+        "top.finder.aether.security",
+        "top.finder.aether.base.api",
 })
 @EnableBlock({"top.finder.aether.security.core.service"})
 @EnableFeignClients(basePackages = {"top.finder.aether.**.api"})

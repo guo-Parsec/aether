@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import top.finder.aether.common.model.IModel;
 
 import java.util.StringJoiner;
 
@@ -16,7 +17,7 @@ import java.util.StringJoiner;
 @Setter
 @Getter
 @ApiModel("参数模型")
-public class SysParamHolders {
+public class SysParamHolders implements IModel {
     private static final long serialVersionUID = 5896078517591280922L;
 
     /**

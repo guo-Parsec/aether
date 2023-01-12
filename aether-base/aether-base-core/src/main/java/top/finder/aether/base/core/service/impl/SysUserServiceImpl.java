@@ -38,6 +38,7 @@ import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.support.strategy.Md5SaltCrypto;
 import top.finder.aether.common.utils.LoggerUtil;
+import top.finder.aether.data.core.entity.UserDetails;
 import top.finder.aether.data.core.support.helper.PageHelper;
 import top.finder.aether.security.api.facade.SecurityFacade;
 
@@ -80,21 +81,21 @@ public class SysUserServiceImpl implements SysUserService {
      *
      * @param account  登陆账户
      * @param password 传入需要验证的密码
-     * @return {@link SysUserVo}
+     * @return {@link UserDetails}
      * @author guocq
      * @date 2022/12/28 14:55
      */
     @Override
-    public SysUserVo loadUser(String account, String password) {
+    public UserDetails loadUser(String account, String password) {
         // 防止内部调用缓存失效
-        SysUserVo sysUserVo = SpringUtil.getBean(SysUserService.class).findUserByAccount(account);
-        if (sysUserVo == null) {
-            return SysUserVo.emptyUser(account);
+        UserDetails userDetails = SpringUtil.getBean(SysUserService.class).findUserByAccount(account);
+        if (userDetails == null) {
+            return UserDetails.emptyUser(account);
         }
-        boolean match = match(account, password, sysUserVo.getPassword());
-        sysUserVo.setCertified(match);
-        sysUserVo.setPassword(null);
-        return sysUserVo;
+        boolean match = match(account, password, userDetails.getPassword());
+        userDetails.setCertified(match);
+        userDetails.setPassword(null);
+        return userDetails;
     }
 
     /**
@@ -106,7 +107,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @date 2022/12/28 16:08
      */
     @Cacheable(cacheNames = "AMS:USER:SINGLE", key = "'ACCOUNT:' + #account")
-    public SysUserVo findUserByAccount(String account) {
+    public UserDetails findUserByAccount(String account) {
         log.debug("根据[account={}]查询用户信息", account);
         Wrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
                 .eq(SysUser::getAccount, account);
@@ -115,7 +116,7 @@ public class SysUserServiceImpl implements SysUserService {
             log.error("未找到用户account={}", account);
             return null;
         }
-        return DictTool.transformerAndTranslate(sysUser, SysUserVo.class);
+        return DictTool.transformerAndTranslate(sysUser, UserDetails.class);
     }
 
     /**

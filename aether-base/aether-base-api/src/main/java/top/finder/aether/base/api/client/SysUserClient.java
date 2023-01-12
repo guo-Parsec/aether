@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.finder.aether.base.api.dto.SysUserCreateDto;
 import top.finder.aether.base.api.support.pool.BaseApiConstantPool;
-import top.finder.aether.base.api.vo.SysUserVo;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.pool.AppConstantPool;
+import top.finder.aether.data.core.entity.UserDetails;
 
 /**
  * <p>用户对外服务接口</p>
@@ -32,7 +32,7 @@ public interface SysUserClient {
      */
     @ApiOperation(value = "加载用户", notes = "加载用户信息并验证是否匹配")
     @GetMapping(value = "/load")
-    Apis<SysUserVo> loadUser(@RequestParam("account") String account, @RequestParam("password") String password);
+    Apis<UserDetails> loadUser(@RequestParam("account") String account, @RequestParam("password") String password);
 
     /**
      * <p>创建用户信息</p>

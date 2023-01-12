@@ -1,7 +1,7 @@
-package top.finder.aether.security.api.facade.impl;
+package top.finder.aether.base.api.facade.impl;
 
 import org.springframework.stereotype.Component;
-import top.finder.aether.security.api.facade.SysOperateRecordFacade;
+import top.finder.aether.base.api.facade.SysOperateRecordFacade;
 
 /**
  * <p>系统操作记录Facade实现</p>

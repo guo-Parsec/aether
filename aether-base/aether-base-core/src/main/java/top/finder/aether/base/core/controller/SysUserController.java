@@ -19,6 +19,7 @@ import top.finder.aether.common.support.annotation.AppGroup;
 import top.finder.aether.common.support.annotation.FeignApi;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.pool.AppConstantPool;
+import top.finder.aether.data.core.entity.UserDetails;
 
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public class SysUserController {
     @ApiOperation(value = "加载系统用户", notes = "加载用户信息并验证是否匹配", hidden = true)
     @GetMapping(value = "/load")
     @FeignApi(AppConstantPool.APP_NAME_SECURITY)
-    public Apis<SysUserVo> loadUser(@RequestParam("account") String account, @RequestParam("password") String password) {
+    public Apis<UserDetails> loadUser(@RequestParam("account") String account, @RequestParam("password") String password) {
         return Apis.success(service.loadUser(account, password));
     }
 

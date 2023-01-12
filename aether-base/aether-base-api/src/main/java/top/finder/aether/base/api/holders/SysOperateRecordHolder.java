@@ -1,24 +1,27 @@
-package top.finder.aether.data.core.entity;
+package top.finder.aether.base.api.holders;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
-import top.finder.aether.data.common.entity.BaseEntity;
+import top.finder.aether.common.model.IModel;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.StringJoiner;
 
 /**
- * <p>系统操作记录表</p>
+ * <p>系统操作记录</p>
  *
  * @author guocq
  * @since 2023/1/12
  */
 @Getter
 @Setter
-@TableName(value = "sys_operate_record")
-public class SysOperateRecord extends BaseEntity {
+public class SysOperateRecordHolder implements IModel {
     private static final long serialVersionUID = 5658981184336396476L;
+
+    /**
+     * 主键
+     */
+    private Long id;
 
     /**
      * 操作人id
@@ -53,7 +56,7 @@ public class SysOperateRecord extends BaseEntity {
     /**
      * 操作时间
      */
-    private Date operateTime;
+    private LocalDateTime operateTime;
 
     /**
      * 操作耗时(毫秒)
@@ -68,21 +71,11 @@ public class SysOperateRecord extends BaseEntity {
     /**
      * 操作类型
      */
-    private Integer operateMethod;
-
-    /**
-     * 过期状态
-     */
-    private Integer expirationStatus;
-
-    /**
-     * 操作到日时间
-     */
-    private Date expirationAt;
+    private String operateMethod;
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", SysOperateRecord.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", SysOperateRecordHolder.class.getSimpleName() + "[", "]")
                 .add("operateId=" + operateId)
                 .add("operateAccount='" + operateAccount + "'")
                 .add("operateResult=" + operateResult)
@@ -93,8 +86,6 @@ public class SysOperateRecord extends BaseEntity {
                 .add("timeSpent=" + timeSpent)
                 .add("operateUri='" + operateUri + "'")
                 .add("operateMethod=" + operateMethod)
-                .add("expirationStatus=" + expirationStatus)
-                .add("expirationAt=" + expirationAt)
                 .add("id=" + id)
                 .toString();
     }

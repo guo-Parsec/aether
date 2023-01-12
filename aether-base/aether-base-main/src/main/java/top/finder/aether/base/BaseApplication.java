@@ -16,10 +16,11 @@ import top.finder.aether.data.core.support.annotation.EnableBlock;
 @ComponentScan({
         "top.finder.aether.common",
         "top.finder.aether.data",
-        "top.finder.aether.base"
+        "top.finder.aether.base",
+        "top.finder.aether.security.api",
 })
 @EnableBlock({"top.finder.aether.base.core.service"})
-@EnableFeignClients
+@EnableFeignClients(basePackages = {"top.finder.aether.**.api"})
 @EnableDiscoveryClient
 @SpringBootApplication
 public class BaseApplication {

@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import top.finder.aether.base.api.client.SysUserClient;
 import top.finder.aether.base.api.support.pool.BaseConstantPool;
-import top.finder.aether.base.api.vo.SysUserVo;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.utils.LoggerUtil;
+import top.finder.aether.data.core.entity.UserDetails;
 import top.finder.aether.security.api.entity.SecuritySignature;
 import top.finder.aether.security.api.facade.SecurityFacade;
 import top.finder.aether.security.core.service.LoginService;
@@ -49,15 +49,15 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     public SecuritySignature login(String account, String password, String verifyCode) {
-        Apis<SysUserVo> userVoApis = sysUserClient.loadUser(account, password);
-        SysUserVo sysUserVo = Apis.getApiDataNoException(userVoApis);
-        if (sysUserVo == null || !sysUserVo.getCertified()) {
+        Apis<UserDetails> userVoApis = sysUserClient.loadUser(account, password);
+        UserDetails details = Apis.getApiDataNoException(userVoApis);
+        if (details == null || !details.getCertified()) {
             throw LoggerUtil.logAetherError(log, "用户账户信息[{}]与密码[{}]匹配错误", account, password);
         }
-        if (sysUserVo.getEnableStatus() == null || !sysUserVo.getEnableStatus().equals(BaseConstantPool.ENABLE_STATUS_ENABLE)) {
+        if (details.getEnableStatus() == null || !details.getEnableStatus().equals(BaseConstantPool.ENABLE_STATUS_ENABLE)) {
             throw LoggerUtil.logAetherError(log, "用户[account={}]已被禁用", account);
         }
-        SecuritySignature signature = new SecuritySignature(sysUserVo);
+        SecuritySignature signature = new SecuritySignature(details);
         SecurityFacade.login(signature);
         // todo 角色 权限 填充
         return signature;

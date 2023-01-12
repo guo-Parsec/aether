@@ -1,8 +1,8 @@
-package top.finder.aether.data.core.repository;
+package top.finder.aether.base.api.repository;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import top.finder.aether.data.core.entity.SysOperateRecord;
+import top.finder.aether.base.api.holders.SysOperateRecordHolder;
 
 /**
  * <p>系统操作记录持久层</p>
@@ -19,5 +19,5 @@ public interface SysOperateRecordRepository {
      * @author guocq
      * @date 2023/1/12 16:28
      */
-    void saveOperateRecord(@Param("record") SysOperateRecord record);
+    void saveOperateRecord(@Param("record") SysOperateRecordHolder record);
 }

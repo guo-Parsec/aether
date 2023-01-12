@@ -54,9 +54,7 @@ create table sys_operate_record
     operate_time      datetime        not null comment '操作时间',
     time_spent        bigint          not null comment '操作耗时(毫秒)',
     operate_uri       varchar(255)    not null comment '操作uri',
-    operate_method    int default 0   not null comment '操作类型',
-    expiration_status int default 0   not null comment '过期状态',
-    expiration_at     datetime        null comment '操作到日时间',
+    operate_method    varchar(32)     not null comment '操作类型',
     constraint sys_operate_record_sys_user_account_fk
         foreign key (operate_account) references sys_user (account),
     constraint sys_operate_record_sys_user_id_fk
