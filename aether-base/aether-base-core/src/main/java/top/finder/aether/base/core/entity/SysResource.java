@@ -1,14 +1,10 @@
 package top.finder.aether.base.core.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import top.finder.aether.data.common.entity.BaseDataEntity;
-import top.finder.aether.data.core.model.ApiModel;
 
-import java.util.List;
-import java.util.Set;
 import java.util.StringJoiner;
 
 /**
@@ -56,31 +52,6 @@ public class SysResource extends BaseDataEntity {
      * 资源描述
      */
     private String resourceDesc;
-
-    /**
-     * <p>apiModel转换</p>
-     *
-     * @param apiModel apiModel
-     * @return {@link List}
-     * @author guocq
-     * @date 2023/1/10 11:43
-     */
-    public static List<SysResource> apiModelToResource(ApiModel apiModel) {
-        Set<String> uri = apiModel.getUri();
-        List<SysResource> sysResources = Lists.newArrayListWithCapacity(uri.size());
-        SysResource sysResource = new SysResource();
-        sysResource.setResourceTypeCode(apiModel.getResourceType().getCode());
-        sysResource.setResourceTypeName(apiModel.getResourceType().getName());
-        sysResource.setResourceCode(apiModel.getResourceCode());
-        sysResource.setResourceName(apiModel.getResourceName());
-        sysResource.setResourceSort(apiModel.getSort());
-        sysResource.setResourceDesc(apiModel.getDesc());
-        for (String url : uri) {
-            sysResource.setResourceUrl(url);
-            sysResources.add(sysResource);
-        }
-        return sysResources;
-    }
 
     @Override
     public String toString() {

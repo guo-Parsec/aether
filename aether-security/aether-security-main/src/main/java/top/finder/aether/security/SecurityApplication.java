@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
-import top.finder.aether.data.core.support.annotation.ApiScan;
 import top.finder.aether.data.core.support.annotation.EnableBlock;
 
 /**
@@ -20,7 +19,6 @@ import top.finder.aether.data.core.support.annotation.EnableBlock;
         "top.finder.aether.base",
         "top.finder.aether.security"
 })
-@ApiScan({"top.finder.aether.security.core.controller"})
 @EnableBlock({"top.finder.aether.security.core.service"})
 @EnableFeignClients(basePackages = {"top.finder.aether.**.api"})
 @EnableDiscoveryClient

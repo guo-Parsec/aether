@@ -11,7 +11,6 @@ import top.finder.aether.base.core.entity.SysRole;
 import top.finder.aether.base.core.service.SysRoleService;
 import top.finder.aether.base.core.vo.SysRoleVo;
 import top.finder.aether.common.support.api.Apis;
-import top.finder.aether.data.core.support.annotation.ApiResource;
 
 import java.util.List;
 import java.util.Set;
@@ -34,12 +33,10 @@ public class SysRoleController {
 
     @ApiOperation(value = "查询列表", notes = "角色列表信息查询")
     @GetMapping(value = "/list")
-    @ApiResource(code = "AMS:ROLE:QUERY", name = "查询列表", sort = 230, desc = "角色列表信息查询")
     public Apis<List<SysRoleVo>> list(SysRole sysRole) {
         return Apis.success(service.listQuery(sysRole));
     }
 
-    @ApiResource(code = "AMS:ROLE:CREATE", name = "新增角色", sort = 240, desc = "角色信息新增操作")
     @ApiOperation(value = "新增角色", notes = "角色信息新增操作")
     @PostMapping(value = "/create.do")
     public Apis<Void> create(@RequestBody @Validated SysRoleCreateDto createDto) {
@@ -47,7 +44,6 @@ public class SysRoleController {
         return Apis.success();
     }
 
-    @ApiResource(code = "AMS:ROLE:UPDATE", name = "更新角色", sort = 250, desc = "角色信息更新操作")
     @ApiOperation(value = "更新角色", notes = "角色信息更新操作")
     @PutMapping(value = "/update.do")
     public Apis<Void> update(@RequestBody @Validated SysRoleUpdateDto updateDto) {
@@ -55,7 +51,6 @@ public class SysRoleController {
         return Apis.success();
     }
 
-    @ApiResource(code = "AMS:ROLE:DELETE", name = "删除角色", sort = 260, desc = "角色信息删除操作")
     @ApiOperation(value = "删除角色", notes = "角色信息删除操作")
     @DeleteMapping(value = "/delete.do")
     public Apis<Void> delete(@RequestBody @Validated Set<Long> idSet) {

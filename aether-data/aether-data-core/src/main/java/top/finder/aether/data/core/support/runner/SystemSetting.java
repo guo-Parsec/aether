@@ -16,14 +16,11 @@ import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
-import top.finder.aether.data.core.model.ApiModel;
 import top.finder.aether.data.core.support.helper.SystemConfigHelper;
 
-import java.util.List;
 import java.util.Map;
 
 import static top.finder.aether.common.support.pool.CommonConstantPool.FIRST_PRIORITY;
-import static top.finder.aether.data.core.support.pool.SystemSettingConstantPool.API_MODELS;
 import static top.finder.aether.data.core.support.pool.SystemSettingConstantPool.FEIGN_SECRET;
 
 /**
@@ -48,7 +45,6 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
     @Override
     public void run(ApplicationArguments args) throws Exception {
         initFeignSecret();
-        initApiModels();
     }
 
     /**
@@ -66,16 +62,6 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
         log.debug("系统[{}]初始化feign密钥为[feignSecret={}]", appName, feignSecret);
         redisHelper.hashSet(systemSettingKey, FEIGN_SECRET, feignSecret);
         DESTROY_SETTING_MAPPING.put(systemSettingKey, FEIGN_SECRET);
-    }
-
-    public void initApiModels() {
-        ApiRegister.register();
-        String appName = SpringUtil.getApplicationName();
-        log.debug("系统[{}]开始初始化api", appName);
-        final String systemSettingKey = SystemConfigHelper.generateSystemSettingKey(appName);
-        List<ApiModel> apiModels = ApiRegister.collectApiModels();
-        redisHelper.hashSet(systemSettingKey, API_MODELS, apiModels);
-        DESTROY_SETTING_MAPPING.put(systemSettingKey, API_MODELS);
     }
 
     /**
