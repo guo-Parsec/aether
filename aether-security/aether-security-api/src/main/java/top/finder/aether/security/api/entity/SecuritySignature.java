@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import top.finder.aether.base.api.vo.UserVo;
+import top.finder.aether.base.api.vo.SysUserVo;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
 
 import java.io.Serializable;
@@ -25,7 +25,7 @@ public class SecuritySignature implements Serializable {
     private static final long serialVersionUID = -6325090388760295196L;
 
     @ApiModelProperty(value = "签名对象")
-    private UserVo details;
+    private SysUserVo details;
 
     @ApiModelProperty(value = "主键")
     private Long id;
@@ -45,7 +45,7 @@ public class SecuritySignature implements Serializable {
     @ApiModelProperty(value = "令牌信息")
     private Token token;
 
-    public SecuritySignature(UserVo details) {
+    public SecuritySignature(SysUserVo details) {
         this.id = Long.valueOf(details.getId());
         this.account = details.getAccount();
         this.details = details;

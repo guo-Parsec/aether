@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import top.finder.aether.base.api.client.UserClient;
+import top.finder.aether.base.api.client.SysUserClient;
 import top.finder.aether.base.api.support.pool.BaseConstantPool;
-import top.finder.aether.base.api.vo.UserVo;
+import top.finder.aether.base.api.vo.SysUserVo;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.utils.LoggerUtil;
@@ -30,7 +30,7 @@ public class LoginServiceImpl implements LoginService {
     private CryptoStrategy strategy;
 
     @Resource
-    private UserClient userClient;
+    private SysUserClient sysUserClient;
 
     @Autowired
     public CryptoStrategy setStrategy(@Qualifier("md5SaltCrypto") CryptoStrategy strategy) {
@@ -49,15 +49,15 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     public SecuritySignature login(String account, String password, String verifyCode) {
-        Apis<UserVo> userVoApis = userClient.loadUser(account, password);
-        UserVo userVo = Apis.getApiDataNoException(userVoApis);
-        if (userVo == null || !userVo.getCertified()) {
+        Apis<SysUserVo> userVoApis = sysUserClient.loadUser(account, password);
+        SysUserVo sysUserVo = Apis.getApiDataNoException(userVoApis);
+        if (sysUserVo == null || !sysUserVo.getCertified()) {
             throw LoggerUtil.logAetherError(log, "用户账户信息[{}]与密码[{}]匹配错误", account, password);
         }
-        if (userVo.getEnableStatus() == null || !userVo.getEnableStatus().equals(BaseConstantPool.ENABLE_STATUS_ENABLE)) {
+        if (sysUserVo.getEnableStatus() == null || !sysUserVo.getEnableStatus().equals(BaseConstantPool.ENABLE_STATUS_ENABLE)) {
             throw LoggerUtil.logAetherError(log, "用户[account={}]已被禁用", account);
         }
-        SecuritySignature signature = new SecuritySignature(userVo);
+        SecuritySignature signature = new SecuritySignature(sysUserVo);
         SecurityFacade.login(signature);
         // todo 角色 权限 填充
         return signature;

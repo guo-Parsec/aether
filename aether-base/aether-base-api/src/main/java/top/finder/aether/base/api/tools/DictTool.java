@@ -6,8 +6,8 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.finder.aether.base.api.facade.DictFacade;
-import top.finder.aether.base.api.model.DictModel;
+import top.finder.aether.base.api.facade.SysDictFacade;
+import top.finder.aether.base.api.holders.SysDictHolders;
 import top.finder.aether.common.support.annotation.DictTranslate;
 import top.finder.aether.common.support.annotation.DictValid;
 import top.finder.aether.common.support.helper.ReflectHelper;
@@ -30,7 +30,7 @@ public class DictTool {
     private static final Logger log = LoggerFactory.getLogger(DictTool.class);
 
     private static final class DictAccessHolder {
-        static final DictFacade DICT_ACCESS = SpringUtil.getBean(DictFacade.class);
+        static final SysDictFacade DICT_ACCESS = SpringUtil.getBean(SysDictFacade.class);
     }
 
     /**
@@ -118,8 +118,8 @@ public class DictTool {
      * @date 2023/1/11 9:59
      */
     private static String findDictName(String dictTypeCode, Integer dictCode) {
-        Optional<DictModel> optional = DictAccessHolder.DICT_ACCESS.findDictByTypeAndCode(dictTypeCode, dictCode);
-        return optional.map(DictModel::getDictName).orElse(null);
+        Optional<SysDictHolders> optional = DictAccessHolder.DICT_ACCESS.findDictByTypeAndCode(dictTypeCode, dictCode);
+        return optional.map(SysDictHolders::getDictName).orElse(null);
     }
 
     /**

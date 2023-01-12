@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.finder.aether.base.api.repository.SysParamRepository">
+    <resultMap id="ParamModelMap" type="top.finder.aether.base.api.holders.SysParamHolders">
+        <!--@mbg.generated-->
+        <!--@Table sys_param-->
+        <result column="param_type_code" jdbcType="VARCHAR" property="paramTypeCode" />
+        <result column="param_type_name" jdbcType="VARCHAR" property="paramTypeName" />
+        <result column="param_name" jdbcType="VARCHAR" property="paramName" />
+        <result column="param_code" jdbcType="VARCHAR" property="paramCode" />
+        <result column="param_value" jdbcType="VARCHAR" property="paramValue" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@sql select -->
+        sysParam.id,
+        sysParam.param_type_code,
+        sysParam.param_type_name,
+        sysParam.param_name,
+        sysParam.param_code,
+        sysParam.param_value,
+        sysParam.param_sort,
+        sysParam.delete_at,
+        sysParam.gmt_create,
+        sysParam.gmt_modify
+        <!--@sql from sys_param sysParam-->
+    </sql>
+    
+    <select id="findParamByType" parameterType="java.lang.String" resultMap="ParamModelMap">
+        select  sysParam.param_type_code,
+                sysParam.param_type_name,
+                sysParam.param_name,
+                sysParam.param_code,
+                sysParam.param_value
+        from sys_param sysParam
+        where sysParam.delete_at = 0
+        and sysParam.param_type_code = #{paramTypeCode,jdbcType=VARCHAR}
+        order by sysParam.param_type_code, sysParam.param_sort, sysParam.gmt_modify desc
+    </select>
+
+    <select id="findParamByParamCode" parameterType="java.lang.String" resultMap="ParamModelMap">
+        select sysParam.param_type_code,
+               sysParam.param_type_name,
+               sysParam.param_name,
+               sysParam.param_code,
+               sysParam.param_value
+        from sys_param sysParam
+        where sysParam.delete_at = 0
+          and sysParam.param_code = #{paramCode,jdbcType=VARCHAR}
+        limit 1
+    </select>
+</mapper>

@@ -5,8 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.finder.aether.base.api.facade.ParamFacade;
-import top.finder.aether.base.api.model.ParamModel;
+import top.finder.aether.base.api.facade.SysParamFacade;
+import top.finder.aether.base.api.holders.SysParamHolders;
 import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
@@ -124,13 +124,13 @@ public class SecurityUtils {
      * @date 2023/1/9 16:55
      */
     public static Long getDefaultTokenExpireTime() {
-        ParamFacade paramFacade = null;
+        SysParamFacade sysParamFacade = null;
         try {
-            paramFacade = SpringUtil.getBean(ParamFacade.class);
+            sysParamFacade = SpringUtil.getBean(SysParamFacade.class);
         } catch (Exception e) {
             return DEFAULT_EXPIRE_TIME;
         }
-        Optional<ParamModel> optional = paramFacade.findParamByParamCode(PARAM_DEFAULT_TOKEN_EXPIRE_TIME);
+        Optional<SysParamHolders> optional = sysParamFacade.findParamByParamCode(PARAM_DEFAULT_TOKEN_EXPIRE_TIME);
         if (!optional.isPresent()) {
             return DEFAULT_EXPIRE_TIME;
         }
