@@ -1,6 +1,5 @@
 package top.finder.aether.security.core.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +9,8 @@ import top.finder.aether.base.api.client.UserClient;
 import top.finder.aether.base.api.support.pool.BaseConstantPool;
 import top.finder.aether.base.api.vo.UserVo;
 import top.finder.aether.common.support.api.Apis;
-import top.finder.aether.common.support.api.CommonHttpStatus;
-import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
+import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.security.api.entity.SecuritySignature;
 import top.finder.aether.security.api.facade.SecurityFacade;
 import top.finder.aether.security.core.service.LoginService;
@@ -54,13 +52,10 @@ public class LoginServiceImpl implements LoginService {
         Apis<UserVo> userVoApis = userClient.loadUser(account, password);
         UserVo userVo = Apis.getApiDataNoException(userVoApis);
         if (userVo == null || !userVo.getCertified()) {
-            String message = StrUtil.format("用户账户信息[{}]与密码[{}]匹配错误", account, password);
-            log.error(message);
-            throw new AetherException("用户账户信息[{}]与密码[{}]匹配错误");
+            throw LoggerUtil.logAetherError(log, "用户账户信息[{}]与密码[{}]匹配错误", account, password);
         }
         if (userVo.getEnableStatus() == null || !userVo.getEnableStatus().equals(BaseConstantPool.ENABLE_STATUS_ENABLE)) {
-            log.error("用户[account={}]已被禁用", account);
-            throw new AetherException(CommonHttpStatus.FAILED, "用户已被禁用");
+            throw LoggerUtil.logAetherError(log, "用户[account={}]已被禁用", account);
         }
         SecuritySignature signature = new SecuritySignature(userVo);
         SecurityFacade.login(signature);

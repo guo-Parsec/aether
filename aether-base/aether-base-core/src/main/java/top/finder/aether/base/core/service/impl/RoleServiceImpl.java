@@ -20,7 +20,7 @@ import top.finder.aether.base.core.mapper.RoleMapper;
 import top.finder.aether.base.core.service.RoleService;
 import top.finder.aether.base.core.vo.RoleVo;
 import top.finder.aether.common.support.helper.TransformerHelper;
-import top.finder.aether.common.utils.Loggers;
+import top.finder.aether.common.utils.LoggerUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -126,7 +126,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 .eq(Role::getRoleCode, roleCode);
         boolean exists = roleMapper.exists(wrapper);
         if (exists) {
-            Loggers.logAetherValidError(log, "角色编码为[roleCode={}]的数据已存在，不能重复新增", roleCode);
+            throw LoggerUtil.logAetherValidError(log, "角色编码为[roleCode={}]的数据已存在，不能重复新增", roleCode);
         }
     }
 
@@ -143,7 +143,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 .eq(Role::getId, id);
         boolean exists = roleMapper.exists(wrapper);
         if (!exists) {
-            Loggers.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
+            throw LoggerUtil.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
         }
         String roleCode = roleUpdateDto.getRoleCode();
         if (StrUtil.isNotBlank(roleCode)) {
@@ -152,7 +152,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                     .ne(Role::getId, id);
             exists = roleMapper.exists(wrapper);
             if (exists) {
-                Loggers.logAetherValidError(log, "角色编码为[roleCode={}]的数据已存在，不能重复更新", roleCode);
+                throw LoggerUtil.logAetherValidError(log, "角色编码为[roleCode={}]的数据已存在，不能重复更新", roleCode);
             }
         }
     }
@@ -166,7 +166,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
      */
     private void checkBeforeDelete(Set<Long> idSet) {
         if (CollUtil.isEmpty(idSet)) {
-            Loggers.logAetherValidError(log, "删除时主键集合不能为空", idSet);
+            throw LoggerUtil.logAetherValidError(log, "删除时主键集合不能为空", idSet);
         }
         Wrapper<Role> wrapper = new LambdaQueryWrapper<Role>()
                 .in(Role::getId, idSet);

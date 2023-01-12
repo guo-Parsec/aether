@@ -34,12 +34,10 @@ import top.finder.aether.base.core.mapper.UserMapper;
 import top.finder.aether.base.core.service.UserService;
 import top.finder.aether.common.support.annotation.BlockBean;
 import top.finder.aether.common.support.annotation.BlockMethod;
-import top.finder.aether.common.support.exception.AetherException;
-import top.finder.aether.common.support.exception.AetherValidException;
 import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.support.strategy.Md5SaltCrypto;
-import top.finder.aether.common.utils.Loggers;
+import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.core.support.helper.PageHelper;
 import top.finder.aether.security.api.facade.SecurityFacade;
 
@@ -268,8 +266,7 @@ public class UserServiceImpl implements UserService {
             typeMessage = "禁用";
         }
         if (typeMessage == null) {
-            log.error("enableStatus={}不合法", enableStatus);
-            throw new AetherValidException("enableStatus不合法");
+            throw LoggerUtil.logAetherValidError(log, "enableStatus={}不合法", enableStatus);
         }
         log.debug("{}用户, 入参[account={},enableStatus={}]", typeMessage, account, enableStatus);
         User user = checkAccountIsExist(account);
@@ -404,7 +401,7 @@ public class UserServiceImpl implements UserService {
         String checkPassword = createDto.getCheckPassword();
         boolean isRegister = createDto.isRegister();
         if (isRegister && !password.equals(checkPassword)) {
-            Loggers.logAetherValidError(log, "用户[account={}]两次密码不一致无法新增", account);
+            throw LoggerUtil.logAetherValidError(log, "用户[account={}]两次密码不一致无法新增", account);
         }
         if (!isRegister) {
             // 非注册接口赋予默认密码
@@ -414,7 +411,7 @@ public class UserServiceImpl implements UserService {
                 .eq(User::getAccount, account);
         boolean exists = userMapper.exists(wrapper);
         if (exists) {
-            Loggers.logAetherValidError(log, "用户[account={}]的数据已存在，不能重复新增", account);
+            throw LoggerUtil.logAetherValidError(log, "用户[account={}]的数据已存在，不能重复新增", account);
         }
         // 校验字典信息
         DictTool.verifyDictLegitimacy(createDto);
@@ -431,7 +428,7 @@ public class UserServiceImpl implements UserService {
         Long id = dto.getId();
         User user = userMapper.selectById(id);
         if (user == null) {
-            Loggers.logAetherValidError(log, "用户[id={}]不存在无法更新数据", id);
+            throw LoggerUtil.logAetherValidError(log, "用户[id={}]不存在无法更新数据", id);
         }
         String account = dto.getAccount();
         if (StrUtil.isNotBlank(account)) {
@@ -440,7 +437,7 @@ public class UserServiceImpl implements UserService {
                     .ne(User::getId, id);
             boolean exists = userMapper.exists(wrapper);
             if (exists) {
-                Loggers.logAetherValidError(log, "用户账户为[account={}]的数据已存在，不能重复更新", account);
+                throw LoggerUtil.logAetherValidError(log, "用户账户为[account={}]的数据已存在，不能重复更新", account);
             }
         }
         // 用户信息修改时不能直接修改用户密码
@@ -458,7 +455,7 @@ public class UserServiceImpl implements UserService {
      */
     private void checkBeforeDelete(Set<Long> idSet) {
         if (CollUtil.isEmpty(idSet)) {
-            Loggers.logAetherValidError(log, "删除时主键集合不能为空", idSet);
+            throw LoggerUtil.logAetherValidError(log, "删除时主键集合不能为空", idSet);
         }
         Wrapper<User> wrapper = new LambdaQueryWrapper<User>()
                 .in(User::getId, idSet);
@@ -480,8 +477,7 @@ public class UserServiceImpl implements UserService {
         String account = dto.getAccount();
         User user = checkAccountIsExist(account);
         if (!dto.getPassword().equals(dto.getCheckPassword())) {
-            log.error("用户[account={}]两次密码不一致无法修改密码", account);
-            throw new AetherException("两次密码不一致无法修改密码");
+            throw LoggerUtil.logAetherValidError(log, "用户[account={}]两次密码不一致无法修改密码", account);
         }
         return user;
     }
@@ -498,8 +494,7 @@ public class UserServiceImpl implements UserService {
                 .in(User::getAccount, account);
         User exists = userMapper.selectOne(wrapper);
         if (exists == null) {
-            log.error("账户[{}]不存在", account);
-            throw new AetherValidException("账户不存在");
+            throw LoggerUtil.logAetherValidError(log, "账户[{}]不存在", account);
         }
         return exists;
     }
@@ -515,13 +510,11 @@ public class UserServiceImpl implements UserService {
         Long id = dto.getId();
         User user = userMapper.selectById(id);
         if (user == null) {
-            log.error("用户[id={}]不存在", id);
-            throw new AetherValidException("用户不存在");
+            throw LoggerUtil.logAetherError(log, "用户[id={}]不存在", id);
         }
         Integer enableStatus = user.getEnableStatus();
         if (!BaseConstantPool.ENABLE_STATUS_ENABLE.equals(enableStatus)) {
-            log.error("当前用户[id={},account={}]已被禁用，无法授权", id, user.getAccount());
-            throw new AetherValidException(StrUtil.format("当前用户[id={},account={}]已被禁用，无法授权", id, user.getAccount()));
+            throw LoggerUtil.logAetherError(log, "当前用户[id={},account={}]已被禁用，无法授权", id, user.getAccount());
         }
         Set<Long> roleId = dto.getRoleId();
         Wrapper<Role> wrapper = new LambdaQueryWrapper<Role>()
@@ -529,8 +522,7 @@ public class UserServiceImpl implements UserService {
                 .in(Role::getId, roleId);
         Set<Long> roleIdFormDb = roleMapper.selectList(wrapper).stream().map(Role::getId).collect(Collectors.toSet());
         if (CollUtil.isEmpty(roleIdFormDb)) {
-            log.error("角色[{}]不存在", roleId);
-            throw new AetherValidException("角色不存在");
+            throw LoggerUtil.logAetherError(log, "角色[{}]不存在", roleId);
         }
         if (roleIdFormDb.size() < roleId.size()) {
             log.warn("当前传入角色id列表[{}]有部分数据不存在，系统默认只添加已存在的角色[{}]", roleId, roleIdFormDb);

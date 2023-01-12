@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import top.finder.aether.common.support.annotation.BlockBean;
 import top.finder.aether.common.support.annotation.BlockMethod;
-import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.data.core.model.Blocker;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static top.finder.aether.common.utils.LoggerUtil.logAetherError;
 
 /**
  * <p>拦截器注册</p>
@@ -56,7 +57,7 @@ public class BlockRegister implements ApplicationRunner {
         Arrays.stream(basePackages).forEach(basePackage -> {
             blockBeanClassSet.addAll(ClassUtil.scanPackage(basePackage, clazz -> clazz.isAnnotationPresent(BlockBean.class)));
         });
-        log.info("拦截器扫描到被[BlockBean]注解标识的类共{}个", blockBeanClassSet.size());
+        log.debug("拦截器扫描到被[BlockBean]注解标识的类共{}个", blockBeanClassSet.size());
         blockerMap = CollUtil.isEmpty(blockerMap) ? Maps.newHashMap() : blockerMap;
         blockBeanClassSet.forEach(clazz -> {
             List<Method> methods = ClassUtil.getPublicMethods(clazz, method -> method.isAnnotationPresent(BlockMethod.class));
@@ -64,10 +65,9 @@ public class BlockRegister implements ApplicationRunner {
                 Blocker blocker = Blocker.of(clazz, method);
                 final String blockId = blocker.getBlockId();
                 if (blockerMap.containsKey(blockId)) {
-                    log.error("当前拦截器[{}]的拦截id[{}]与已被注册的拦截器[{}]重复，请确认拦截器bean名称与method名称的唯一性", blocker, blockId, blockerMap.get(blockId));
-                    throw new IllegalStateException("拦截器已被注册");
+                    throw logAetherError(log, "当前拦截器[{}]的拦截id[{}]与已被注册的拦截器[{}]重复，请确认拦截器bean名称与method名称的唯一性", blocker, blockId, blockerMap.get(blockId));
                 }
-                log.info("bean[{}]中的[{}]被成功注册为拦截器, 拦截器id为{}", blocker.getBeanName(), blocker.getMethodName(), blockId);
+                log.trace("bean[{}]中的[{}]被成功注册为拦截器, 拦截器id为{}", blocker.getBeanName(), blocker.getMethodName(), blockId);
                 blockerMap.put(blockId, blocker);
             });
         });
@@ -89,8 +89,7 @@ public class BlockRegister implements ApplicationRunner {
     public static Blocker findBlocker(String blockerId) {
         Assert.notNull(blockerId, "拦截器id不能为空");
         if (CollUtil.isEmpty(blockerMap) || !blockerMap.containsKey(blockerId)) {
-            log.error("获取失败：未找到id为{}的拦截器", blockerId);
-            throw new AetherException("获取拦截器失败");
+            throw logAetherError(log, "获取失败,未找到id为{}的拦截器", blockerId);
         }
         return blockerMap.get(blockerId);
     }
@@ -100,7 +99,6 @@ public class BlockRegister implements ApplicationRunner {
      *
      * @param blockerId 拦截器id
      * @param args      参数列表
-     * @return void
      * @author guocq
      * @date 2023/1/6 11:00
      */
@@ -112,7 +110,7 @@ public class BlockRegister implements ApplicationRunner {
         try {
             method.invoke(bean, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new AetherException(e);
+            throw logAetherError(log, e);
         }
     }
 }

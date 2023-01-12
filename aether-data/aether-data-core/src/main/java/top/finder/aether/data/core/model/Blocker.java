@@ -11,6 +11,7 @@ import top.finder.aether.common.model.IModel;
 import top.finder.aether.common.support.annotation.BlockBean;
 import top.finder.aether.common.support.annotation.BlockMethod;
 import top.finder.aether.common.support.pool.CommonConstantPool;
+import top.finder.aether.common.utils.LoggerUtil;
 
 import java.lang.reflect.Method;
 import java.util.StringJoiner;
@@ -83,8 +84,7 @@ public class Blocker implements IModel {
      */
     public static Blocker of(Class<?> beanClass, Method method) {
         if (beanClass == null || method == null) {
-            log.error("beanClass和method不能为空");
-            throw new IllegalStateException("beanClass和method不能为空");
+            throw LoggerUtil.logAetherError(log, "beanClass和method不能为空");
         }
         BlockBean blockBean = AnnotationUtils.findAnnotation(beanClass, BlockBean.class);
         String beanName = null;

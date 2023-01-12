@@ -20,7 +20,7 @@ import top.finder.aether.base.core.mapper.DictMapper;
 import top.finder.aether.base.core.service.DictService;
 import top.finder.aether.base.core.vo.DictVo;
 import top.finder.aether.common.support.helper.TransformerHelper;
-import top.finder.aether.common.utils.Loggers;
+import top.finder.aether.common.utils.LoggerUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -132,7 +132,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
                 .eq(Dict::getDictCode, dictCode);
         boolean exists = dictMapper.exists(wrapper);
         if (exists) {
-            Loggers.logAetherValidError(log, "字典数据[dictTypeCode={},dictCode={}]的数据已存在，不能重复新增", dictTypeCode, dictCode);
+            throw LoggerUtil.logAetherValidError(log, "字典数据[dictTypeCode={},dictCode={}]的数据已存在，不能重复新增", dictTypeCode, dictCode);
         }
     }
 
@@ -145,14 +145,14 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      */
     private void checkBeforeDelete(Set<Long> idSet) {
         if (CollUtil.isEmpty(idSet)) {
-            Loggers.logAetherValidError(log, "删除时主键集合不能为空", idSet);
+            throw LoggerUtil.logAetherValidError(log, "删除时主键集合不能为空", idSet);
         }
         Wrapper<Dict> wrapper = new LambdaQueryWrapper<Dict>()
                 .in(Dict::getId, idSet);
         Long count = dictMapper.selectCount(wrapper);
         int size = idSet.size();
         if (count == 0) {
-            Loggers.logAetherValidError(log, "待删除的idSet={}中没有找到相应的数据，无法删除", idSet);
+            throw LoggerUtil.logAetherValidError(log, "待删除的idSet={}中没有找到相应的数据，无法删除", idSet);
         }
         if (count < size) {
             log.warn("待删除的idSet={}中部分主键不存在无法删除，系统将删除已存在的数据{}条", idSet, count);
@@ -171,7 +171,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         Dict dictFromDb = dictMapper.selectById(id);
         boolean exists = dictFromDb != null && ObjectUtil.equals(id, dictFromDb.getId());
         if (!exists) {
-            Loggers.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
+            throw LoggerUtil.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
             return;
         }
         String dictTypeCode = StrUtil.isBlank(updateDto.getDictTypeCode()) ? dictFromDb.getDictTypeCode() : updateDto.getDictTypeCode();
@@ -182,7 +182,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
                 .ne(Dict::getId, id);
         exists = dictMapper.exists(wrapper);
         if (exists) {
-            Loggers.logAetherValidError(log, "字典数据[dictTypeCode={},dictCode={}]的数据已存在，不能重复新增", dictTypeCode, dictCode);
+            throw LoggerUtil.logAetherValidError(log, "字典数据[dictTypeCode={},dictCode={}]的数据已存在，不能重复新增", dictTypeCode, dictCode);
         }
     }
 }

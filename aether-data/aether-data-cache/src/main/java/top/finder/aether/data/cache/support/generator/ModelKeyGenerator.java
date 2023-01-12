@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.stereotype.Component;
 import top.finder.aether.common.model.IModel;
-import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.pool.CommonConstantPool;
+import top.finder.aether.common.utils.LoggerUtil;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -40,12 +40,10 @@ public class ModelKeyGenerator implements KeyGenerator {
     @Override
     public Object generate(Object target, Method method, Object... params) {
         if (ArrayUtil.isEmpty(params)) {
-            log.error("[ModelKeyGenerator]参数列表为空,不能生成缓存的key");
-            throw new AetherException("[ModelKeyGenerator]参数列表为空,不能生成缓存的key");
+            throw LoggerUtil.logAetherError(log, "[ModelKeyGenerator]参数列表为空,不能生成缓存的key");
         }
         if (params.length > 1) {
-            log.error("[ModelKeyGenerator]参数列表长度不能超过1");
-            throw new AetherException("[ModelKeyGenerator]参数列表长度不能超过1");
+            throw LoggerUtil.logAetherError(log, "[ModelKeyGenerator]参数列表长度不能超过1");
         }
         Object param = params[0];
         if (param instanceof IModel) {
@@ -66,7 +64,6 @@ public class ModelKeyGenerator implements KeyGenerator {
             }
             return StrUtil.isBlank(builderStr) ? EMPTY_STR : builderStr;
         }
-        log.error("[ModelKeyGenerator]参数必须为IModel类型");
-        throw new AetherException("[ModelKeyGenerator]参数必须为IModel类型");
+        throw LoggerUtil.logAetherError(log, "[ModelKeyGenerator]参数必须为IModel类型");
     }
 }

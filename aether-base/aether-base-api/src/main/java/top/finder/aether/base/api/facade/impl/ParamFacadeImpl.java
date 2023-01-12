@@ -12,6 +12,7 @@ import top.finder.aether.base.api.facade.ParamFacade;
 import top.finder.aether.base.api.model.ParamModel;
 import top.finder.aether.base.api.repository.ParamRepository;
 import top.finder.aether.common.support.exception.AetherValidException;
+import top.finder.aether.common.utils.LoggerUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +50,7 @@ public class ParamFacadeImpl implements ParamFacade {
     public List<ParamModel> findParamByType(String paramTypeCode) {
         log.debug("根据参数类型[paramTypeCode={}]查询系统参数列表", paramTypeCode);
         if (StrUtil.isBlank(paramTypeCode)) {
-            log.error("参数类型[paramTypeCode]不能为空");
-            throw new AetherValidException("参数类型[paramTypeCode]不能为空");
+            throw LoggerUtil.logAetherError(log, "参数类型[paramTypeCode]不能为空");
         }
         List<ParamModel> paramModels = repository.findParamByType(paramTypeCode);
         if (CollUtil.isEmpty(paramModels)) {
@@ -74,7 +74,7 @@ public class ParamFacadeImpl implements ParamFacade {
         log.debug("根据参数码[paramCode={}]查询系统参数", paramCode);
         if (StrUtil.isBlank(paramCode)) {
             log.error("参数码[paramCode]不能为空");
-            throw new AetherValidException("参数码[paramCode]不能为空");
+            throw LoggerUtil.logAetherError(log, "参数码[paramCode]不能为空");
         }
         return Optional.ofNullable(repository.findParamByParamCode(paramCode));
     }

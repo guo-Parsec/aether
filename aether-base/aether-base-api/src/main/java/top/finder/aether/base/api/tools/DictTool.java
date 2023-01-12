@@ -10,9 +10,9 @@ import top.finder.aether.base.api.facade.DictFacade;
 import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.common.support.annotation.DictTranslate;
 import top.finder.aether.common.support.annotation.DictValid;
-import top.finder.aether.common.support.exception.AetherValidException;
 import top.finder.aether.common.support.helper.ReflectHelper;
 import top.finder.aether.common.support.helper.TransformerHelper;
+import top.finder.aether.common.utils.LoggerUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -157,18 +157,14 @@ public class DictTool {
         String fieldValue = StrUtil.toStringOrNull(ReflectHelper.getFieldValue(object, field));
         if (ObjectUtil.isEmpty(fieldValue)) {
             if (dictValid.emptyValid()) {
-                String message = StrUtil.format("字段[fieldName={}]为空，校验失败", fieldName);
-                log.error(message);
-                throw new AetherValidException(message);
+                throw LoggerUtil.logAetherError(log, "字段[fieldName={}]为空，校验失败", fieldName);
             }
             return;
         }
         Integer dictCode = NumberUtil.parseInt(fieldValue);
         String dictValue = findDictName(dictTypeCode, dictCode);
         if (StrUtil.isBlank(dictValue)) {
-            String message = StrUtil.format("字段[fieldName={},dictTypeCode={},dictCode={}]找不到对应的字典值校验失败", fieldName, dictTypeCode, dictCode);
-            log.error(message);
-            throw new AetherValidException(message);
+            throw LoggerUtil.logAetherError(log, "字段[fieldName={},dictTypeCode={},dictCode={}]找不到对应的字典值校验失败", fieldName, dictTypeCode, dictCode);
         }
     }
 }

@@ -5,10 +5,8 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
-import org.slf4j.Logger;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import top.finder.aether.common.support.exception.AetherValidException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
@@ -39,21 +37,6 @@ public class CodeHelper {
             throw new IllegalArgumentException("目标对象[source]和转换类对象[vClass]不能为空");
         }
         return vClass.cast(source);
-    }
-
-    /**
-     * <p>记录AetherValid异常日志并抛出</p>
-     *
-     * @param log      记录日志对象
-     * @param template 日志模板
-     * @param params   参数
-     * @author guocq
-     * @date 2022/12/27 10:28
-     */
-    public static void logAetherValidError(Logger log, CharSequence template, Object... params) {
-        String errorMessage = StrUtil.format(template, params);
-        log.error(errorMessage);
-        throw new AetherValidException(errorMessage);
     }
 
     /**

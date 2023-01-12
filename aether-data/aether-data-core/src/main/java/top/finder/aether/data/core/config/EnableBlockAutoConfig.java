@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 import top.finder.aether.common.support.pool.CommonConstantPool;
+import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.core.support.annotation.EnableBlock;
 import top.finder.aether.data.core.support.runner.BlockRegister;
 
@@ -39,8 +40,7 @@ public class EnableBlockAutoConfig implements ImportSelector {
             String basePackage = null;
             String className = annotationMetadata.getClassName();
             if (StrUtil.isBlank(className)) {
-                log.error("获取className为空");
-                throw new IllegalStateException("获取className为空");
+                throw LoggerUtil.logAetherError(log, "获取className为空");
             }
             try {
                 Class<?> baseClass = Class.forName(className);

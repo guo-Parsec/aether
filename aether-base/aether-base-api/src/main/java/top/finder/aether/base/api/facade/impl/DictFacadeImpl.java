@@ -13,12 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import top.finder.aether.base.api.facade.DictFacade;
 import top.finder.aether.base.api.model.DictModel;
 import top.finder.aether.base.api.repository.DictRepository;
-import top.finder.aether.common.support.exception.AetherValidException;
+import top.finder.aether.common.utils.LoggerUtil;
 
 import java.util.List;
 import java.util.Optional;
 
-import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.*;
+import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_MODEL_CACHE_LIST;
+import static top.finder.aether.base.api.support.pool.BaseCacheConstantPool.BASE_DICT_MODEL_CACHE_SINGLE;
 
 /**
  * <p>数据字典Facade接口实现</p>
@@ -49,8 +50,7 @@ public class DictFacadeImpl implements DictFacade {
     public List<DictModel> findDictByType(String dictTypeCode) {
         log.debug("根据字典类型[dictTypeCode={}]查询字典列表", dictTypeCode);
         if (StrUtil.isBlank(dictTypeCode)) {
-            log.error("字典类型码[dictTypeCode]不能为空");
-            throw new AetherValidException("字典类型码[dictTypeCode]不能为空");
+            throw LoggerUtil.logAetherError(log, "字典类型码[dictTypeCode]不能为空");
         }
         List<DictModel> dictList = repository.findDictByType(dictTypeCode);
         if (CollUtil.isEmpty(dictList)) {
@@ -75,11 +75,11 @@ public class DictFacadeImpl implements DictFacade {
         log.debug("根据字典类型[dictTypeCode={}]和字典码[dictCode={}]查询数据字典", dictTypeCode, dictCode);
         if (StrUtil.isBlank(dictTypeCode)) {
             log.error("字典类型码[dictTypeCode]不能为空");
-            throw new AetherValidException("字典类型码[dictTypeCode]不能为空");
+            throw LoggerUtil.logAetherError(log, "字典类型码[dictTypeCode]不能为空");
         }
         if (ObjectUtil.isEmpty(dictCode)) {
             log.error("字典码[dictCode]不能为空");
-            throw new AetherValidException("字典码[dictCode]不能为空");
+            throw LoggerUtil.logAetherError(log, "字典码[dictCode]不能为空");
         }
         DictFacade dictFacade = SpringUtil.getBean(DictFacade.class);
         List<DictModel> dictModelList = dictFacade.findDictByType(dictTypeCode);

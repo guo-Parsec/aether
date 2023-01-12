@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import top.finder.aether.base.api.facade.ParamFacade;
 import top.finder.aether.base.api.model.ParamModel;
 import top.finder.aether.common.support.api.CommonHttpStatus;
-import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
+import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
 import top.finder.aether.security.api.entity.SecuritySignature;
 
@@ -86,9 +86,7 @@ public class SecurityUtils {
         }
         String effectiveTokenId = text.replace(SecurityConstantPool.EFFECTIVE_TOKEN_PREFIX, StrUtil.EMPTY);
         if (StrUtil.isBlank(effectiveTokenId)) {
-            String message = StrUtil.format("从文本{}中解析有效的token失败", text);
-            log.error(message);
-            throw new AetherException(CommonHttpStatus.UNAUTHORIZED, message);
+            throw LoggerUtil.logAetherError(log, "从文本{}中解析有效的token失败", text);
         }
         return effectiveTokenId;
     }
@@ -102,8 +100,7 @@ public class SecurityUtils {
      */
     public static void checkSecuritySignatureEmpty(SecuritySignature signature) {
         if (isSecuritySignatureEmpty(signature)) {
-            log.error("获取登录凭证信息失败，无法获取到登录信息，可能因为令牌已过期");
-            throw new AetherException(CommonHttpStatus.UNAUTHORIZED, "获取登录凭证信息失败，无法获取到登录信息，可能因为令牌已过期");
+            throw LoggerUtil.logAetherError(log, CommonHttpStatus.UNAUTHORIZED, "获取登录凭证信息失败，无法获取到登录信息，可能因为令牌已过期");
         }
     }
 

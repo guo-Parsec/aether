@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.finder.aether.common.support.exception.AetherException;
+import top.finder.aether.common.utils.LoggerUtil;
 
 /**
  * <p>统一返回结果封装</p>
@@ -197,8 +198,7 @@ public class Apis<T> {
      */
     public static <T> T getApiData(Apis<T> apis) {
         if (apis == null) {
-            log.error("请求结果集为空，可能为请求错误");
-            throw new AetherException("请求结果集为空，可能为请求错误");
+            throw LoggerUtil.logAetherError(log, "请求结果集为空，可能为请求错误");
         }
         int apiCode = apis.getCode();
         if (!CommonHttpStatus.SUCCESS.getCode().equals(apiCode)) {

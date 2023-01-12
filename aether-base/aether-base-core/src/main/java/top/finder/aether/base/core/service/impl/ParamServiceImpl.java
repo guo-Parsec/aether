@@ -21,7 +21,7 @@ import top.finder.aether.base.core.entity.Param;
 import top.finder.aether.base.core.mapper.ParamMapper;
 import top.finder.aether.base.core.service.ParamService;
 import top.finder.aether.common.support.helper.TransformerHelper;
-import top.finder.aether.common.utils.Loggers;
+import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.core.support.helper.PageHelper;
 
 import javax.annotation.Resource;
@@ -159,7 +159,7 @@ public class ParamServiceImpl implements ParamService {
                 .eq(Param::getParamCode, paramCode);
         boolean exists = mapper.exists(wrapper);
         if (exists) {
-            Loggers.logAetherValidError(log, "参数编码为[paramCode={}]的数据已存在，不能重复新增", paramCode);
+            throw LoggerUtil.logAetherValidError(log, "参数编码为[paramCode={}]的数据已存在，不能重复新增", paramCode);
         }
     }
 
@@ -176,7 +176,7 @@ public class ParamServiceImpl implements ParamService {
                 .eq(Param::getId, id);
         boolean exists = mapper.exists(wrapper);
         if (!exists) {
-            Loggers.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
+            throw LoggerUtil.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
         }
         String paramCode = dto.getParamCode();
         if (StrUtil.isNotBlank(paramCode)) {
@@ -185,7 +185,7 @@ public class ParamServiceImpl implements ParamService {
                     .ne(Param::getId, id);
             exists = mapper.exists(wrapper);
             if (exists) {
-                Loggers.logAetherValidError(log, "参数编码为[paramCode={}]的数据已存在，不能重复更新", paramCode);
+                throw LoggerUtil.logAetherValidError(log, "参数编码为[paramCode={}]的数据已存在，不能重复更新", paramCode);
             }
         }
     }
@@ -199,7 +199,7 @@ public class ParamServiceImpl implements ParamService {
      */
     private void checkBeforeDelete(Set<Long> idSet) {
         if (CollUtil.isEmpty(idSet)) {
-            Loggers.logAetherValidError(log, "删除时主键集合不能为空", idSet);
+            throw LoggerUtil.logAetherValidError(log, "删除时主键集合不能为空", idSet);
         }
         Wrapper<Param> wrapper = new LambdaQueryWrapper<Param>()
                 .in(Param::getId, idSet);

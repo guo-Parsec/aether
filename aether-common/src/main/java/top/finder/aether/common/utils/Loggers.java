@@ -7,7 +7,6 @@ import com.google.common.collect.Maps;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.slf4j.Logger;
 import org.springframework.util.Assert;
-import top.finder.aether.common.support.exception.AetherValidException;
 import top.finder.aether.common.support.function.TernaryConsumer;
 
 import java.util.Map;
@@ -184,20 +183,5 @@ public class Loggers {
      */
     public static void aopErrorLog(Logger log, ProceedingJoinPoint point, String messageTemplate) {
         aopLog(log, Level.ERROR, point, messageTemplate);
-    }
-
-    /**
-     * <p>记录AetherValid异常日志并抛出</p>
-     *
-     * @param log      记录日志对象
-     * @param template 日志模板
-     * @param params   参数
-     * @author guocq
-     * @date 2022/12/27 10:28
-     */
-    public static void logAetherValidError(Logger log, CharSequence template, Object... params) {
-        String errorMessage = StrUtil.format(template, params);
-        log.error(errorMessage);
-        throw new AetherValidException(errorMessage);
     }
 }
