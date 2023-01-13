@@ -8,16 +8,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.system.api.facade.SysParamFacade;
 import top.finder.aether.system.api.holders.SysParamHolders;
 import top.finder.aether.system.api.repository.SysParamRepository;
-import top.finder.aether.common.utils.LoggerUtil;
 
 import java.util.List;
 import java.util.Optional;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheConstantPool.SYSTEM_PARAM_MODEL_CACHE_LIST;
-import static top.finder.aether.system.api.support.pool.SystemCacheConstantPool.SYSTEM_PARAM_MODEL_CACHE_SINGLE;
+import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.*;
 
 /**
  * <p>系统参数Facade接口实现</p>
@@ -45,7 +44,7 @@ public class SysParamFacadeImpl implements SysParamFacade {
      * @date 2023/1/11 13:46
      */
     @Override
-    @Cacheable(cacheNames = SYSTEM_PARAM_MODEL_CACHE_LIST, key = "'paramTypeCode:' + #paramTypeCode")
+    @Cacheable(cacheNames = M_HO_PARAM, key = "'paramTypeCode:' + #paramTypeCode")
     public List<SysParamHolders> findParamByType(String paramTypeCode) {
         log.debug("根据参数类型[paramTypeCode={}]查询系统参数列表", paramTypeCode);
         if (StrUtil.isBlank(paramTypeCode)) {
@@ -68,7 +67,7 @@ public class SysParamFacadeImpl implements SysParamFacade {
      * @date 2023/1/11 13:46
      */
     @Override
-    @Cacheable(cacheNames = SYSTEM_PARAM_MODEL_CACHE_SINGLE, key = "'paramCode:' + #paramCode")
+    @Cacheable(cacheNames = S_OHO_PARAM, key = "'paramCode:' + #paramCode")
     public Optional<SysParamHolders> findParamByParamCode(String paramCode) {
         log.debug("根据参数码[paramCode={}]查询系统参数", paramCode);
         if (StrUtil.isBlank(paramCode)) {

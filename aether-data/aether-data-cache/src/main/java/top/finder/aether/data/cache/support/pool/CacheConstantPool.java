@@ -13,7 +13,7 @@ public interface CacheConstantPool {
     String CACHE_RESULT_SINGLE = "single";
 
     /**
-     * 缓存列表结果
+     * 缓存多条结果
      */
-    String CACHE_RESULT_LIST = "list";
+    String CACHE_RESULT_MULTIPLE = "multiple";
 }

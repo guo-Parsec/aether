@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheConstantPool.*;
+import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.*;
 
 /**
  * <p>系统参数服务接口实现类</p>
@@ -53,7 +53,7 @@ public class SysParamServiceImpl implements SysParamService {
      * @date 2023/1/9 11:13
      */
     @Override
-    @Cacheable(cacheNames = SYSTEM_PARAM_CACHE_LIST, keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
+    @Cacheable(cacheNames = M_VO_PARAM, keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
     public List<SysParamVo> list(SysParamQueryDto dto) {
         log.debug("根据字典查询参数列表, 入参={}", dto);
         List<SysParam> sysParams = mapper.selectList(findQueryWrapper(dto));
@@ -102,7 +102,7 @@ public class SysParamServiceImpl implements SysParamService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {SYSTEM_PARAM_CACHE_SINGLE, SYSTEM_PARAM_CACHE_LIST, SYSTEM_PARAM_MODEL_CACHE_SINGLE, SYSTEM_PARAM_MODEL_CACHE_LIST}, allEntries = true)
+    @CacheEvict(cacheNames = {P_PARAM}, allEntries = true)
     public void create(SysParamCreateDto dto) {
         log.debug("系统参数新增, 入参={}", dto);
         checkBeforeCreate(dto);
@@ -120,7 +120,7 @@ public class SysParamServiceImpl implements SysParamService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {SYSTEM_PARAM_CACHE_SINGLE, SYSTEM_PARAM_CACHE_LIST, SYSTEM_PARAM_MODEL_CACHE_SINGLE, SYSTEM_PARAM_MODEL_CACHE_LIST}, allEntries = true)
+    @CacheEvict(cacheNames = {P_PARAM}, allEntries = true)
     public void update(SysParamUpdateDto dto) {
         log.debug("系统参数更新, 入参={}", dto);
         checkBeforeUpdate(dto);
@@ -138,7 +138,7 @@ public class SysParamServiceImpl implements SysParamService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {SYSTEM_PARAM_CACHE_SINGLE, SYSTEM_PARAM_CACHE_LIST, SYSTEM_PARAM_MODEL_CACHE_SINGLE, SYSTEM_PARAM_MODEL_CACHE_LIST}, allEntries = true)
+    @CacheEvict(cacheNames = {P_PARAM}, allEntries = true)
     public void delete(Set<Long> idSet) {
         log.debug("系统参数批量删除, 入参={}", idSet);
         checkBeforeDelete(idSet);

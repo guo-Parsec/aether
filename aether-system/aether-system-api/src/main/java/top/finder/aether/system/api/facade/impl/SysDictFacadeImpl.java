@@ -18,8 +18,8 @@ import top.finder.aether.common.utils.LoggerUtil;
 import java.util.List;
 import java.util.Optional;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheConstantPool.SYSTEM_DICT_MODEL_CACHE_LIST;
-import static top.finder.aether.system.api.support.pool.SystemCacheConstantPool.SYSTEM_DICT_MODEL_CACHE_SINGLE;
+import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.M_HO_DICT;
+import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.S_OHO_DICT;
 
 /**
  * <p>数据字典Facade接口实现</p>
@@ -46,7 +46,7 @@ public class SysDictFacadeImpl implements SysDictFacade {
      * @date 2023/1/11 9:20
      */
     @Override
-    @Cacheable(cacheNames = SYSTEM_DICT_MODEL_CACHE_LIST, key = "'dictTypeCode:' + #dictTypeCode")
+    @Cacheable(cacheNames = M_HO_DICT, key = "'dictTypeCode:' + #dictTypeCode")
     public List<SysDictHolders> findDictByType(String dictTypeCode) {
         log.debug("根据字典类型[dictTypeCode={}]查询字典列表", dictTypeCode);
         if (StrUtil.isBlank(dictTypeCode)) {
@@ -70,7 +70,7 @@ public class SysDictFacadeImpl implements SysDictFacade {
      * @date 2023/1/11 9:43
      */
     @Override
-    @Cacheable(cacheNames = SYSTEM_DICT_MODEL_CACHE_SINGLE, key = "'dictTypeCode:' + #dictTypeCode + ':dictCode:' + #dictCode")
+    @Cacheable(cacheNames = S_OHO_DICT, key = "'dictTypeCode:' + #dictTypeCode + ':dictCode:' + #dictCode")
     public Optional<SysDictHolders> findDictByTypeAndCode(String dictTypeCode, Integer dictCode) {
         log.debug("根据字典类型[dictTypeCode={}]和字典码[dictCode={}]查询数据字典", dictTypeCode, dictCode);
         if (StrUtil.isBlank(dictTypeCode)) {

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheConstantPool.*;
+import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.*;
 
 /**
  * <p>数据字典服务接口实现类</p>
@@ -50,7 +50,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
      * @date 2022/12/29 15:03
      */
     @Override
-    @CacheEvict(cacheNames = {SYSTEM_DICT_CACHE_SINGLE, SYSTEM_DICT_CACHE_LIST, SYSTEM_DICT_MODEL_CACHE_SINGLE, SYSTEM_DICT_MODEL_CACHE_LIST}, allEntries = true)
+    @CacheEvict(cacheNames = {P_DICT}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void create(SysDictCreateDto createDto) {
         log.debug("新增字典信息, 入参={}", createDto);
@@ -68,7 +68,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
      * @date 2022/12/29 15:04
      */
     @Override
-    @CacheEvict(cacheNames = {SYSTEM_DICT_CACHE_SINGLE, SYSTEM_DICT_CACHE_LIST, SYSTEM_DICT_MODEL_CACHE_SINGLE, SYSTEM_DICT_MODEL_CACHE_LIST}, allEntries = true)
+    @CacheEvict(cacheNames = {P_DICT}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> idSet) {
         log.debug("删除角色信息, 入参={}", idSet);
@@ -85,7 +85,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
      * @date 2022/12/29 15:03
      */
     @Override
-    @CacheEvict(cacheNames = {SYSTEM_DICT_CACHE_SINGLE, SYSTEM_DICT_CACHE_LIST, SYSTEM_DICT_MODEL_CACHE_SINGLE, SYSTEM_DICT_MODEL_CACHE_LIST}, allEntries = true)
+    @CacheEvict(cacheNames = {P_DICT}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(SysDictUpdateDto updateDto) {
         log.debug("更新字典信息, 入参={}", updateDto);
@@ -104,7 +104,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
      * @date 2022/12/29 15:03
      */
     @Override
-    @Cacheable(cacheNames = SYSTEM_DICT_CACHE_LIST, keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
+    @Cacheable(cacheNames = M_VO_DICT, keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
     public List<SysDictVo> listQuery(SysDict sysDict) {
         Wrapper<SysDict> wrapper = new LambdaQueryWrapper<SysDict>()
                 .eq(ObjectUtil.isNotEmpty(sysDict.getId()), SysDict::getId, sysDict.getId())

@@ -1,68 +1,100 @@
 package top.finder.aether.system.api.support.pool;
 
 import static top.finder.aether.common.support.pool.CommonConstantPool.REDIS_KEY_SEPARATOR;
-import static top.finder.aether.data.cache.support.pool.CacheConstantPool.CACHE_RESULT_SINGLE;
-import static top.finder.aether.data.cache.support.pool.CacheConstantPool.CACHE_RESULT_LIST;
 
 /**
- * <p>系统模块缓存常量池</p>
+ * <p>系统缓存常量池</p>
  *
  * @author guocq
- * @since 2023/1/11
  */
 public interface SystemCacheConstantPool {
     /**
-     * SYSTEM模块缓存前缀
+     * 系统模块统一前缀
      */
-    String SYSTEM_CACHE_PREFIX = "system";
+    String PREFIX = "system";
 
     /**
-     * SYSTEM-DICT服务缓存前缀
+     * vo结果集前缀
      */
-    String SYSTEM_DICT_CACHE_PREFIX = SYSTEM_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "dict";
+    String P_VO = "vo";
 
     /**
-     * SYSTEM-DICT服务缓存单条结果
+     * holder结果集前缀
      */
-    String SYSTEM_DICT_CACHE_SINGLE = SYSTEM_DICT_CACHE_PREFIX + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+    String P_HO = "holder";
 
     /**
-     * SYSTEM-DICT服务缓存列表结果
+     * optional结果集前缀
      */
-    String SYSTEM_DICT_CACHE_LIST = SYSTEM_DICT_CACHE_PREFIX + REDIS_KEY_SEPARATOR + CACHE_RESULT_LIST;
+    String P_O = "optional";
 
     /**
-     * SYSTEM-DICT-MODEL服务缓存单条结果
+     * optional-holder结果集前缀
      */
-    String SYSTEM_DICT_MODEL_CACHE_SINGLE = SYSTEM_DICT_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "model" + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+    String P_OHO = P_O + REDIS_KEY_SEPARATOR + P_HO;
 
     /**
-     * SYSTEM-DICT-MODEL服务缓存列表结果
+     * optional-vo结果集前缀
      */
-    String SYSTEM_DICT_MODEL_CACHE_LIST = SYSTEM_DICT_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "model" + REDIS_KEY_SEPARATOR + CACHE_RESULT_LIST;
+    String P_OVO = P_O + REDIS_KEY_SEPARATOR + P_VO;
 
     /**
-     * SYSTEM-PARAM服务缓存前缀
+     * dict业务
      */
-    String SYSTEM_PARAM_CACHE_PREFIX = SYSTEM_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "param";
+    String B_DICT = "dict";
 
     /**
-     * SYSTEM-PARAM服务缓存单条结果
+     * param业务
      */
-    String SYSTEM_PARAM_CACHE_SINGLE = SYSTEM_PARAM_CACHE_PREFIX + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+    String B_PARAM = "param";
 
     /**
-     * SYSTEM-PARAM服务缓存列表结果
+     * dict业务统一前缀
      */
-    String SYSTEM_PARAM_CACHE_LIST = SYSTEM_PARAM_CACHE_PREFIX + REDIS_KEY_SEPARATOR + CACHE_RESULT_LIST;
+    String P_DICT = PREFIX + REDIS_KEY_SEPARATOR + B_DICT;
 
     /**
-     * SYSTEM-PARAM-MODEL服务缓存单条结果
+     * dict业务vo结果集统一前缀
      */
-    String SYSTEM_PARAM_MODEL_CACHE_SINGLE = SYSTEM_PARAM_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "model" + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+    String P_VO_DICT = P_DICT + REDIS_KEY_SEPARATOR + P_VO;
 
     /**
-     * SYSTEM-PARAM-MODEL服务缓存列表结果
+     * dict业务optional-VO结果集统一前缀
      */
-    String SYSTEM_PARAM_MODEL_CACHE_LIST = SYSTEM_PARAM_CACHE_PREFIX + REDIS_KEY_SEPARATOR + "model" + REDIS_KEY_SEPARATOR + CACHE_RESULT_LIST;
+    String P_OVO_DICT = P_DICT + REDIS_KEY_SEPARATOR + P_OVO;
+
+    /**
+     * dict业务holder结果集统一前缀
+     */
+    String P_HO_DICT = P_DICT + REDIS_KEY_SEPARATOR + P_HO;
+
+    /**
+     * dict业务optional-holder结果集统一前缀
+     */
+    String P_OHO_DICT = P_DICT + REDIS_KEY_SEPARATOR + P_OHO;
+
+    /**
+     * param业务统一前缀
+     */
+    String P_PARAM = PREFIX + REDIS_KEY_SEPARATOR + B_PARAM;
+
+    /**
+     * param业务vo结果集统一前缀
+     */
+    String P_VO_PARAM = P_PARAM + REDIS_KEY_SEPARATOR + P_VO;
+
+    /**
+     * param业务optional-vo结果集统一前缀
+     */
+    String P_OVO_PARAM = P_PARAM + REDIS_KEY_SEPARATOR + P_OVO;
+
+    /**
+     * param业务holder结果集统一前缀
+     */
+    String P_HO_PARAM = P_PARAM + REDIS_KEY_SEPARATOR + P_HO;
+
+    /**
+     * param业务optional-holder结果集统一前缀
+     */
+    String P_OHO_PARAM = P_PARAM + REDIS_KEY_SEPARATOR + P_OHO;
 }
