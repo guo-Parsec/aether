@@ -15,11 +15,10 @@
         <result column="time_spent" jdbcType="BIGINT" property="timeSpent"/>
         <result column="operate_uri" jdbcType="VARCHAR" property="operateUri"/>
         <result column="operate_method" jdbcType="INTEGER" property="operateMethod"/>
-        <result column="expiration_status" jdbcType="INTEGER" property="expirationStatus"/>
-        <result column="expiration_at" jdbcType="TIMESTAMP" property="expirationAt"/>
     </resultMap>
-    <sql id="Base_Column_List">
-        <!--@mbg.generated-->
+
+    <sql id="sys_operate_record_columns">
+        <!--@sql select -->
         id,
         operate_id,
         operate_account,
@@ -30,21 +29,17 @@
         operate_time,
         time_spent,
         operate_uri,
-        operate_method,
-        expiration_status,
-        expiration_at
+        operate_method
+        <!--@sql from sys_operate_record -->
     </sql>
 
-    <insert id="saveOperateRecord" parameterType="top.finder.aether.base.core.entity.SysOperateRecord">
-        insert into sys_operate_record(id, operate_id, operate_account, operate_result, operate_code, error_reason,
-                                       operate_ip, operate_time, time_spent, operate_uri, operate_method,
-                                       expiration_status, expiration_at)
+    <insert id="saveOperateRecord" parameterType="top.finder.aether.base.api.holders.SysOperateRecordHolder">
+        insert into sys_operate_record(<include refid="sys_operate_record_columns"/>)
         values (#{record.id ,jdbcType=BIGINT}, #{record.operateId,jdbcType=BIGINT},
                 #{record.operateAccount,jdbcType=VARCHAR}, #{record.operateResult,jdbcType=INTEGER},
                 #{record.operateCode,jdbcType=INTEGER}, #{record.errorReason,jdbcType=VARCHAR},
                 #{record.operateIp,jdbcType=VARCHAR}, #{record.operateTime,jdbcType=TIMESTAMP},
                 #{record.timeSpent,jdbcType=BIGINT}, #{record.operateUri,jdbcType=VARCHAR},
-                #{record.operateMethod,jdbcType=INTEGER}, #{record.expirationStatus,jdbcType=INTEGER},
-                #{record.expirationAt,jdbcType=TIMESTAMP})
+                #{record.operateMethod,jdbcType=INTEGER})
     </insert>
 </mapper>
