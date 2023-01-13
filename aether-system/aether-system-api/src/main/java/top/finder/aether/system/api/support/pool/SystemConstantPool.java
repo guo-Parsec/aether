@@ -43,6 +43,16 @@ public interface SystemConstantPool {
     Integer ENABLE_STATUS_DISABLE = 1;
 
     /**
+     * 操作结果 - 操作成功
+     */
+    Integer OPERATE_RESULT_SUCCESS = 0;
+
+    /**
+     * 操作结果 - 操作失败
+     */
+    Integer OPERATE_RESULT_FAILED = 1;
+
+    /**
      * 默认初始密码
      */
     String PARAM_DEFAULT_PASSWORD = "DEFAULT_PASSWORD";

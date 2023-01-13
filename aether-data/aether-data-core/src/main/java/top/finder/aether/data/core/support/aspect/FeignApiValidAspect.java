@@ -5,18 +5,21 @@ import com.google.common.collect.Sets;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.annotation.FeignApi;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.helper.CodeHelper;
-import top.finder.aether.common.utils.AopLoggerUtils;
 import top.finder.aether.common.support.pool.CommonConstantPool;
+import top.finder.aether.common.utils.AopLoggerUtils;
 import top.finder.aether.data.core.support.runner.SystemSetting;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import java.util.Set;
 
 import static top.finder.aether.common.support.pool.CommonConstantPool.ALL_TEXT;
@@ -39,10 +42,12 @@ public class FeignApiValidAspect {
         this.systemSetting = systemSetting;
     }
 
-    @Around("@annotation(feignApi)")
-    public Object around(ProceedingJoinPoint point, FeignApi feignApi) throws Throwable {
+    @Around("@annotation(top.finder.aether.common.support.annotation.FeignApi)")
+    public Object around(ProceedingJoinPoint point) throws Throwable {
         AopLoggerUtils.aopLog(log, point, "feignApi校验{}开始");
-        if (validCurrentAppIsAccessible(feignApi)) {
+        Method method = ((MethodSignature) point.getSignature()).getMethod();
+        FeignApi feignApi = AnnotationUtils.findAnnotation(method, FeignApi.class);
+        if (feignApi != null && validCurrentAppIsAccessible(feignApi)) {
             log.debug("feignApi校验成功");
             AopLoggerUtils.aopLog(log, point, "feignApi校验{}开始");
             return point.proceed(point.getArgs());
@@ -60,7 +65,6 @@ public class FeignApiValidAspect {
      */
     private boolean validCurrentAppIsAccessible(FeignApi feignApi) {
         Set<String> appSet = Sets.newHashSet(feignApi.value());
-        appSet.addAll(Sets.newHashSet(feignApi.accessAppNames()));
         HttpServletRequest request = CodeHelper.getHttpServletRequest();
         String requestPath = request.getRequestURI();
         String sourceApp = request.getHeader(CommonConstantPool.FEIGN_SOURCE_APP_HEAD_KEY);

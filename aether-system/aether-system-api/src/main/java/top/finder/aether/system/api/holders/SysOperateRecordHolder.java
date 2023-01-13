@@ -1,11 +1,20 @@
 package top.finder.aether.system.api.holders;
 
+import cn.hutool.extra.servlet.ServletUtil;
 import lombok.Getter;
 import lombok.Setter;
 import top.finder.aether.common.model.IModel;
+import top.finder.aether.common.support.api.CommonHttpStatus;
+import top.finder.aether.common.support.exception.AetherException;
+import top.finder.aether.common.support.helper.Builder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.StringJoiner;
+
+import static top.finder.aether.system.api.support.pool.SystemConstantPool.OPERATE_RESULT_FAILED;
+import static top.finder.aether.system.api.support.pool.SystemConstantPool.OPERATE_RESULT_SUCCESS;
 
 /**
  * <p>系统操作记录</p>
@@ -72,6 +81,21 @@ public class SysOperateRecordHolder implements IModel {
      * 操作类型
      */
     private String operateMethod;
+
+    public static SysOperateRecordHolder buildRecordHolder(AetherException error, LocalDateTime operateTime, long timeSpent, HttpServletRequest request) {
+        Optional<AetherException> optional = Optional.ofNullable(error);
+        return Builder.builder(SysOperateRecordHolder::new)
+                // 1 代表失败 0 代表成功
+                .with(SysOperateRecordHolder::setOperateResult, optional.isPresent() ? OPERATE_RESULT_FAILED : OPERATE_RESULT_SUCCESS)
+                .with(SysOperateRecordHolder::setOperateCode, optional.isPresent() ? optional.get().getCode() : CommonHttpStatus.SUCCESS.getCode())
+                .with(SysOperateRecordHolder::setErrorReason, optional.map(AetherException::getMessage).orElse("-"))
+                .with(SysOperateRecordHolder::setOperateIp, ServletUtil.getClientIP(request))
+                .with(SysOperateRecordHolder::setOperateTime, operateTime)
+                .with(SysOperateRecordHolder::setTimeSpent, timeSpent)
+                .enhanceWith(SysOperateRecordHolder::setOperateUri, request::getRequestURI)
+                .enhanceWith(SysOperateRecordHolder::setOperateMethod, request::getMethod)
+                .build();
+    }
 
     @Override
     public String toString() {

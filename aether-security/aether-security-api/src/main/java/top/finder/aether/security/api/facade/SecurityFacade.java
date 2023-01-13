@@ -13,6 +13,8 @@ import top.finder.aether.data.cache.support.helper.RedisHelper;
 import top.finder.aether.security.api.entity.SecuritySignature;
 import top.finder.aether.security.api.utils.SecurityUtils;
 
+import javax.servlet.http.HttpServletRequest;
+
 import static java.util.concurrent.TimeUnit.HOURS;
 
 /**
@@ -55,6 +57,19 @@ public class SecurityFacade {
      */
     public static SecuritySignature findSecuritySignature() {
         String tokenText = CodeHelper.getHttpServletRequest().getHeader(SecurityConstantPool.TOKEN_IN_HEAD_KEY);
+        return findSecuritySignature(tokenText);
+    }
+
+    /**
+     * <p>根据提供的request获取请求的安全认证签名</p>
+     *
+     * @param request 请求
+     * @return {@link SecuritySignature}
+     * @author guocq
+     * @date 2023/1/13 14:05
+     */
+    public static SecuritySignature findSecuritySignature(HttpServletRequest request) {
+        String tokenText = request.getHeader(SecurityConstantPool.TOKEN_IN_HEAD_KEY);
         return findSecuritySignature(tokenText);
     }
 

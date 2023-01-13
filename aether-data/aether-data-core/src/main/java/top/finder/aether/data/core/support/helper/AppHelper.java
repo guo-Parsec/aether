@@ -29,7 +29,18 @@ public class AppHelper {
      * @date 2023/1/5 15:34
      */
     public static String findCurrentRequestSourceApp() {
-        HttpServletRequest request = CodeHelper.getHttpServletRequest();
+        return findCurrentRequestSourceApp(null);
+    }
+
+    /**
+     * <p>获取当前请求来源app</p>
+     *
+     * @return java.lang.String
+     * @author guocq
+     * @date 2023/1/5 15:34
+     */
+    public static String findCurrentRequestSourceApp(HttpServletRequest request) {
+        request = request == null ? CodeHelper.getHttpServletRequest() : request;
         String requestPath = request.getRequestURI();
         String sourceApp = request.getHeader(CommonConstantPool.FEIGN_SOURCE_APP_HEAD_KEY);
         if (StrUtil.isBlank(sourceApp)) {
@@ -47,9 +58,9 @@ public class AppHelper {
      * @author guocq
      * @date 2023/1/5 16:43
      */
-    public static Boolean isFeignRequest() {
-        HttpServletRequest request = CodeHelper.getHttpServletRequest();
-        String sourceApp = findCurrentRequestSourceApp();
+    public static Boolean isFeignRequest(HttpServletRequest request) {
+        request = request == null ? CodeHelper.getHttpServletRequest() : request;
+        String sourceApp = findCurrentRequestSourceApp(request);
         String headerFeignSecret = request.getHeader(FEIGN_SECRET);
         if (StrUtil.isBlank(headerFeignSecret)) {
             log.error("请求密钥为空，验证失败");

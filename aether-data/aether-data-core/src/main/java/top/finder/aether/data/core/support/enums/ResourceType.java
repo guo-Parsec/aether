@@ -51,4 +51,9 @@ public enum ResourceType {
         return Arrays.stream(ResourceType.values()).filter(resourceType -> resourceType.code.equals(lowerCaseCode))
                 .findFirst();
     }
+    
+    public static boolean equals(ResourceType resourceType, String code) {
+        Optional<ResourceType> optional = findByCode(code);
+        return optional.filter(resourceType::equals).isPresent();
+    }
 }

@@ -44,6 +44,10 @@ public class SecuritySignature implements Serializable {
 
     @ApiModelProperty(value = "令牌信息")
     private Token token;
+    
+    public SecuritySignature() {
+        
+    }
 
     public SecuritySignature(UserDetails details) {
         this.id = Long.valueOf(details.getId());
