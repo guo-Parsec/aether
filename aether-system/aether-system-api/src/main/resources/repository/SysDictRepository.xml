@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.finder.aether.system.api.repository.SysDictRepository">
+  <resultMap id="BaseResultMap" type="top.finder.aether.system.api.holders.SysDictHolders">
+    <!--@mbg.generated-->
+    <!--@Table sys_dict-->
+    <result column="dict_type_code" jdbcType="VARCHAR" property="dictTypeCode" />
+    <result column="dict_type_name" jdbcType="VARCHAR" property="dictTypeName" />
+    <result column="dict_name" jdbcType="VARCHAR" property="dictName" />
+    <result column="dict_code" jdbcType="VARCHAR" property="dictCode" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+      <!--@sql select -->
+      sysDict.id,
+      sysDict.dict_type_code,
+      sysDict.dict_type_name,
+      sysDict.dict_name,
+      sysDict.dict_code,
+      sysDict.dict_sort,
+      sysDict.delete_at,
+      sysDict.gmt_create,
+      sysDict.gmt_modify
+      <!--@sql from sys_dict sysDict-->
+  </sql>
+
+    <select id="findDictByType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select sysDict.dict_type_code,
+               sysDict.dict_type_name,
+               sysDict.dict_name,
+               sysDict.dict_code
+        from sys_dict sysDict
+        where sysDict.delete_at = 0
+          and sysDict.dict_type_code = #{dictTypeCode,jdbcType=VARCHAR}
+        order by sysDict.dict_type_code, sysDict.dict_sort, sysDict.gmt_modify desc
+    </select>
+
+
+</mapper>

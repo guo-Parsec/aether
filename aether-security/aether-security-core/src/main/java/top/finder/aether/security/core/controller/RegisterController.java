@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.finder.aether.base.api.client.SysUserClient;
+import top.finder.aether.system.api.client.SysUserClient;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.security.core.dto.RegisterDto;
 import top.finder.aether.security.core.support.pool.SecurityApiConstantPool;

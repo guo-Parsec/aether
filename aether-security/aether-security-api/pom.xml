@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>top.finder</groupId>
-            <artifactId>aether-base-api</artifactId>
+            <artifactId>aether-system-api</artifactId>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>

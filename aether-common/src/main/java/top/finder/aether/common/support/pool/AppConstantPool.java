@@ -8,14 +8,14 @@ package top.finder.aether.common.support.pool;
  */
 public interface AppConstantPool {
     /**
-     * APP名称 - BASE
+     * APP名称 - system
      */
-    String APP_NAME_BASE = "aether-base";
+    String APP_NAME_SYSTEM = "aether-system";
 
     /**
-     * 用于feign的baseApp
+     * 用于feign的systemApp
      */
-    String APP_BASE = APP_NAME_BASE + "/base";
+    String APP_SYSTEM = APP_NAME_SYSTEM + "/system";
 
     /**
      * APP名称 - SECURITY

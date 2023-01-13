@@ -1,5 +1,0 @@
-spring:
-  application:
-    name: aether-base
-  profiles:
-    active: dev

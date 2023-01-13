@@ -6,10 +6,10 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-        - id: aether-base
-          uri: lb://aether-base
+        - id: aether-system
+          uri: lb://aether-system
           predicates:
-            - Path=/base/**
+            - Path=/system/**
         - id: aether-security
           uri: lb://aether-security
           predicates:

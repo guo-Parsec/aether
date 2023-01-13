@@ -37,7 +37,7 @@
         </dependency>
         <dependency>
             <groupId>top.finder</groupId>
-            <artifactId>aether-base-api</artifactId>
+            <artifactId>aether-system-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>com.alibaba.cloud</groupId>

@@ -19,7 +19,7 @@
     <modules>
         <module>aether-common</module>
         <module>aether-data</module>
-        <module>aether-base</module>
+        <module>aether-system</module>
         <module>aether-gateway</module>
         <module>aether-security</module>
     </modules>
@@ -155,7 +155,7 @@
             <!-- 基础服务模块api -->
             <dependency>
                 <groupId>top.finder</groupId>
-                <artifactId>aether-base-api</artifactId>
+                <artifactId>aether-system-api</artifactId>
                 <version>${aether.version}</version>
             </dependency>
             <!-- 安全服务模块api -->

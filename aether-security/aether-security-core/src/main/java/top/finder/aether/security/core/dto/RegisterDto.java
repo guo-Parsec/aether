@@ -5,12 +5,12 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import top.finder.aether.base.api.dto.SysUserCreateDto;
+import top.finder.aether.system.api.dto.SysUserCreateDto;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-import static top.finder.aether.base.api.support.pool.BaseConstantPool.SEX_TYPE_UNKNOWN;
+import static top.finder.aether.system.api.support.pool.SystemConstantPool.SEX_TYPE_UNKNOWN;
 
 /**
  * <p>注册参数</p>

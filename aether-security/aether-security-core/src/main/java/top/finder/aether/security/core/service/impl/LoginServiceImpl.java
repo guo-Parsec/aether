@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import top.finder.aether.base.api.client.SysUserClient;
-import top.finder.aether.base.api.support.pool.BaseConstantPool;
+import top.finder.aether.system.api.client.SysUserClient;
+import top.finder.aether.system.api.support.pool.SystemConstantPool;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.utils.LoggerUtil;
@@ -54,7 +54,7 @@ public class LoginServiceImpl implements LoginService {
         if (details == null || !details.getCertified()) {
             throw LoggerUtil.logAetherError(log, "用户账户信息[{}]与密码[{}]匹配错误", account, password);
         }
-        if (details.getEnableStatus() == null || !details.getEnableStatus().equals(BaseConstantPool.ENABLE_STATUS_ENABLE)) {
+        if (details.getEnableStatus() == null || !details.getEnableStatus().equals(SystemConstantPool.ENABLE_STATUS_ENABLE)) {
             throw LoggerUtil.logAetherError(log, "用户[account={}]已被禁用", account);
         }
         SecuritySignature signature = new SecuritySignature(details);

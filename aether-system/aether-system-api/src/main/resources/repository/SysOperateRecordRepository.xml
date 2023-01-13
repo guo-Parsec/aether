@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.finder.aether.system.api.repository.SysOperateRecordRepository">
+    <resultMap id="BaseResultMap" type="top.finder.aether.system.api.holders.SysOperateRecordHolder">
+        <!--@mbg.generated-->
+        <!--@Table sys_operate_record-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="operate_id" jdbcType="BIGINT" property="operateId"/>
+        <result column="operate_account" jdbcType="VARCHAR" property="operateAccount"/>
+        <result column="operate_result" jdbcType="INTEGER" property="operateResult"/>
+        <result column="operate_code" jdbcType="INTEGER" property="operateCode"/>
+        <result column="error_reason" jdbcType="LONGVARCHAR" property="errorReason"/>
+        <result column="operate_ip" jdbcType="VARCHAR" property="operateIp"/>
+        <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime"/>
+        <result column="time_spent" jdbcType="BIGINT" property="timeSpent"/>
+        <result column="operate_uri" jdbcType="VARCHAR" property="operateUri"/>
+        <result column="operate_method" jdbcType="INTEGER" property="operateMethod"/>
+    </resultMap>
+
+    <sql id="sys_operate_record_columns">
+        <!--@sql select -->
+        id,
+        operate_id,
+        operate_account,
+        operate_result,
+        operate_code,
+        error_reason,
+        operate_ip,
+        operate_time,
+        time_spent,
+        operate_uri,
+        operate_method
+        <!--@sql from sys_operate_record -->
+    </sql>
+
+    <insert id="saveOperateRecord" parameterType="top.finder.aether.system.api.holders.SysOperateRecordHolder">
+        insert into sys_operate_record(<include refid="sys_operate_record_columns"/>)
+        values (#{record.id ,jdbcType=BIGINT}, #{record.operateId,jdbcType=BIGINT},
+                #{record.operateAccount,jdbcType=VARCHAR}, #{record.operateResult,jdbcType=INTEGER},
+                #{record.operateCode,jdbcType=INTEGER}, #{record.errorReason,jdbcType=VARCHAR},
+                #{record.operateIp,jdbcType=VARCHAR}, #{record.operateTime,jdbcType=TIMESTAMP},
+                #{record.timeSpent,jdbcType=BIGINT}, #{record.operateUri,jdbcType=VARCHAR},
+                #{record.operateMethod,jdbcType=INTEGER})
+    </insert>
+</mapper>
