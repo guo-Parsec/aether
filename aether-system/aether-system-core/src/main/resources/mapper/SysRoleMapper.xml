@@ -30,8 +30,21 @@
     <select id="findRoleCodeByUserId" parameterType="java.lang.Long" resultType="java.lang.String">
         select sysRole.role_code
         from sys_role sysRole
-        left join sys_user_role aur on sysRole.id = aur.role_id
+                 left join sys_user_role aur on sysRole.id = aur.role_id
         where sysRole.delete_at = 0
-        and aur.user_id = #{userId,jdbcType=BIGINT}
+          and aur.user_id = #{userId,jdbcType=BIGINT}
     </select>
+
+    <delete id="unbindResourceOfRole" parameterType="java.lang.Long">
+        delete
+        from sys_role_resource
+        where role_id = #{roleId,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="bindResourceOfUser">
+        insert into sys_role_resource(role_id, resource_id) values
+        <foreach collection="resourceIds" item="resourceId" separator=",">
+            (#{roleId,jdbcType=BIGINT}, #{resourceId,jdbcType=BIGINT})
+        </foreach>
+    </insert>
 </mapper>

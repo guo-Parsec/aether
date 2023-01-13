@@ -1,16 +1,15 @@
 package top.finder.aether.system.core.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.system.api.support.pool.SystemApiConstantPool;
-import top.finder.aether.system.core.dto.SysRoleCreateDto;
-import top.finder.aether.system.core.dto.SysRoleUpdateDto;
-import top.finder.aether.system.core.entity.SysRole;
+import top.finder.aether.system.core.dto.*;
 import top.finder.aether.system.core.service.SysRoleService;
 import top.finder.aether.system.core.vo.SysRoleVo;
-import top.finder.aether.common.support.api.Apis;
 
 import java.util.List;
 import java.util.Set;
@@ -33,8 +32,15 @@ public class SysRoleController {
 
     @ApiOperation(value = "查询角色列表", notes = "角色列表信息查询")
     @GetMapping(value = "/list")
-    public Apis<List<SysRoleVo>> list(SysRole sysRole) {
-        return Apis.success(service.listQuery(sysRole));
+    public Apis<List<SysRoleVo>> list(SysRoleQueryDto dto) {
+        return Apis.success(service.listQuery(dto));
+    }
+
+
+    @ApiOperation(value = "分页查询角色列表", notes = "角色列表信息分页查询")
+    @GetMapping(value = "/page/query")
+    public Apis<IPage<SysRoleVo>> page(SysRolePageQueryDto dto) {
+        return Apis.success(service.pageQuery(dto));
     }
 
     @ApiOperation(value = "新增系统角色", notes = "角色信息新增操作")
@@ -55,6 +61,13 @@ public class SysRoleController {
     @DeleteMapping(value = "/delete.do")
     public Apis<Void> delete(@RequestBody @Validated Set<Long> idSet) {
         service.delete(idSet);
+        return Apis.success();
+    }
+
+    @ApiOperation(value = "为角色赋予资源", notes = "为角色赋予资源")
+    @PostMapping(value = "/grant-resource.do")
+    public Apis<Void> grantResourceToRole(@RequestBody @Validated GrantResourceToRoleDto dto) {
+        service.grantResourceToRole(dto);
         return Apis.success();
     }
 }

@@ -22,4 +22,23 @@ public interface SysRoleMapper extends CommonMapper<SysRole> {
      * @date 2023/1/9 10:44
      */
     Set<String> findRoleCodeByUserId(@Param("userId") Long userId);
+
+    /**
+     * <p>根据角色id删除角色绑定的资源</p>
+     *
+     * @param roleId 角色id
+     * @author guocq
+     * @date 2023/1/9 10:30
+     */
+    void unbindResourceOfRole(@Param(value = "roleId") Long roleId);
+
+    /**
+     * <p>绑定用户的角色</p>
+     *
+     * @param roleId      角色id
+     * @param resourceIds 资源id列表
+     * @author guocq
+     * @date 2023/1/9 10:30
+     */
+    void bindResourceOfUser(@Param(value = "roleId") Long roleId, @Param("resourceIds") Set<Long> resourceIds);
 }

@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import top.finder.aether.system.core.entity.SysRole;
 import top.finder.aether.data.common.entity.IPageDto;
 
 import javax.validation.constraints.Min;
@@ -20,7 +19,7 @@ import java.util.StringJoiner;
 @Getter
 @Setter
 @ApiModel("角色分页查询参数")
-public class SysRolePageQueryDto extends SysRole implements IPageDto {
+public class SysRolePageQueryDto extends SysRoleQueryDto implements IPageDto {
     private static final long serialVersionUID = 4938421970914661532L;
 
     /**
@@ -46,11 +45,7 @@ public class SysRolePageQueryDto extends SysRole implements IPageDto {
                 .add("pageSize=" + pageSize)
                 .add("roleCode='" + roleCode + "'")
                 .add("roleName='" + roleName + "'")
-                .add("roleSort=" + roleSort)
                 .add("roleDesc='" + roleDesc + "'")
-                .add("deleteAt=" + deleteAt)
-                .add("gmtCreate=" + gmtCreate)
-                .add("gmtModify=" + gmtModify)
                 .add("id=" + id)
                 .toString();
     }

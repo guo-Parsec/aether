@@ -1,10 +1,10 @@
 package top.finder.aether.system.core.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +12,16 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.system.api.tools.DictTool;
-import top.finder.aether.system.core.dto.SysRoleCreateDto;
-import top.finder.aether.system.core.dto.SysRoleUpdateDto;
+import top.finder.aether.common.support.helper.TransformerHelper;
+import top.finder.aether.common.utils.LoggerUtil;
+import top.finder.aether.data.core.support.helper.PageHelper;
+import top.finder.aether.system.core.dto.*;
+import top.finder.aether.system.core.entity.SysResource;
 import top.finder.aether.system.core.entity.SysRole;
+import top.finder.aether.system.core.mapper.SysResourceMapper;
 import top.finder.aether.system.core.mapper.SysRoleMapper;
 import top.finder.aether.system.core.service.SysRoleService;
 import top.finder.aether.system.core.vo.SysRoleVo;
-import top.finder.aether.common.support.helper.TransformerHelper;
-import top.finder.aether.common.utils.LoggerUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -39,6 +40,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
     @Resource
     private SysRoleMapper mapper;
+    @Resource
+    private SysResourceMapper sysResourceMapper;
 
     /**
      * <p>新增：角色信息</p>
@@ -96,21 +99,49 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     /**
      * <p>查询：角色信息列表</p>
      *
-     * @param sysRole 查询入参
-     * @return {@link List < RoleVo >}
+     * @param dto 查询入参
+     * @return {@link List}
      * @author guocq
      * @date 2022/12/27 11:01
      */
     @Cacheable(cacheNames = "AMS:ROLE:LIST", keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
     @Override
-    public List<SysRoleVo> listQuery(SysRole sysRole) {
-        Wrapper<SysRole> wrapper = new LambdaQueryWrapper<SysRole>()
-                .eq(ObjectUtil.isNotEmpty(sysRole.getId()), SysRole::getId, sysRole.getId())
-                .eq(StrUtil.isNotBlank(sysRole.getRoleCode()), SysRole::getRoleCode, sysRole.getRoleCode())
-                .like(StrUtil.isNotBlank(sysRole.getRoleName()), SysRole::getRoleName, sysRole.getRoleName());
-        List<SysRole> sysRoles = mapper.selectList(wrapper);
-        return sysRoles.stream().map(ele -> TransformerHelper.transformer(ele, SysRoleVo.class))
-                .peek(DictTool::translate).collect(Collectors.toList());
+    public List<SysRoleVo> listQuery(SysRoleQueryDto dto) {
+        List<SysRole> sysRoles = mapper.selectList(dto.getCommonWrapper());
+        return sysRoles.stream().map(ele -> TransformerHelper.transformer(ele, SysRoleVo.class)).collect(Collectors.toList());
+    }
+
+    /**
+     * <p>分页查询角色信息</p>
+     *
+     * @param dto 参数
+     * @return {@link IPage}
+     * @author guocq
+     * @date 2023/1/13 15:35
+     */
+    @Override
+    public IPage<SysRoleVo> pageQuery(SysRolePageQueryDto dto) {
+        IPage<SysRole> page = PageHelper.initPage(dto);
+        page = mapper.selectPage(page, dto.getCommonWrapper());
+        return page.convert(ele -> TransformerHelper.transformer(ele, SysRoleVo.class));
+    }
+
+    /**
+     * <p>为角色赋予资源</p>
+     *
+     * @param dto 入参
+     * @author guocq
+     * @date 2023/1/9 10:14
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void grantResourceToRole(GrantResourceToRoleDto dto) {
+        log.debug("为角色赋予资源,入参={}", dto);
+        checkBeforeGrantResourceToRole(dto);
+        Long id = dto.getId();
+        mapper.unbindResourceOfRole(id);
+        mapper.bindResourceOfUser(id, dto.getResourceId());
+        log.debug("为角色赋予资源成功");
     }
 
     /**
@@ -177,6 +208,33 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         }
         if (count < size) {
             log.warn("待删除的idSet={}中部分主键不存在无法删除，系统将删除已存在的数据{}条", idSet, count);
+        }
+    }
+
+    /**
+     * <p>为角色赋资源前校验</p>
+     *
+     * @param dto 入参
+     * @author guocq
+     * @date 2023/1/9 10:27
+     */
+    private void checkBeforeGrantResourceToRole(GrantResourceToRoleDto dto) {
+        Long id = dto.getId();
+        SysRole sysRole = mapper.selectById(id);
+        if (sysRole == null) {
+            throw LoggerUtil.logAetherError(log, "角色[id={}]不存在", id);
+        }
+        Set<Long> resourceId = dto.getResourceId();
+        Wrapper<SysResource> wrapper = new LambdaQueryWrapper<SysResource>()
+                .select(SysResource::getId)
+                .in(SysResource::getId, resourceId);
+        Set<Long> resourceIdFormDb = sysResourceMapper.selectList(wrapper).stream().map(SysResource::getId).collect(Collectors.toSet());
+        if (CollUtil.isEmpty(resourceIdFormDb)) {
+            throw LoggerUtil.logAetherError(log, "资源[{}]不存在", resourceId);
+        }
+        if (resourceIdFormDb.size() < resourceId.size()) {
+            log.warn("当前传入资源id列表[{}]有部分数据不存在，系统默认只添加已存在的资源[{}]", resourceId, resourceIdFormDb);
+            dto.setResourceId(resourceIdFormDb);
         }
     }
 }
