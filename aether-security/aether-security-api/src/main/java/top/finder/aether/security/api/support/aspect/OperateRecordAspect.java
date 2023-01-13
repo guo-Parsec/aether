@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.helper.CodeHelper;
@@ -63,7 +65,11 @@ public class OperateRecordAspect {
             result = Apis.failed(error);
         }
         stopWatch.stop();
-        async.execSaveOperateRecord(error, recordTime, stopWatch.getTotalTimeMillis(), CodeHelper.getHttpServletRequest());
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            RequestContextHolder.setRequestAttributes(attributes, true);
+            async.execSaveOperateRecord(error, recordTime, stopWatch.getTotalTimeMillis());
+        }
         return result;
     }
 

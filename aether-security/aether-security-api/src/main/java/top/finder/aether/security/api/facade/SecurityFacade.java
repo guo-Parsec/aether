@@ -56,7 +56,7 @@ public class SecurityFacade {
      * @date 2022/12/27 17:27
      */
     public static SecuritySignature findSecuritySignature() {
-        String tokenText = CodeHelper.getHttpServletRequest().getHeader(SecurityConstantPool.TOKEN_IN_HEAD_KEY);
+        String tokenText = SecurityUtils.findRawTokenInHead();
         return findSecuritySignature(tokenText);
     }
 
@@ -69,7 +69,7 @@ public class SecurityFacade {
      * @date 2023/1/13 14:05
      */
     public static SecuritySignature findSecuritySignature(HttpServletRequest request) {
-        String tokenText = request.getHeader(SecurityConstantPool.TOKEN_IN_HEAD_KEY);
+        String tokenText = SecurityUtils.findRawTokenInHead(request);
         return findSecuritySignature(tokenText);
     }
 

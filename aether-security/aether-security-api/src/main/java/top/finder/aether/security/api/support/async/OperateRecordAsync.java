@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.exception.AetherException;
+import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.security.api.entity.SecuritySignature;
 import top.finder.aether.security.api.facade.SecurityFacade;
 import top.finder.aether.system.api.facade.SysOperateRecordFacade;
@@ -31,7 +32,8 @@ public class OperateRecordAsync {
     }
     
     @Async("asyncTaskExecutor")
-    public void execSaveOperateRecord(AetherException error, LocalDateTime operateTime, Long timeSpent, HttpServletRequest request) {
+    public void execSaveOperateRecord(AetherException error, LocalDateTime operateTime, Long timeSpent) {
+        HttpServletRequest request = CodeHelper.getHttpServletRequest();
         SysOperateRecordHolder holder = SysOperateRecordHolder.buildRecordHolder(error, operateTime, timeSpent, request);
         SecuritySignature securitySignature = this.findSecuritySignature(request);
         holder.setOperateId(Optional.ofNullable(securitySignature).map(SecuritySignature::getId).orElse(0L));

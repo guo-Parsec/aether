@@ -1,19 +1,22 @@
 package top.finder.aether.security.api.utils;
 
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.finder.aether.system.api.facade.SysParamFacade;
-import top.finder.aether.system.api.holders.SysParamHolders;
 import top.finder.aether.common.support.api.CommonHttpStatus;
+import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.pool.CommonConstantPool;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
 import top.finder.aether.security.api.entity.SecuritySignature;
+import top.finder.aether.system.api.facade.SysParamFacade;
+import top.finder.aether.system.api.holders.SysParamHolders;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 import static top.finder.aether.security.api.utils.SecurityInnerPool.*;
@@ -26,6 +29,7 @@ import static top.finder.aether.security.api.utils.SecurityInnerPool.*;
  */
 public class SecurityUtils {
     private static final Logger log = LoggerFactory.getLogger(SecurityUtils.class);
+
     /**
      * <p>根据用户id生成指定userId的用户认证通过的用户信息存储的key</p>
      * <p>e.g. AETHER:SECURITY:USER:{userId}</p>
@@ -39,7 +43,7 @@ public class SecurityUtils {
         String template = RedisHelper.keyJoin(true, CommonConstantPool.BASE_REDIS_KEY, SECURITY, USER,
                 CommonConstantPool.EMPTY_VAR_PLACEHOLDER);
         String securityUserKey = StrUtil.format(template, userId);
-        log.debug("根据userId={}生成的安全用户key为{}", userId, securityUserKey);
+        log.trace("根据userId={}生成的安全用户key为{}", userId, securityUserKey);
         return securityUserKey;
     }
 
@@ -56,7 +60,7 @@ public class SecurityUtils {
         String template = RedisHelper.keyJoin(true, CommonConstantPool.BASE_REDIS_KEY, SECURITY, TOKEN,
                 CommonConstantPool.EMPTY_VAR_PLACEHOLDER);
         String securityTokenKey = StrUtil.format(template, tokenId);
-        log.debug("根据tokenId={}生成的安全用户key为{}", tokenId, securityTokenKey);
+        log.trace("根据tokenId={}生成的安全用户key为{}", tokenId, securityTokenKey);
         return securityTokenKey;
     }
 
@@ -70,7 +74,7 @@ public class SecurityUtils {
      */
     public static String generateAnonUrlsKey() {
         String anonUrlsKey = RedisHelper.keyJoin(true, CommonConstantPool.BASE_REDIS_KEY, SECURITY, ANON, URLS);
-        log.debug("生成可匿名访问通过的url存储的key为{}", anonUrlsKey);
+        log.trace("生成可匿名访问通过的url存储的key为{}", anonUrlsKey);
         return anonUrlsKey;
     }
 
@@ -89,6 +93,31 @@ public class SecurityUtils {
             throw LoggerUtil.logAetherError(log, "从文本{}中解析有效的token失败", text);
         }
         return effectiveTokenId;
+    }
+
+    /**
+     * <p>获取原生token</p>
+     *
+     * @return java.lang.String
+     * @author guocq
+     * @date 2023/1/13 15:10
+     */
+    public static String findRawTokenInHead() {
+        Optional<Pair<String, String>> optional = CodeHelper.findHeadIgnoreCase(CodeHelper.getHttpServletRequest(), SecurityConstantPool.TOKEN_IN_HEAD_KEY);
+        return optional.map(Pair::getValue).orElse(StrUtil.EMPTY);
+    }
+
+    /**
+     * <p>获取原生token</p>
+     *
+     * @param request 请求
+     * @return java.lang.String
+     * @author guocq
+     * @date 2023/1/13 15:10
+     */
+    public static String findRawTokenInHead(HttpServletRequest request) {
+        Optional<Pair<String, String>> optional = CodeHelper.findHeadIgnoreCase(request, SecurityConstantPool.TOKEN_IN_HEAD_KEY);
+        return optional.map(Pair::getValue).orElse(StrUtil.EMPTY);
     }
 
     /**
@@ -143,7 +172,7 @@ public class SecurityUtils {
 }
 
 interface SecurityInnerPool {
-   String SECURITY = "SECURITY";
+    String SECURITY = "SECURITY";
 
     String USER = "USER";
 

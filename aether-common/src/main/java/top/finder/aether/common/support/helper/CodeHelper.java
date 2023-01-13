@@ -1,5 +1,6 @@
 package top.finder.aether.common.support.helper;
 
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -10,10 +11,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -94,6 +92,30 @@ public class CodeHelper {
             }
         }
         return headersMap;
+    }
+
+    /**
+     * <p>从请求头中获取与{@code name}不区分大小写的请求头内容</p>
+     *
+     * @param request 请求
+     * @param name    请求头name
+     * @return {@link Optional}
+     * @author guocq
+     * @date 2023/1/13 15:07
+     */
+    public static Optional<Pair<String, String>> findHeadIgnoreCase(HttpServletRequest request, String name) {
+        String val = request.getHeader(name);
+        if (val != null) {
+            return Optional.of(Pair.of(name, val));
+        }
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            if (name.equalsIgnoreCase(headerName)) {
+                return Optional.of(Pair.of(name, request.getHeader(name)));
+            }
+        }
+        return Optional.empty();
     }
 
     /**

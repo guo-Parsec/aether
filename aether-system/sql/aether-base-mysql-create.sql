@@ -43,18 +43,18 @@ create index sys_menu_parent_id_menu_level_index
 
 create table sys_operate_record
 (
-    id                bigint          not null comment '主键'
+    id              bigint          not null comment '主键'
         primary key,
-    operate_id        bigint          null comment '操作人id',
-    operate_account   varchar(32)     null comment '操作人账户',
-    operate_result    int default 0   not null comment '操作结果',
-    operate_code      int default 200 not null comment '操作结果码',
-    error_reason      longtext        null comment '错误原因',
-    operate_ip        varchar(32)     not null comment '操作ip地址',
-    operate_time      datetime        not null comment '操作时间',
-    time_spent        bigint          not null comment '操作耗时(毫秒)',
-    operate_uri       varchar(255)    not null comment '操作uri',
-    operate_method    varchar(32)     not null comment '操作类型',
+    operate_id      bigint          null comment '操作人id',
+    operate_account varchar(32)     null comment '操作人账户',
+    operate_result  int default 0   not null comment '操作结果',
+    operate_code    int default 200 not null comment '操作结果码',
+    error_reason    longtext        null comment '错误原因',
+    operate_ip      varchar(32)     not null comment '操作ip地址',
+    operate_time    datetime        not null comment '操作时间',
+    time_spent      bigint          not null comment '操作耗时(毫秒)',
+    operate_uri     varchar(255)    not null comment '操作uri',
+    operate_method  varchar(32)     not null comment '操作类型',
     constraint sys_operate_record_sys_user_account_fk
         foreign key (operate_account) references sys_user (account),
     constraint sys_operate_record_sys_user_id_fk
@@ -147,7 +147,7 @@ create table sys_user
     nickname      varchar(32)                            null comment '昵称',
     sex           int          default 0                 not null comment '用户性别',
     avatar_url    varchar(128) default ''                null comment '头像地址',
-    birthday      date                                   not null comment '出生日期',
+    birthday      date                                   null comment '出生日期',
     user_type     int          default 0                 not null comment '用户类型',
     enable_status int          default 0                 not null comment '启用状态',
     delete_at     bigint       default 0                 not null comment '数据删除时间(未删除时为0)',

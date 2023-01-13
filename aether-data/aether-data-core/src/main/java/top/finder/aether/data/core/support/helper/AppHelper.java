@@ -63,7 +63,7 @@ public class AppHelper {
         String sourceApp = findCurrentRequestSourceApp(request);
         String headerFeignSecret = request.getHeader(FEIGN_SECRET);
         if (StrUtil.isBlank(headerFeignSecret)) {
-            log.error("请求密钥为空，验证失败");
+            log.warn("请求密钥为空，验证失败");
             return false;
         }
         SystemSetting bean = SpringUtil.getBean(SystemSetting.class);

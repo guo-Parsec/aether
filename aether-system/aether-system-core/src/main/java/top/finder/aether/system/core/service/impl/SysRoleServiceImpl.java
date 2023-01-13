@@ -172,6 +172,9 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
                 .in(SysRole::getId, idSet);
         Long count = mapper.selectCount(wrapper);
         int size = idSet.size();
+        if (count == 0) {
+            throw LoggerUtil.logAetherValidError(log, "不存在需要删除的数据[idSet={}]", idSet);
+        }
         if (count < size) {
             log.warn("待删除的idSet={}中部分主键不存在无法删除，系统将删除已存在的数据{}条", idSet, count);
         }
