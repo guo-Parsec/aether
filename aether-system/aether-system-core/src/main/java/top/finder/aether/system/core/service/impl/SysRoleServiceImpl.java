@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static top.finder.aether.system.api.support.pool.role.RoleCacheConstantPool.M_VO_ROLE;
+import static top.finder.aether.system.api.support.pool.role.RoleCacheConstantPool.P_ROLE;
+
 /**
  * <p>系统角色业务接口实现类</p>
  *
@@ -51,7 +54,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @date 2022/12/27 9:25
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:ROLE:SINGLE", "AMS:ROLE:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {P_ROLE}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void create(SysRoleCreateDto createDto) {
         log.debug("新增角色信息, 入参={}", createDto);
@@ -69,7 +72,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @date 2022/12/27 10:48
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:ROLE:SINGLE", "AMS:ROLE:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {P_ROLE}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> idSet) {
         log.debug("删除角色信息, 入参={}", idSet);
@@ -86,7 +89,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @date 2022/12/27 10:39
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:ROLE:SINGLE", "AMS:ROLE:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {P_ROLE}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(SysRoleUpdateDto updateDto) {
         log.debug("更新角色信息, 入参={}", updateDto);
@@ -104,7 +107,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @author guocq
      * @date 2022/12/27 11:01
      */
-    @Cacheable(cacheNames = "AMS:ROLE:LIST", keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
+    @Cacheable(cacheNames = M_VO_ROLE, keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
     @Override
     public List<SysRoleVo> listQuery(SysRoleQueryDto dto) {
         List<SysRole> sysRoles = mapper.selectList(dto.getCommonWrapper());

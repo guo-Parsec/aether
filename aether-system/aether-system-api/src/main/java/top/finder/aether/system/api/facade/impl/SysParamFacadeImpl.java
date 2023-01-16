@@ -16,7 +16,7 @@ import top.finder.aether.system.api.repository.SysParamRepository;
 import java.util.List;
 import java.util.Optional;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.*;
+import static top.finder.aether.system.api.support.pool.param.ParamCacheConstantPool.*;
 
 /**
  * <p>系统参数Facade接口实现</p>

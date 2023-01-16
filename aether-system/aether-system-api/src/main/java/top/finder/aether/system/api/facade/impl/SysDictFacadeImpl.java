@@ -18,8 +18,8 @@ import top.finder.aether.common.utils.LoggerUtil;
 import java.util.List;
 import java.util.Optional;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.M_HO_DICT;
-import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.S_OHO_DICT;
+import static top.finder.aether.system.api.support.pool.dict.DictCacheConstantPool.M_HO_DICT;
+import static top.finder.aether.system.api.support.pool.dict.DictCacheConstantPool.S_OHO_DICT;
 
 /**
  * <p>数据字典Facade接口实现</p>

@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheConstantPool.P_RESOURCE;
-import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.M_VO_RESOURCE;
+import static top.finder.aether.system.api.support.pool.resource.ResourceCacheConstantPool.P_RESOURCE;
+import static top.finder.aether.system.api.support.pool.resource.ResourceCacheConstantPool.M_VO_RESOURCE;
 
 /**
  * <p>系统资源业务接口实现类</p>

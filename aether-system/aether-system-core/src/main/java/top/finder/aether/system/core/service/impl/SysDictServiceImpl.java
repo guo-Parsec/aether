@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.M_VO_DICT;
-import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.P_DICT;
+import static top.finder.aether.system.api.support.pool.dict.DictCacheConstantPool.M_VO_DICT;
+import static top.finder.aether.system.api.support.pool.dict.DictCacheConstantPool.P_DICT;
 
 /**
  * <p>数据字典服务接口实现类</p>

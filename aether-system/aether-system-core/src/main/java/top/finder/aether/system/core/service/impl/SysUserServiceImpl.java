@@ -48,6 +48,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static top.finder.aether.system.api.support.pool.user.UserCacheConstantPool.P_USER;
+import static top.finder.aether.system.api.support.pool.user.UserCacheConstantPool.S_UD_USER;
 import static top.finder.aether.system.core.converter.SysUserConverter.entityToVoConverter;
 import static top.finder.aether.system.core.converter.SysUserConverter.sysUserToUserDetailsConverter;
 
@@ -109,7 +111,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @author guocq
      * @date 2022/12/28 16:08
      */
-    @Cacheable(cacheNames = "AMS:USER:SINGLE", key = "'ACCOUNT:' + #account")
+    @Cacheable(cacheNames = S_UD_USER, key = "'ACCOUNT:' + #account")
     public UserDetails findUserByAccount(String account) {
         log.debug("根据[account={}]查询用户信息", account);
         Wrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
@@ -130,7 +132,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @date 2023/1/5 11:02
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:USER:SINGLE", "AMS:USER:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {P_USER}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void create(SysUserCreateDto dto) {
         log.debug("新增用户信息, 入参={}", dto);
@@ -150,7 +152,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @date 2023/1/5 11:02
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:USER:SINGLE", "AMS:USER:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {P_USER}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(SysUserUpdateDto dto) {
         log.debug("更新用户信息, 入参={}", dto);
@@ -168,7 +170,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @date 2023/1/5 11:02
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:USER:SINGLE", "AMS:USER:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {P_USER}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> idSet) {
         log.debug("删除用户信息, 入参={}", idSet);
@@ -234,7 +236,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @date 2023/1/9 9:41
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:USER:SINGLE", "AMS:USER:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {P_USER}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void resetUser(String account) {
         log.debug("重置用户, 入参={}", account);
@@ -259,7 +261,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @date 2023/1/9 9:50
      */
     @Override
-    @CacheEvict(cacheNames = {"AMS:USER:SINGLE", "AMS:USER:LIST"}, allEntries = true)
+    @CacheEvict(cacheNames = {P_USER}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void changeUserEnableStatus(String account, Integer enableStatus) {
         String typeMessage = null;

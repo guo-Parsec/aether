@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.M_VO_PARAM;
-import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.P_PARAM;
+import static top.finder.aether.system.api.support.pool.param.ParamCacheConstantPool.M_VO_PARAM;
+import static top.finder.aether.system.api.support.pool.param.ParamCacheConstantPool.P_PARAM;
 
 /**
  * <p>系统参数服务接口实现类</p>
