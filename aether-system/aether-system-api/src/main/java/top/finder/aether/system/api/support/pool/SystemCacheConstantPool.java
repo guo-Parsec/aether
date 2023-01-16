@@ -49,6 +49,11 @@ public interface SystemCacheConstantPool {
     String B_PARAM = "param";
 
     /**
+     * resource业务
+     */
+    String B_RESOURCE = "resource";
+
+    /**
      * dict业务统一前缀
      */
     String P_DICT = PREFIX + REDIS_KEY_SEPARATOR + B_DICT;
@@ -72,7 +77,7 @@ public interface SystemCacheConstantPool {
      * dict业务optional-holder结果集统一前缀
      */
     String P_OHO_DICT = P_DICT + REDIS_KEY_SEPARATOR + P_OHO;
-
+    
     /**
      * param业务统一前缀
      */
@@ -97,4 +102,29 @@ public interface SystemCacheConstantPool {
      * param业务optional-holder结果集统一前缀
      */
     String P_OHO_PARAM = P_PARAM + REDIS_KEY_SEPARATOR + P_OHO;
+
+    /**
+     * resource业务统一前缀
+     */
+    String P_RESOURCE = PREFIX + REDIS_KEY_SEPARATOR + B_RESOURCE;
+
+    /**
+     * resource业务vo结果集统一前缀
+     */
+    String P_VO_RESOURCE = P_RESOURCE + REDIS_KEY_SEPARATOR + P_VO;
+
+    /**
+     * resource业务optional-vo结果集统一前缀
+     */
+    String P_OVO_RESOURCE = P_RESOURCE + REDIS_KEY_SEPARATOR + P_OVO;
+
+    /**
+     * resource业务holder结果集统一前缀
+     */
+    String P_HO_RESOURCE = P_RESOURCE + REDIS_KEY_SEPARATOR + P_HO;
+
+    /**
+     * resource业务optional-holder结果集统一前缀
+     */
+    String P_OHO_RESOURCE = P_RESOURCE + REDIS_KEY_SEPARATOR + P_OHO;
 }

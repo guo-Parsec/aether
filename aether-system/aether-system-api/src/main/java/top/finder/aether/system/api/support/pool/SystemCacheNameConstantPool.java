@@ -70,5 +70,35 @@ public interface SystemCacheNameConstantPool extends SystemCacheConstantPool {
      * param业务holder多条结果缓存名称
      */
     String M_HO_PARAM = P_HO_PARAM + REDIS_KEY_SEPARATOR + CACHE_RESULT_MULTIPLE;
+
+    /**
+     * resource业务vo单条结果缓存名称
+     */
+    String S_VO_RESOURCE = P_VO_RESOURCE + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+
+    /**
+     * resource业务optional<vo>单条结果缓存名称
+     */
+    String S_OVO_RESOURCE = P_OVO_RESOURCE + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+
+    /**
+     * resource业务vo多条结果缓存名称
+     */
+    String M_VO_RESOURCE = P_VO_RESOURCE + REDIS_KEY_SEPARATOR + CACHE_RESULT_MULTIPLE;
+
+    /**
+     * resource业务holder单条结果缓存名称
+     */
+    String S_HO_RESOURCE = P_HO_RESOURCE + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+
+    /**
+     * resource业务optional<holder>单条结果缓存名称
+     */
+    String S_OHO_RESOURCE = P_OHO_RESOURCE + REDIS_KEY_SEPARATOR + CACHE_RESULT_SINGLE;
+
+    /**
+     * resource业务holder多条结果缓存名称
+     */
+    String M_HO_RESOURCE = P_HO_RESOURCE + REDIS_KEY_SEPARATOR + CACHE_RESULT_MULTIPLE;
 }
 

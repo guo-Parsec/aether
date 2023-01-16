@@ -1,82 +1,73 @@
-package top.finder.aether.system.core.entity;
+package top.finder.aether.system.core.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import top.finder.aether.data.common.entity.BaseDataEntity;
-import top.finder.aether.data.core.support.enums.ResourceType;
+import top.finder.aether.data.common.vo.BaseDataVo;
 
 import java.util.StringJoiner;
 
 /**
- * <p>系统资源表</p>
+ * <p>系统资源展示层</p>
  *
  * @author guocq
- * @since 2023/1/10
+ * @since 2023/1/16
  */
-@Getter
 @Setter
-@TableName(value = "sys_resource")
-public class SysResource extends BaseDataEntity {
-    private static final long serialVersionUID = 7796147232012279094L;
+@Getter
+@ApiModel("系统资源展示层")
+public class SysResourceVo extends BaseDataVo {
+    private static final long serialVersionUID = -9208410785010167154L;
+
     /**
-     * 资源类别码值
+     * 资源类别码
      */
+    @ApiModelProperty(value = "资源类别码")
     private String resourceTypeCode;
 
     /**
      * 资源类别名称
      */
+    @ApiModelProperty(value = "资源类别名称")
     private String resourceTypeName;
 
     /**
      * 权限码值
      */
+    @ApiModelProperty(value = "权限码值")
     private String resourceCode;
 
     /**
      * 权限名称
      */
+    @ApiModelProperty(value = "权限名称")
     private String resourceName;
 
     /**
      * 资源路径
      */
+    @ApiModelProperty(value = "资源路径")
     private String resourceUrl;
 
     /**
      * 资源描述
      */
+    @ApiModelProperty(value = "资源描述")
     private String resourceDesc;
-
-    /**
-     * <p>设置资源类型</p>
-     *
-     * @param resourceType 资源类型
-     * @author guocq
-     * @date 2023/1/16 15:14
-     */
-    public void setResourceType(ResourceType resourceType) {
-        if (resourceType == null) {
-            resourceType = ResourceType.AUTH;
-        }
-        this.resourceTypeCode = resourceType.getCode();
-        this.resourceTypeName = resourceType.getName();
-    }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", SysResource.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", SysResourceVo.class.getSimpleName() + "[", "]")
                 .add("resourceTypeCode='" + resourceTypeCode + "'")
                 .add("resourceTypeName='" + resourceTypeName + "'")
                 .add("resourceCode='" + resourceCode + "'")
                 .add("resourceName='" + resourceName + "'")
                 .add("resourceUrl='" + resourceUrl + "'")
                 .add("resourceDesc='" + resourceDesc + "'")
-                .add("deleteAt=" + deleteAt)
                 .add("gmtCreate=" + gmtCreate)
                 .add("gmtModify=" + gmtModify)
-                .add("id=" + id)
+                .add("id='" + id + "'")
                 .toString();
     }
 }

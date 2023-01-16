@@ -16,7 +16,7 @@ public class PageHelper {
      * <p>初始化分页参数</p>
      *
      * @param dto 入参
-     * @return {@link IPage<T>}
+     * @return {@link IPage}
      * @author guocq
      * @date 2023/1/5 17:36
      */
