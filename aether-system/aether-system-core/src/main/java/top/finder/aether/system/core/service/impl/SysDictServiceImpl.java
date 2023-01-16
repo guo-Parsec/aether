@@ -12,22 +12,22 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.system.api.tools.DictTool;
+import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.system.core.dto.SysDictCreateDto;
 import top.finder.aether.system.core.dto.SysDictUpdateDto;
 import top.finder.aether.system.core.entity.SysDict;
 import top.finder.aether.system.core.mapper.SysDictMapper;
 import top.finder.aether.system.core.service.SysDictService;
+import top.finder.aether.system.core.converter.SysDictConverter;
 import top.finder.aether.system.core.vo.SysDictVo;
-import top.finder.aether.common.support.helper.TransformerHelper;
-import top.finder.aether.common.utils.LoggerUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.*;
+import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.M_VO_DICT;
+import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.P_DICT;
 
 /**
  * <p>数据字典服务接口实现类</p>
@@ -55,7 +55,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     public void create(SysDictCreateDto createDto) {
         log.debug("新增字典信息, 入参={}", createDto);
         checkBeforeCreate(createDto);
-        SysDict sysDict = TransformerHelper.transformer(createDto, SysDict.class);
+        SysDict sysDict = SysDictConverter.createDtoToEntity(createDto);
         mapper.insert(sysDict);
         log.debug("新增字典成功");
     }
@@ -90,7 +90,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     public void update(SysDictUpdateDto updateDto) {
         log.debug("更新字典信息, 入参={}", updateDto);
         checkBeforeUpdate(updateDto);
-        SysDict sysDict = TransformerHelper.transformer(updateDto, SysDict.class);
+        SysDict sysDict = SysDictConverter.updateDtoToEntity(updateDto);
         mapper.updateById(sysDict);
         log.debug("更新字典成功");
     }
@@ -113,8 +113,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
                 .eq(ObjectUtil.isNotEmpty(sysDict.getDictCode()), SysDict::getDictCode, sysDict.getDictCode())
                 .like(StrUtil.isNotBlank(sysDict.getDictName()), SysDict::getDictName, sysDict.getDictName());
         List<SysDict> sysDictList = mapper.selectList(wrapper);
-        return sysDictList.stream().map(ele -> TransformerHelper.transformer(ele, SysDictVo.class))
-                .peek(DictTool::translate).collect(Collectors.toList());
+        return sysDictList.stream().map(SysDictConverter::entityToVo).collect(Collectors.toList());
     }
 
     /**

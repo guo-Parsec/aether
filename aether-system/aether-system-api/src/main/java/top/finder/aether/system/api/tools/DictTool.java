@@ -6,13 +6,13 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.finder.aether.system.api.facade.SysDictFacade;
-import top.finder.aether.system.api.holders.SysDictHolders;
 import top.finder.aether.common.support.annotation.DictTranslate;
 import top.finder.aether.common.support.annotation.DictValid;
+import top.finder.aether.common.support.helper.Converter;
 import top.finder.aether.common.support.helper.ReflectHelper;
-import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.utils.LoggerUtil;
+import top.finder.aether.system.api.facade.SysDictFacade;
+import top.finder.aether.system.api.holders.SysDictHolders;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -52,16 +52,16 @@ public class DictTool {
     /**
      * <p>将源对象{@code source}转换为指定类型{@link T},对转换后的对象{@code target}中被注解{@link DictTranslate}标识的字段进行字典翻译</p>
      *
-     * @param source 源对象
-     * @param tClass 目标对象class
+     * @param source    源对象
+     * @param converter 源对象{@code source}转换为指定类型{@link T}的转换器
      * @return T 目标类型
      * @author guocq
-     * @date 2023/1/11 10:20
+     * @date 2023/1/16 14:03
      */
-    public static <S, T> T transformerAndTranslate(S source, Class<T> tClass) {
-        T target = TransformerHelper.transformer(source, tClass);
-        translate(target);
-        return target;
+    public static <S, T> T convertAndTranslate(S source, Converter<S, T> converter) {
+        T convert = converter.convert(source);
+        translate(convert);
+        return convert;
     }
 
     /**

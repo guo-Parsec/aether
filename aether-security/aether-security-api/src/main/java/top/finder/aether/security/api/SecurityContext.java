@@ -1,6 +1,5 @@
 package top.finder.aether.security.api;
 
-import cn.hutool.core.thread.ThreadUtil;
 import top.finder.aether.security.api.entity.SecuritySignature;
 import top.finder.aether.security.api.facade.SecurityFacade;
 import top.finder.aether.security.api.utils.SecurityUtil;
@@ -13,7 +12,7 @@ import top.finder.aether.security.api.utils.SecurityUtil;
  */
 public class SecurityContext {
     @SuppressWarnings("all")
-    private static final ThreadLocal<SecuritySignature> securityContext = ThreadUtil.createThreadLocal(() -> null);
+    private static final ThreadLocal<SecuritySignature> securityContext = ThreadLocal.withInitial(() -> null);
 
     /**
      * <p>销毁安全上下文</p>
@@ -35,8 +34,13 @@ public class SecurityContext {
     public static SecuritySignature get() {
         SecuritySignature signature = securityContext.get();
         if (SecurityUtil.isSecuritySignatureEmpty(signature)) {
-            signature = SecurityFacade.findSecuritySignature();
-            securityContext.set(signature);
+            try {
+                signature = SecurityFacade.findSecuritySignature();
+                securityContext.set(signature);
+            } catch (Exception e) {
+                signature = null;
+                securityContext.remove();
+            }
         }
         return signature;
     }

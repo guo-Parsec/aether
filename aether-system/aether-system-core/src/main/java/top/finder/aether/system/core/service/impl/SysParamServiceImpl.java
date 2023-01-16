@@ -12,24 +12,25 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.system.core.vo.SysParamVo;
+import top.finder.aether.common.utils.LoggerUtil;
+import top.finder.aether.data.core.support.helper.PageHelper;
 import top.finder.aether.system.core.dto.SysParamCreateDto;
-import top.finder.aether.system.core.dto.SysSysParamPageQueryDto;
 import top.finder.aether.system.core.dto.SysParamQueryDto;
 import top.finder.aether.system.core.dto.SysParamUpdateDto;
+import top.finder.aether.system.core.dto.SysSysParamPageQueryDto;
 import top.finder.aether.system.core.entity.SysParam;
 import top.finder.aether.system.core.mapper.SysParamMapper;
 import top.finder.aether.system.core.service.SysParamService;
-import top.finder.aether.common.support.helper.TransformerHelper;
-import top.finder.aether.common.utils.LoggerUtil;
-import top.finder.aether.data.core.support.helper.PageHelper;
+import top.finder.aether.system.core.converter.SysParamConverter;
+import top.finder.aether.system.core.vo.SysParamVo;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.*;
+import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.M_VO_PARAM;
+import static top.finder.aether.system.api.support.pool.SystemCacheNameConstantPool.P_PARAM;
 
 /**
  * <p>系统参数服务接口实现类</p>
@@ -57,7 +58,7 @@ public class SysParamServiceImpl implements SysParamService {
     public List<SysParamVo> list(SysParamQueryDto dto) {
         log.debug("根据字典查询参数列表, 入参={}", dto);
         List<SysParam> sysParams = mapper.selectList(findQueryWrapper(dto));
-        return sysParams.stream().map(record -> TransformerHelper.transformer(record, SysParamVo.class)).collect(Collectors.toList());
+        return sysParams.stream().map(SysParamConverter::entityToVo).collect(Collectors.toList());
     }
 
     /**
@@ -73,7 +74,7 @@ public class SysParamServiceImpl implements SysParamService {
         log.debug("根据字典查询参数分页列表, 入参={}", dto);
         IPage<SysParam> page = PageHelper.initPage(dto);
         IPage<SysParam> rawPage = mapper.selectPage(page, findQueryWrapper(dto));
-        return rawPage.convert(record -> TransformerHelper.transformer(record, SysParamVo.class));
+        return rawPage.convert(SysParamConverter::entityToVo);
     }
 
     /**
@@ -106,7 +107,7 @@ public class SysParamServiceImpl implements SysParamService {
     public void create(SysParamCreateDto dto) {
         log.debug("系统参数新增, 入参={}", dto);
         checkBeforeCreate(dto);
-        SysParam sysParam = TransformerHelper.transformer(dto, SysParam.class);
+        SysParam sysParam = SysParamConverter.createDtoToEntity(dto);
         mapper.insert(sysParam);
         log.debug("系统参数新增成功");
     }
@@ -124,7 +125,7 @@ public class SysParamServiceImpl implements SysParamService {
     public void update(SysParamUpdateDto dto) {
         log.debug("系统参数更新, 入参={}", dto);
         checkBeforeUpdate(dto);
-        SysParam sysParam = TransformerHelper.transformer(dto, SysParam.class);
+        SysParam sysParam = SysParamConverter.updateDtoToEntity(dto);
         mapper.updateById(sysParam);
         log.debug("系统参数更新成功");
     }

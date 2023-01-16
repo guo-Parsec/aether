@@ -17,36 +17,39 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.system.api.dto.SysUserCreateDto;
-import top.finder.aether.system.api.facade.SysParamFacade;
-import top.finder.aether.system.api.holders.SysParamHolders;
-import top.finder.aether.system.api.support.pool.SystemConstantPool;
-import top.finder.aether.system.api.tools.DictTool;
-import top.finder.aether.system.api.vo.SysUserVo;
-import top.finder.aether.system.core.dto.GrantRoleToUserDto;
-import top.finder.aether.system.core.dto.SysUserChangePasswordDto;
-import top.finder.aether.system.core.dto.SysSysUserPageQueryDto;
-import top.finder.aether.system.core.dto.SysUserUpdateDto;
-import top.finder.aether.system.core.entity.SysRole;
-import top.finder.aether.system.core.entity.SysUser;
-import top.finder.aether.system.core.mapper.SysRoleMapper;
-import top.finder.aether.system.core.mapper.SysUserMapper;
-import top.finder.aether.system.core.service.SysUserService;
 import top.finder.aether.common.support.annotation.BlockBean;
 import top.finder.aether.common.support.annotation.BlockMethod;
-import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.support.strategy.CryptoStrategy;
 import top.finder.aether.common.support.strategy.Md5SaltCrypto;
 import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.core.entity.UserDetails;
 import top.finder.aether.data.core.support.helper.PageHelper;
 import top.finder.aether.security.api.facade.SecurityFacade;
+import top.finder.aether.system.api.dto.SysUserCreateDto;
+import top.finder.aether.system.api.facade.SysParamFacade;
+import top.finder.aether.system.api.holders.SysParamHolders;
+import top.finder.aether.system.api.support.pool.SystemConstantPool;
+import top.finder.aether.system.api.tools.DictTool;
+import top.finder.aether.system.api.vo.SysUserVo;
+import top.finder.aether.system.core.converter.SysUserConverter;
+import top.finder.aether.system.core.dto.GrantRoleToUserDto;
+import top.finder.aether.system.core.dto.SysSysUserPageQueryDto;
+import top.finder.aether.system.core.dto.SysUserChangePasswordDto;
+import top.finder.aether.system.core.dto.SysUserUpdateDto;
+import top.finder.aether.system.core.entity.SysRole;
+import top.finder.aether.system.core.entity.SysUser;
+import top.finder.aether.system.core.mapper.SysRoleMapper;
+import top.finder.aether.system.core.mapper.SysUserMapper;
+import top.finder.aether.system.core.service.SysUserService;
 
 import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static top.finder.aether.system.core.converter.SysUserConverter.entityToVoConverter;
+import static top.finder.aether.system.core.converter.SysUserConverter.sysUserToUserDetailsConverter;
 
 /**
  * <p>用户操作业务实现类</p>
@@ -116,7 +119,7 @@ public class SysUserServiceImpl implements SysUserService {
             log.error("未找到用户account={}", account);
             return null;
         }
-        return DictTool.transformerAndTranslate(sysUser, UserDetails.class);
+        return DictTool.convertAndTranslate(sysUser, sysUserToUserDetailsConverter);
     }
 
     /**
@@ -132,7 +135,7 @@ public class SysUserServiceImpl implements SysUserService {
     public void create(SysUserCreateDto dto) {
         log.debug("新增用户信息, 入参={}", dto);
         checkBeforeCreate(dto);
-        SysUser sysUser = TransformerHelper.transformer(dto, SysUser.class);
+        SysUser sysUser = SysUserConverter.createDtoToEntity(dto);
         sysUser.setPassword(encrypt(sysUser.getAccount(), dto.getPassword()));
         mapper.insert(sysUser);
         // todo 默认角色赋予
@@ -152,7 +155,7 @@ public class SysUserServiceImpl implements SysUserService {
     public void update(SysUserUpdateDto dto) {
         log.debug("更新用户信息, 入参={}", dto);
         checkBeforeUpdate(dto);
-        SysUser sysUser = TransformerHelper.transformer(dto, SysUser.class);
+        SysUser sysUser = SysUserConverter.updateDtoToEntity(dto);
         mapper.updateById(sysUser);
         log.debug("更新用户信息成功");
     }
@@ -197,7 +200,7 @@ public class SysUserServiceImpl implements SysUserService {
                 .orderByDesc(SysUser::getGmtModify)
                 .orderByDesc(SysUser::getGmtCreate);
         IPage<SysUser> rawPage = mapper.selectPage(page, wrapper);
-        return rawPage.convert(record -> DictTool.transformerAndTranslate(record, SysUserVo.class));
+        return rawPage.convert(record -> DictTool.convertAndTranslate(record, entityToVoConverter));
     }
 
     /**

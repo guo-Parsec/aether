@@ -1,5 +1,6 @@
 package top.finder.aether.data.common.vo;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.Getter;
 import lombok.Setter;
 import top.finder.aether.common.vo.IVo;
@@ -26,6 +27,14 @@ public abstract class BaseVo implements IVo {
     }
 
     public BaseVo(String id) {
+        this.id = id;
+    }
+    
+    public void setId(Long id) {
+        this.setId(StrUtil.toStringOrNull(id));
+    }
+
+    public void setId(String id) {
         this.id = id;
     }
 

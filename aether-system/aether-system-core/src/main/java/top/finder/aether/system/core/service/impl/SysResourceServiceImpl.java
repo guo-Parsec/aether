@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import top.finder.aether.system.core.entity.SysResource;
 import top.finder.aether.system.core.mapper.SysResourceMapper;
 import top.finder.aether.system.core.service.SysResourceService;
-import top.finder.aether.system.core.transform.SysResourceTransform;
+import top.finder.aether.system.core.converter.SysResourceConverter;
 import top.finder.aether.data.core.entity.ResourceMapping;
 import top.finder.aether.data.core.support.runner.SystemSetting;
 
@@ -96,7 +96,7 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysRe
             }
         }
         return resourceMappings.stream()
-                .map(SysResourceTransform::resourceMappingToSysResource)
+                .map(SysResourceConverter::resourceMappingToSysResource)
                 .collect(Collectors.toList());
     }
 

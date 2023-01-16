@@ -12,9 +12,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.finder.aether.common.support.helper.TransformerHelper;
 import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.core.support.helper.PageHelper;
+import top.finder.aether.system.core.converter.SysRoleConverter;
 import top.finder.aether.system.core.dto.*;
 import top.finder.aether.system.core.entity.SysResource;
 import top.finder.aether.system.core.entity.SysRole;
@@ -56,7 +56,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public void create(SysRoleCreateDto createDto) {
         log.debug("新增角色信息, 入参={}", createDto);
         checkBeforeCreate(createDto);
-        SysRole sysRole = TransformerHelper.transformer(createDto, SysRole.class);
+        SysRole sysRole = SysRoleConverter.createDtoToEntity(createDto);
         mapper.insert(sysRole);
         log.debug("新增角色成功");
     }
@@ -91,7 +91,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public void update(SysRoleUpdateDto updateDto) {
         log.debug("更新角色信息, 入参={}", updateDto);
         checkBeforeUpdate(updateDto);
-        SysRole sysRole = TransformerHelper.transformer(updateDto, SysRole.class);
+        SysRole sysRole = SysRoleConverter.updateDtoToEntity(updateDto);
         mapper.updateById(sysRole);
         log.debug("更新角色成功");
     }
@@ -108,7 +108,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Override
     public List<SysRoleVo> listQuery(SysRoleQueryDto dto) {
         List<SysRole> sysRoles = mapper.selectList(dto.getCommonWrapper());
-        return sysRoles.stream().map(ele -> TransformerHelper.transformer(ele, SysRoleVo.class)).collect(Collectors.toList());
+        return sysRoles.stream().map(SysRoleConverter::entityToVo).collect(Collectors.toList());
     }
 
     /**
@@ -123,7 +123,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public IPage<SysRoleVo> pageQuery(SysRolePageQueryDto dto) {
         IPage<SysRole> page = PageHelper.initPage(dto);
         page = mapper.selectPage(page, dto.getCommonWrapper());
-        return page.convert(ele -> TransformerHelper.transformer(ele, SysRoleVo.class));
+        return page.convert(SysRoleConverter::entityToVo);
     }
 
     /**
