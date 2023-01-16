@@ -11,7 +11,7 @@ import org.springframework.web.server.ServerWebExchange;
 import top.finder.aether.common.support.helper.UrlHelper;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
-import top.finder.aether.security.api.utils.SecurityUtils;
+import top.finder.aether.security.api.utils.SecurityUtil;
 import top.finder.aether.security.api.entity.SecuritySignature;
 
 import java.io.Serializable;
@@ -85,7 +85,7 @@ public class SecurityWebfluxFacade {
      */
     private static boolean anonRelease(RequestPath requestPath, List<String> whiteList) {
         Assert.notNull(requestPath, "当前请求为null");
-        String anonUrlsKey = SecurityUtils.generateAnonUrlsKey();
+        String anonUrlsKey = SecurityUtil.generateAnonUrlsKey();
         @SuppressWarnings("unchecked")
         Set<String> anonUrls = RedisHelper.getInstance().get(anonUrlsKey, Set.class);
         anonUrls = Optional.ofNullable(anonUrls).map(urls -> Sets.newHashSet(CollUtil.addAll(urls, whiteList))).orElse(Sets.newHashSet(whiteList));

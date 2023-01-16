@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.exception.AetherException;
-import top.finder.aether.common.support.helper.CodeHelper;
+import top.finder.aether.security.api.SecurityContext;
 import top.finder.aether.security.api.entity.SecuritySignature;
 import top.finder.aether.security.api.facade.SecurityFacade;
 import top.finder.aether.system.api.facade.SysOperateRecordFacade;
@@ -30,12 +30,14 @@ public class OperateRecordAsync {
     public OperateRecordAsync(SysOperateRecordFacade facade) {
         this.facade = facade;
     }
-    
-    @Async("asyncTaskExecutor")
-    public void execSaveOperateRecord(AetherException error, LocalDateTime operateTime, Long timeSpent) {
-        HttpServletRequest request = CodeHelper.getHttpServletRequest();
-        SysOperateRecordHolder holder = SysOperateRecordHolder.buildRecordHolder(error, operateTime, timeSpent, request);
-        SecuritySignature securitySignature = this.findSecuritySignature(request);
+
+    @Async("recordAsyncTaskExecutor")
+    public void execSaveOperateRecord(AetherException error, LocalDateTime operateTime, Long timeSpent, String uri, String method, String ip) {
+        SysOperateRecordHolder holder = SysOperateRecordHolder.buildRecordHolder(error, operateTime, timeSpent);
+        holder.setOperateIp(ip);
+        holder.setOperateUri(uri);
+        holder.setOperateMethod(method);
+        SecuritySignature securitySignature = SecurityContext.get();
         holder.setOperateId(Optional.ofNullable(securitySignature).map(SecuritySignature::getId).orElse(0L));
         holder.setOperateAccount(Optional.ofNullable(securitySignature).map(SecuritySignature::getAccount).orElse("anon"));
         facade.saveOperateRecord(holder);

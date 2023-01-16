@@ -11,7 +11,7 @@ import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
 import top.finder.aether.security.api.entity.SecuritySignature;
-import top.finder.aether.security.api.utils.SecurityUtils;
+import top.finder.aether.security.api.utils.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,9 +41,9 @@ public class SecurityFacade {
         // 登录时先踢出当前用户
         kickOut(id);
         RedisHelper redisHelper = RedisHelper.getInstance();
-        String securityTokenKey = SecurityUtils.generateSecurityTokenKey(tokenId);
-        String securityUserKey = SecurityUtils.generateSecurityUserKey(id);
-        Long defaultTokenExpireTime = SecurityUtils.getDefaultTokenExpireTime();
+        String securityTokenKey = SecurityUtil.generateSecurityTokenKey(tokenId);
+        String securityUserKey = SecurityUtil.generateSecurityUserKey(id);
+        Long defaultTokenExpireTime = SecurityUtil.getDefaultTokenExpireTime();
         redisHelper.set(securityTokenKey, signature, defaultTokenExpireTime, HOURS);
         redisHelper.set(securityUserKey, tokenId, defaultTokenExpireTime, HOURS);
     }
@@ -56,7 +56,7 @@ public class SecurityFacade {
      * @date 2022/12/27 17:27
      */
     public static SecuritySignature findSecuritySignature() {
-        String tokenText = SecurityUtils.findRawTokenInHead();
+        String tokenText = SecurityUtil.findRawTokenInHead();
         return findSecuritySignature(tokenText);
     }
 
@@ -69,7 +69,7 @@ public class SecurityFacade {
      * @date 2023/1/13 14:05
      */
     public static SecuritySignature findSecuritySignature(HttpServletRequest request) {
-        String tokenText = SecurityUtils.findRawTokenInHead(request);
+        String tokenText = SecurityUtil.findRawTokenInHead(request);
         return findSecuritySignature(tokenText);
     }
 
@@ -87,11 +87,11 @@ public class SecurityFacade {
             log.error("tokenText不能为空");
             throw new AetherException(CommonHttpStatus.UNAUTHORIZED, "tokenText不能为空");
         }
-        String effectiveTokenId = SecurityUtils.findEffectiveTokenId(tokenText);
+        String effectiveTokenId = SecurityUtil.findEffectiveTokenId(tokenText);
         RedisHelper redisHelper = RedisHelper.getInstance();
-        String securityUserKey = SecurityUtils.generateSecurityTokenKey(effectiveTokenId);
+        String securityUserKey = SecurityUtil.generateSecurityTokenKey(effectiveTokenId);
         SecuritySignature signature = redisHelper.get(securityUserKey, SecuritySignature.class);
-        SecurityUtils.checkSecuritySignatureEmpty(signature);
+        SecurityUtil.checkSecuritySignatureEmpty(signature);
         return signature;
     }
 
@@ -153,11 +153,11 @@ public class SecurityFacade {
         log.debug("id为{}的用户将被踢下线", userId);
         Assert.notNull(userId, "userId不能为空");
         RedisHelper redisHelper = RedisHelper.getInstance();
-        String securityUserKey = SecurityUtils.generateSecurityUserKey(userId);
+        String securityUserKey = SecurityUtil.generateSecurityUserKey(userId);
         boolean exist = redisHelper.hasKey(securityUserKey);
         if (exist) {
             String tokenId = redisHelper.get(securityUserKey, String.class);
-            String securityTokenKey = SecurityUtils.generateSecurityTokenKey(tokenId);
+            String securityTokenKey = SecurityUtil.generateSecurityTokenKey(tokenId);
             redisHelper.delete(securityTokenKey);
         }
         redisHelper.delete(securityUserKey);

@@ -17,15 +17,15 @@ import java.util.Map;
  * @author guocq
  * @since 2023/1/5
  */
-public final class AopLoggerUtils {
+public final class AopLoggerUtil {
     private static final Map<Level, TernaryConsumer<Logger, String, Object[]>> LOG_MAP = Maps.newHashMapWithExpectedSize(5);
 
     static {
-        LOG_MAP.put(Level.TRACE, AopLoggerUtils::trace);
-        LOG_MAP.put(Level.DEBUG, AopLoggerUtils::debug);
-        LOG_MAP.put(Level.INFO, AopLoggerUtils::info);
-        LOG_MAP.put(Level.WARN, AopLoggerUtils::warn);
-        LOG_MAP.put(Level.ERROR, AopLoggerUtils::error);
+        LOG_MAP.put(Level.TRACE, AopLoggerUtil::trace);
+        LOG_MAP.put(Level.DEBUG, AopLoggerUtil::debug);
+        LOG_MAP.put(Level.INFO, AopLoggerUtil::info);
+        LOG_MAP.put(Level.WARN, AopLoggerUtil::warn);
+        LOG_MAP.put(Level.ERROR, AopLoggerUtil::error);
     }
 
     /**

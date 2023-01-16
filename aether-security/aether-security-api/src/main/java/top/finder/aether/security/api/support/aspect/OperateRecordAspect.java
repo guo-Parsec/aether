@@ -1,6 +1,7 @@
 package top.finder.aether.security.api.support.aspect;
 
 import cn.hutool.core.date.StopWatch;
+import cn.hutool.extra.servlet.ServletUtil;
 import io.swagger.annotations.ApiOperation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,9 +16,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.helper.CodeHelper;
-import top.finder.aether.common.utils.AopLoggerUtils;
+import top.finder.aether.common.utils.AopLoggerUtil;
 import top.finder.aether.data.core.support.enums.ResourceType;
 import top.finder.aether.data.core.support.helper.AppHelper;
+import top.finder.aether.security.api.SecurityContext;
 import top.finder.aether.security.api.support.async.OperateRecordAsync;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +52,7 @@ public class OperateRecordAspect {
         if (!allowRecord(point)) {
             return point.proceed(args);
         }
-        AopLoggerUtils.aopLog(log, point, "{}开始记录日志");
+        AopLoggerUtil.aopLog(log, point, "{}开始记录日志");
         Object result = null;
         AetherException error = null;
         StopWatch stopWatch = new StopWatch("operateRecord");
@@ -67,8 +69,11 @@ public class OperateRecordAspect {
         stopWatch.stop();
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
-            RequestContextHolder.setRequestAttributes(attributes, true);
-            async.execSaveOperateRecord(error, recordTime, stopWatch.getTotalTimeMillis());
+            HttpServletRequest request = attributes.getRequest();
+            String clientIp = ServletUtil.getClientIP(request);
+            String uri = request.getRequestURI();
+            String method = request.getMethod();
+            async.execSaveOperateRecord(error, recordTime, stopWatch.getTotalTimeMillis(), uri, method, clientIp);
         }
         return result;
     }

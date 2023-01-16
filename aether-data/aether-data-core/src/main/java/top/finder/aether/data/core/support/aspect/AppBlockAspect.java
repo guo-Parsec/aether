@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import top.finder.aether.common.support.annotation.AppBlocking;
 import top.finder.aether.common.support.annotation.AppGroup;
 import top.finder.aether.common.support.enums.AppBlockingType;
-import top.finder.aether.common.utils.AopLoggerUtils;
+import top.finder.aether.common.utils.AopLoggerUtil;
 import top.finder.aether.data.core.support.helper.AppHelper;
 import top.finder.aether.data.core.support.runner.BlockRegister;
 
@@ -52,16 +52,16 @@ public class AppBlockAspect {
         boolean allowIntercept = allowIntercept(appBlocking);
         if (!allowIntercept) {
             String appName = SpringUtil.getApplicationName();
-            AopLoggerUtils.aopLog(log, Level.INFO, point, "{}[appBlocking]对当前应用[" + appName + "]不设置拦截");
+            AopLoggerUtil.aopLog(log, Level.INFO, point, "{}[appBlocking]对当前应用[" + appName + "]不设置拦截");
             return point.proceed(args);
         }
         if (AppBlockingType.BEFORE.equals(value)) {
-            AopLoggerUtils.aopLog(log, Level.INFO, point, "{}[appBlocking]前置拦截开始");
+            AopLoggerUtil.aopLog(log, Level.INFO, point, "{}[appBlocking]前置拦截开始");
             before(appBlocking, args);
         }
         Object result = point.proceed(args);
         if (AppBlockingType.AFTER.equals(value)) {
-            AopLoggerUtils.aopLog(log, Level.INFO, point, "{}[appBlocking]后置拦截开始");
+            AopLoggerUtil.aopLog(log, Level.INFO, point, "{}[appBlocking]后置拦截开始");
             after(appBlocking, args, result);
         }
         return result;
@@ -70,9 +70,9 @@ public class AppBlockAspect {
     @Around("@annotation(appGroup)")
     public Object appGroupAround(ProceedingJoinPoint point, AppGroup appGroup) throws Throwable {
         AppBlocking[] blocking = appGroup.blocking();
-        AopLoggerUtils.aopLog(log, Level.INFO, point, "{}appGroup拦截开始");
+        AopLoggerUtil.aopLog(log, Level.INFO, point, "{}appGroup拦截开始");
         if (ArrayUtil.isEmpty(blocking)) {
-            AopLoggerUtils.aopLog(log, point, "{}appGroup拦截获取AppBlocking为空，将不再进行拦截");
+            AopLoggerUtil.aopLog(log, point, "{}appGroup拦截获取AppBlocking为空，将不再进行拦截");
             return point.proceed();
         }
         Object[] args = point.getArgs();
@@ -81,13 +81,13 @@ public class AppBlockAspect {
                 .collect(Collectors.groupingBy(AppBlocking::value));
         List<AppBlocking> before = blockMap.get(AppBlockingType.BEFORE);
         if (CollUtil.isNotEmpty(before)) {
-            AopLoggerUtils.aopLog(log, Level.INFO, point, "{}[appBlocking]前置拦截开始");
+            AopLoggerUtil.aopLog(log, Level.INFO, point, "{}[appBlocking]前置拦截开始");
             before.forEach(appBlocking -> before(appBlocking, args));
         }
         Object result = point.proceed(args);
         List<AppBlocking> after = blockMap.get(AppBlockingType.AFTER);
         if (CollUtil.isNotEmpty(after)) {
-            AopLoggerUtils.aopLog(log, Level.INFO, point, "{}[appBlocking]后置拦截开始");
+            AopLoggerUtil.aopLog(log, Level.INFO, point, "{}[appBlocking]后置拦截开始");
             after.forEach(appBlocking -> after(appBlocking, args, result));
         }
         return result;

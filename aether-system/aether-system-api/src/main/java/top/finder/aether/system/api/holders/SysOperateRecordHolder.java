@@ -1,6 +1,5 @@
 package top.finder.aether.system.api.holders;
 
-import cn.hutool.extra.servlet.ServletUtil;
 import lombok.Getter;
 import lombok.Setter;
 import top.finder.aether.common.model.IModel;
@@ -8,7 +7,6 @@ import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.helper.Builder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -82,18 +80,18 @@ public class SysOperateRecordHolder implements IModel {
      */
     private String operateMethod;
 
-    public static SysOperateRecordHolder buildRecordHolder(AetherException error, LocalDateTime operateTime, long timeSpent, HttpServletRequest request) {
+    public static SysOperateRecordHolder buildRecordHolder(AetherException error, LocalDateTime operateTime, long timeSpent) {
         Optional<AetherException> optional = Optional.ofNullable(error);
         return Builder.builder(SysOperateRecordHolder::new)
                 // 1 代表失败 0 代表成功
                 .with(SysOperateRecordHolder::setOperateResult, optional.isPresent() ? OPERATE_RESULT_FAILED : OPERATE_RESULT_SUCCESS)
                 .with(SysOperateRecordHolder::setOperateCode, optional.isPresent() ? optional.get().getCode() : CommonHttpStatus.SUCCESS.getCode())
                 .with(SysOperateRecordHolder::setErrorReason, optional.map(AetherException::getMessage).orElse("-"))
-                .with(SysOperateRecordHolder::setOperateIp, ServletUtil.getClientIP(request))
+                // .with(SysOperateRecordHolder::setOperateIp, ServletUtil.getClientIP(request))
                 .with(SysOperateRecordHolder::setOperateTime, operateTime)
                 .with(SysOperateRecordHolder::setTimeSpent, timeSpent)
-                .enhanceWith(SysOperateRecordHolder::setOperateUri, request::getRequestURI)
-                .enhanceWith(SysOperateRecordHolder::setOperateMethod, request::getMethod)
+                // .enhanceWith(SysOperateRecordHolder::setOperateUri, request::getRequestURI)
+                // .enhanceWith(SysOperateRecordHolder::setOperateMethod, request::getMethod)
                 .build();
     }
 

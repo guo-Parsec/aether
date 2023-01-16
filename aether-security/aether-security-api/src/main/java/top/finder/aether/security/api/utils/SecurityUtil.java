@@ -27,8 +27,8 @@ import static top.finder.aether.security.api.utils.SecurityInnerPool.*;
  * @author guocq
  * @since 2022/12/27
  */
-public class SecurityUtils {
-    private static final Logger log = LoggerFactory.getLogger(SecurityUtils.class);
+public class SecurityUtil {
+    private static final Logger log = LoggerFactory.getLogger(SecurityUtil.class);
 
     /**
      * <p>根据用户id生成指定userId的用户认证通过的用户信息存储的key</p>
