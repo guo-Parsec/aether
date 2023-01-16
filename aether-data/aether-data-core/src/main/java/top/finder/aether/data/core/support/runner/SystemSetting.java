@@ -57,7 +57,6 @@ public class SystemSetting implements ApplicationRunner, DisposableBean, Ordered
     @Override
     public void run(ApplicationArguments args) throws Exception {
         initFeignSecret();
-        initResource();
     }
 
     /**
