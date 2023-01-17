@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.finder.aether.system.core.mapper.SysMenuMapper">
+  <resultMap id="BaseResultMap" type="top.finder.aether.system.core.entity.SysMenu">
+    <!--@mbg.generated-->
+    <!--@Table sys_menu-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="absolute_path" jdbcType="VARCHAR" property="absolutePath" />
+    <result column="menu_code" jdbcType="VARCHAR" property="menuCode" />
+    <result column="menu_title" jdbcType="VARCHAR" property="menuTitle" />
+    <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" />
+    <result column="menu_level" jdbcType="INTEGER" property="menuLevel" />
+    <result column="menu_sort" jdbcType="INTEGER" property="menuSort" />
+    <result column="menu_url" jdbcType="VARCHAR" property="menuUrl" />
+    <result column="menu_component" jdbcType="VARCHAR" property="menuComponent" />
+    <result column="menu_display" jdbcType="INTEGER" property="menuDisplay" />
+    <result column="menu_desc" jdbcType="VARCHAR" property="menuDesc" />
+    <result column="delete_at" jdbcType="BIGINT" property="deleteAt" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, parent_id, absolute_path, menu_code, menu_title, menu_icon, menu_level, menu_sort, 
+    menu_url, menu_component, menu_display, menu_desc, delete_at, gmt_create, gmt_modify
+  </sql>
+</mapper>
