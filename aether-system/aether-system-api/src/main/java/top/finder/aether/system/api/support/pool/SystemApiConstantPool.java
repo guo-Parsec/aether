@@ -41,4 +41,14 @@ public interface SystemApiConstantPool {
      * 系统配置模块网络请求前缀
      */
     String SYSTEM_SETTING_WEB_API_PREFIX = "/system-setting";
+
+    /**
+     * 系统菜单模块网络请求前缀
+     */
+    String MENU_WEB_API_PREFIX = "/menu";
+
+    /**
+     * 系统操作记录模块网络请求前缀
+     */
+    String RECORD_WEB_API_PREFIX = "/operate/record";
 }

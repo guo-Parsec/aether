@@ -3,13 +3,17 @@ package ${package.Entity};
 <#list table.importPackages as pkg>
 import ${pkg};
 </#list>
+<#if swagger>
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+</#if>
 <#if entityLombokModel>
 import lombok.Getter;
 import lombok.Setter;
 </#if>
 
 /**
- * <p>${table.comment!}</p>
+ * <p>${table.comment!}数据展示层</p>
  *
  * @author ${author}
  * @since ${date}
@@ -18,8 +22,8 @@ import lombok.Setter;
 @Getter
 @Setter
 </#if>
-<#if table.convert>
-@TableName("${schemaName}${table.name}")
+<#if swagger>
+@ApiModel(value = "${entity}数据展示层对象", description = "${table.comment!}")
 </#if>
 <#if superEntityClass??>
 public class ${entity} extends ${superEntityClass}<#if activeRecord><${entity}></#if> {
@@ -41,9 +45,13 @@ public class ${entity} {
     </#if>
 
     <#if field.comment!?length gt 0>
+        <#if swagger>
+    @ApiModelProperty("${field.comment}")
+        <#else>
     /**
      * ${field.comment}
      */
+        </#if>
     </#if>
     <#if field.keyFlag>
         <#-- 主键 -->
