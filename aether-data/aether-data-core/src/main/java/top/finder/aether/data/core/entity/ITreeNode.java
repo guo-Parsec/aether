@@ -37,7 +37,7 @@ public interface ITreeNode<K extends Serializable> extends IModel {
      * @author guocq
      * @date 2023/1/16 16:50
      */
-    void setChildren(Collection<ITreeNode<K>> children);
+    void setChildren(Collection<? extends ITreeNode<K>> children);
 
     /**
      * <p>获取子元素集合</p>
@@ -47,4 +47,40 @@ public interface ITreeNode<K extends Serializable> extends IModel {
      * @date 2023/1/16 16:54
      */
     Collection<? extends ITreeNode<K>> getChildren();
+
+    /**
+     * <p>是否根节点</p>
+     *
+     * @return boolean
+     * @author guocq
+     * @date  2023/1/18 16:31
+     */
+    boolean isRoot();
+
+    /**
+     * <p>设置是否根节点</p>
+     *
+     * @param root 是否为根节点
+     * @author guocq
+     * @date  2023/1/18 16:31
+     */
+    void setRoot(boolean root);
+
+    /**
+     * <p>设置是否为叶子节点</p>
+     *
+     * @param isLeaf 是否为叶子节点
+     * @author guocq
+     * @date 2023/1/18 16:31
+     */
+    void setLeaf(boolean isLeaf);
+
+    /**
+     * <p>是否为叶子节点</p>
+     *
+     * @return java.lang.Boolean
+     * @author guocq
+     * @date 2023/1/18 16:31
+     */
+    boolean isLeaf();
 }

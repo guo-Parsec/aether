@@ -1,8 +1,10 @@
 package top.finder.aether.data.core.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -13,21 +15,36 @@ import java.util.Collection;
  */
 @Setter
 @Getter
-public abstract class AbstractTreeNode implements ITreeNode<Long> {
+public abstract class AbstractTreeNode<K extends Serializable> implements ITreeNode<K> {
     private static final long serialVersionUID = 8536099298974979986L;
 
     /**
      * 主键
      */
-    protected Long id;
+    @ApiModelProperty(value = "主键")
+    protected K id;
 
     /**
      * 父级id
      */
-    protected Long parentId;
+    @ApiModelProperty(value = "父级id")
+    protected K parentId;
 
     /**
      * 子元素id
      */
-    protected Collection<ITreeNode<Long>> children;
+    @ApiModelProperty(value = "子元素id")
+    protected Collection<? extends ITreeNode<K>> children;
+
+    /**
+     * 是否为根元素
+     */
+    @ApiModelProperty(value = "是否为根元素")
+    protected boolean root;
+
+    /**
+     * 是否为叶子节点
+     */
+    @ApiModelProperty(value = "是否为叶子节点")
+    protected boolean leaf;
 }
