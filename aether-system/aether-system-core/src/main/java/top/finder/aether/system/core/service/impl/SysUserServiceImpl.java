@@ -27,14 +27,15 @@ import top.finder.aether.data.core.support.helper.PageHelper;
 import top.finder.aether.security.api.facade.SecurityFacade;
 import top.finder.aether.system.api.dto.SysUserCreateDto;
 import top.finder.aether.system.api.facade.SysParamFacade;
+import top.finder.aether.system.api.facade.SysUserFacade;
 import top.finder.aether.system.api.holders.SysParamHolders;
 import top.finder.aether.system.api.support.pool.SystemConstantPool;
 import top.finder.aether.system.api.tools.DictTool;
 import top.finder.aether.system.api.vo.SysUserVo;
 import top.finder.aether.system.core.converter.SysUserConverter;
 import top.finder.aether.system.core.dto.GrantRoleToUserDto;
-import top.finder.aether.system.core.dto.SysSysUserPageQueryDto;
 import top.finder.aether.system.core.dto.SysUserChangePasswordDto;
+import top.finder.aether.system.core.dto.SysUserPageQueryDto;
 import top.finder.aether.system.core.dto.SysUserUpdateDto;
 import top.finder.aether.system.core.entity.SysRole;
 import top.finder.aether.system.core.entity.SysUser;
@@ -70,6 +71,7 @@ public class SysUserServiceImpl implements SysUserService {
     private SysRoleMapper sysRoleMapper;
     private CryptoStrategy defaultCryptoStrategy;
     private SysParamFacade sysParamFacade;
+    private SysUserFacade userFacade;
 
     @Autowired
     public void setCryptoStrategy(@Qualifier("md5SaltCrypto") CryptoStrategy cryptoStrategy) {
@@ -79,6 +81,11 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     public void setParamFacade(SysParamFacade sysParamFacade) {
         this.sysParamFacade = sysParamFacade;
+    }
+
+    @Autowired
+    public void setUserFacade(SysUserFacade userFacade) {
+        this.userFacade = userFacade;
     }
 
     /**
@@ -188,7 +195,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @date 2023/1/5 11:04
      */
     @Override
-    public IPage<SysUserVo> pageQuery(SysSysUserPageQueryDto dto) {
+    public IPage<SysUserVo> pageQuery(SysUserPageQueryDto dto) {
         log.debug("分页查询用户,入参={}", dto);
         IPage<SysUser> page = PageHelper.initPage(dto);
         Wrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
@@ -304,6 +311,7 @@ public class SysUserServiceImpl implements SysUserService {
         Long id = dto.getId();
         mapper.unbindRoleOfUser(id);
         mapper.bindRoleOfUser(id, dto.getRoleId());
+        userFacade.clearCache(id);
         log.debug("为用户赋予角色成功");
         SecurityFacade.kickOut(id);
     }
@@ -333,7 +341,7 @@ public class SysUserServiceImpl implements SysUserService {
     public void registeredUserCreate(SysUserCreateDto dto) {
         dto.setUserType(SystemConstantPool.USER_TYPE_REGISTERED);
     }
-
+    
     /**
      * <p>判断用户密码是否匹配</p>
      *

@@ -9,6 +9,7 @@ import top.finder.aether.common.model.IModel;
 import top.finder.aether.data.core.support.enums.ResourceType;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.StringJoiner;
 
 /**
@@ -25,7 +26,7 @@ public class SysResourceCreateDto implements IModel {
     /**
      * 资源类别
      */
-    @NotEmpty(message = "资源类别不能为空")
+    @NotNull(message = "资源类别不能为空")
     @ApiModelProperty(value = "资源类别")
     private ResourceType resourceType;
 

@@ -29,12 +29,4 @@
       gmt_modify
       <!--@sql from sys_resource -->
   </sql>
-
-  <delete id="deleteWithResourceCode">
-    delete from sys_resource where delete_at = 0 and resource_code in
-    <foreach collection="resourceCodeSet" item="resourceCode" open="(" close=")" separator=",">
-      #{resourceCode,jdbcType=VARCHAR}
-    </foreach>
-  </delete>
-
 </mapper>

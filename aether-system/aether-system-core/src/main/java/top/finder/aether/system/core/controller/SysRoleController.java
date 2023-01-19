@@ -9,7 +9,7 @@ import top.finder.aether.common.support.api.Apis;
 import top.finder.aether.system.api.support.pool.SystemApiConstantPool;
 import top.finder.aether.system.core.dto.*;
 import top.finder.aether.system.core.service.SysRoleService;
-import top.finder.aether.system.core.vo.SysRoleVo;
+import top.finder.aether.system.api.vo.SysRoleVo;
 
 import java.util.List;
 import java.util.Set;

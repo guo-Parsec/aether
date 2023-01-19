@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="top.finder.aether.system.core.mapper.SysRoleMapper">
-    <resultMap id="BaseResultMap" type="top.finder.aether.system.core.entity.SysRole">
+<mapper namespace="top.finder.aether.system.api.repository.SysRoleRepository">
+    <resultMap id="BaseResultMap" type="top.finder.aether.system.api.vo.SysRoleVo">
         <!--@mbg.generated-->
         <!--@Table sys_role-->
         <id column="id" jdbcType="BIGINT" property="id"/>
@@ -9,7 +9,6 @@
         <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
         <result column="role_sort" jdbcType="INTEGER" property="roleSort"/>
         <result column="role_desc" jdbcType="VARCHAR" property="roleDesc"/>
-        <result column="delete_at" jdbcType="BIGINT" property="deleteAt"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify"/>
     </resultMap>
@@ -21,22 +20,16 @@
         sysRole.role_name,
         sysRole.role_sort,
         sysRole.role_desc,
-        sysRole.delete_at,
         sysRole.gmt_create,
         sysRole.gmt_modify
         <!--@sql from sys_role sysRole -->
     </sql>
 
-    <delete id="unbindResourceOfRole" parameterType="java.lang.Long">
-        delete
-        from sys_role_resource
-        where role_id = #{roleId,jdbcType=BIGINT}
-    </delete>
-
-    <insert id="bindResourceOfUser">
-        insert into sys_role_resource(role_id, resource_id) values
-        <foreach collection="resourceIds" item="resourceId" separator=",">
-            (#{roleId,jdbcType=BIGINT}, #{resourceId,jdbcType=BIGINT})
-        </foreach>
-    </insert>
+    <select id="findRoleCodeByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select sysRole.role_code, sysRole.id
+        from sys_role sysRole
+                 left join sys_user_role aur on sysRole.id = aur.role_id
+        where sysRole.delete_at = 0
+          and aur.user_id = #{userId,jdbcType=BIGINT}
+    </select>
 </mapper>

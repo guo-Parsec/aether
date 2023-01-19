@@ -40,7 +40,7 @@ public class SecuritySignature implements Serializable {
     private Set<String> permissions;
 
     @ApiModelProperty(value = "用户所拥有的请求路径")
-    private Set<String> urls;
+    private Set<String> resourceUrls;
 
     @ApiModelProperty(value = "令牌信息")
     private Token token;
@@ -79,7 +79,7 @@ public class SecuritySignature implements Serializable {
                 .add("account='" + account + "'")
                 .add("roles=" + roles)
                 .add("permissions=" + permissions)
-                .add("urls=" + urls)
+                .add("resourceUrls=" + resourceUrls)
                 .add("token=" + token)
                 .toString();
     }

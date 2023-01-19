@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.finder.aether.system.core.dto.*;
 import top.finder.aether.system.core.entity.SysRole;
-import top.finder.aether.system.core.vo.SysRoleVo;
+import top.finder.aether.system.api.vo.SysRoleVo;
 
 import java.util.List;
 import java.util.Set;

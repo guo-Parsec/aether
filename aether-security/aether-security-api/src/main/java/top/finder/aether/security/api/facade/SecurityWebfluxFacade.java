@@ -65,9 +65,9 @@ public class SecurityWebfluxFacade {
             return false;
         }
         SecuritySignature signature = SecurityFacade.findSecuritySignature(tokenText);
-        Set<String> urls = signature.getUrls();
+        Set<String> resourceUrls = signature.getResourceUrls();
         String reqUrl = UrlHelper.autoPopulateRequestRootPath(requestPath.toString());
-        if (!UrlHelper.matches(reqUrl, urls)) {
+        if (!UrlHelper.matches(reqUrl, resourceUrls)) {
             log.error("当前用户没有访问请求[{}]的权限，系统拒绝放行", requestPath);
             return false;
         }

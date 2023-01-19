@@ -8,7 +8,7 @@ import top.finder.aether.data.core.entity.ResourceMapping;
 import top.finder.aether.system.core.dto.SysResourceCreateDto;
 import top.finder.aether.system.core.dto.SysResourceUpdateDto;
 import top.finder.aether.system.core.entity.SysResource;
-import top.finder.aether.system.core.vo.SysResourceVo;
+import top.finder.aether.system.api.vo.SysResourceVo;
 
 /**
  * <p>系统资源转换类</p>

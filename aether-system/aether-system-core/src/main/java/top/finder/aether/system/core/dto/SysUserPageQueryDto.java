@@ -19,7 +19,7 @@ import java.util.StringJoiner;
 @Getter
 @Setter
 @ApiModel("用户分页查询参数")
-public class SysSysUserPageQueryDto extends SysUserQueryDto implements IPageDto {
+public class SysUserPageQueryDto extends SysUserQueryDto implements IPageDto {
 
     private static final long serialVersionUID = -3323511371707903871L;
     /**
@@ -40,7 +40,7 @@ public class SysSysUserPageQueryDto extends SysUserQueryDto implements IPageDto 
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", SysSysUserPageQueryDto.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", SysUserPageQueryDto.class.getSimpleName() + "[", "]")
                 .add("currentPage=" + currentPage)
                 .add("pageSize=" + pageSize)
                 .add("account='" + account + "'")

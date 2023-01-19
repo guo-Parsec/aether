@@ -118,7 +118,7 @@ public class DictTool {
      * @date 2023/1/11 9:59
      */
     private static String findDictName(String dictTypeCode, Integer dictCode) {
-        Optional<SysDictHolders> optional = DictAccessHolder.DICT_ACCESS.findDictByTypeAndCode(dictTypeCode, dictCode);
+        Optional<SysDictHolders> optional = Optional.ofNullable(DictAccessHolder.DICT_ACCESS.findDictByTypeAndCode(dictTypeCode, dictCode));
         return optional.map(SysDictHolders::getDictName).orElse(null);
     }
 

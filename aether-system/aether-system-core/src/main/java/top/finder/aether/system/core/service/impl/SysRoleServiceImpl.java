@@ -8,12 +8,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.core.support.helper.PageHelper;
+import top.finder.aether.system.api.facade.SysUserFacade;
 import top.finder.aether.system.core.converter.SysRoleConverter;
 import top.finder.aether.system.core.dto.*;
 import top.finder.aether.system.core.entity.SysResource;
@@ -21,7 +23,7 @@ import top.finder.aether.system.core.entity.SysRole;
 import top.finder.aether.system.core.mapper.SysResourceMapper;
 import top.finder.aether.system.core.mapper.SysRoleMapper;
 import top.finder.aether.system.core.service.SysRoleService;
-import top.finder.aether.system.core.vo.SysRoleVo;
+import top.finder.aether.system.api.vo.SysRoleVo;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -45,6 +47,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     private SysRoleMapper mapper;
     @Resource
     private SysResourceMapper sysResourceMapper;
+    private SysUserFacade userFacade;
+
+    @Autowired
+    public void setUserFacade(SysUserFacade userFacade) {
+        this.userFacade = userFacade;
+    }
 
     /**
      * <p>新增：角色信息</p>
@@ -144,6 +152,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         Long id = dto.getId();
         mapper.unbindResourceOfRole(id);
         mapper.bindResourceOfUser(id, dto.getResourceId());
+        userFacade.clearCache();
         log.debug("为角色赋予资源成功");
     }
 

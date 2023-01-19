@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -81,7 +82,8 @@ public class SysMenuQueryDto implements IModel {
      * @author guocq
      * @date 2023/01/18 15:46
      */
-    public LambdaQueryWrapper<SysMenu> getCommonWrapper() {
+    @JsonIgnore
+    public LambdaQueryWrapper<SysMenu> findCommonWrapper() {
         LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ObjectUtil.isNotNull(this.id), SysMenu::getId, this.id);
         wrapper.eq(ObjectUtil.isNotNull(this.parentId), SysMenu::getParentId, this.parentId);

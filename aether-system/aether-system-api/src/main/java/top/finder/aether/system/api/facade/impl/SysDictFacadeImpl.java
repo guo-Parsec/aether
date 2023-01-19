@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.system.api.facade.SysDictFacade;
 import top.finder.aether.system.api.holders.SysDictHolders;
 import top.finder.aether.system.api.repository.SysDictRepository;
-import top.finder.aether.common.utils.LoggerUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,13 +65,13 @@ public class SysDictFacadeImpl implements SysDictFacade {
      *
      * @param dictTypeCode 字典类型
      * @param dictCode     字典码
-     * @return {@link Optional}
+     * @return {@link SysDictHolders}
      * @author guocq
      * @date 2023/1/11 9:43
      */
     @Override
-    @Cacheable(cacheNames = S_OHO_DICT, key = "'dictTypeCode:' + #dictTypeCode + ':dictCode:' + #dictCode")
-    public Optional<SysDictHolders> findDictByTypeAndCode(String dictTypeCode, Integer dictCode) {
+    @Cacheable(cacheNames = S_OHO_DICT, key = "'dictTypeCode:' + #dictTypeCode + ':dictCode:' + #dictCode", unless = "#result == null")
+    public SysDictHolders findDictByTypeAndCode(String dictTypeCode, Integer dictCode) {
         log.debug("根据字典类型[dictTypeCode={}]和字典码[dictCode={}]查询数据字典", dictTypeCode, dictCode);
         if (StrUtil.isBlank(dictTypeCode)) {
             log.error("字典类型码[dictTypeCode]不能为空");
@@ -84,8 +84,11 @@ public class SysDictFacadeImpl implements SysDictFacade {
         SysDictFacade sysDictFacade = SpringUtil.getBean(SysDictFacade.class);
         List<SysDictHolders> sysDictHoldersList = sysDictFacade.findDictByType(dictTypeCode);
         if (CollUtil.isEmpty(sysDictHoldersList)) {
-            return Optional.empty();
+            return null;
         }
-        return sysDictHoldersList.stream().filter(dictModel -> ObjectUtil.equals(dictCode, dictModel.getDictCode())).findFirst();
+        Optional<SysDictHolders> optional = sysDictHoldersList.stream()
+                .filter(dictModel -> ObjectUtil.equals(dictCode, dictModel.getDictCode()))
+                .findFirst();
+        return optional.orElse(null);
     }
 }

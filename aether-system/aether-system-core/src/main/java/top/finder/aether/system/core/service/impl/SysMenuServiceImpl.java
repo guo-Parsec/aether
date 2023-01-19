@@ -1,6 +1,7 @@
 package top.finder.aether.system.core.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.core.support.helper.PageHelper;
+import top.finder.aether.system.api.tools.DictTool;
 import top.finder.aether.system.core.converter.SysMenuConverter;
 import top.finder.aether.system.core.dto.SysMenuCreateDto;
 import top.finder.aether.system.core.dto.SysMenuPageQueryDto;
@@ -39,7 +41,7 @@ import static top.finder.aether.system.api.support.pool.menu.MenuCacheConstantPo
 @Service(value = "sysMenuService")
 public class SysMenuServiceImpl implements SysMenuService {
     private static final Logger log = LoggerFactory.getLogger(SysMenuServiceImpl.class);
-    
+
     @Resource
     private SysMenuMapper mapper;
 
@@ -60,7 +62,7 @@ public class SysMenuServiceImpl implements SysMenuService {
         mapper.insert(sysMenu);
         log.debug("新增系统菜单成功");
     }
-    
+
     /**
      * <p>批量删除：系统菜单</p>
      *
@@ -77,7 +79,7 @@ public class SysMenuServiceImpl implements SysMenuService {
         mapper.logicBatchDeleteByIds(idSet, System.currentTimeMillis());
         log.debug("删除系统菜单成功");
     }
-    
+
     /**
      * <p>更新：系统菜单</p>
      *
@@ -95,7 +97,7 @@ public class SysMenuServiceImpl implements SysMenuService {
         mapper.insert(sysMenu);
         log.debug("更新系统菜单成功");
     }
-    
+
     /**
      * <p>查询：系统菜单列表</p>
      *
@@ -107,10 +109,10 @@ public class SysMenuServiceImpl implements SysMenuService {
     @Override
     @Cacheable(cacheNames = M_VO_MENU, keyGenerator = "modelKeyGenerator", unless = "#result.isEmpty()")
     public List<SysMenuVo> listQuery(SysMenuQueryDto dto) {
-        List<SysMenu> sysMenuList = mapper.selectList(dto.getCommonWrapper());
+        List<SysMenu> sysMenuList = mapper.selectList(dto.findCommonWrapper());
         return sysMenuList.stream().map(SysMenuConverter::entityToVo).collect(Collectors.toList());
     }
-    
+
     /**
      * <p>分页查询：系统菜单</p>
      *
@@ -122,7 +124,7 @@ public class SysMenuServiceImpl implements SysMenuService {
     @Override
     public IPage<SysMenuVo> pageQuery(SysMenuPageQueryDto dto) {
         IPage<SysMenu> page = PageHelper.initPage(dto);
-        page = mapper.selectPage(page, dto.getCommonWrapper());
+        page = mapper.selectPage(page, dto.findCommonWrapper());
         return page.convert(SysMenuConverter::entityToVo);
     }
 
@@ -141,8 +143,17 @@ public class SysMenuServiceImpl implements SysMenuService {
         if (exists) {
             throw LoggerUtil.logAetherValidError(log, "菜单码值为[menuCode={}]的数据已存在，不能重复新增", menuCode);
         }
+        Long parentId = dto.getParentId();
+        wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysMenu::getId, parentId);
+        SysMenu sysMenu = mapper.selectOne(wrapper);
+        if (sysMenu == null) {
+            throw LoggerUtil.logAetherValidError(log, "上级菜单[parentId={}]不存在，新增失败", parentId);
+        }
+        dto.setAbsolutePath(sysMenu.handleAbsolutePath());
+        DictTool.verifyDictLegitimacy(dto);
     }
-    
+
     /**
      * <p>删除系统菜单前校验</p>
      *
@@ -163,9 +174,9 @@ public class SysMenuServiceImpl implements SysMenuService {
         }
         if (count < size) {
             log.warn("待删除的idSet={}中部分主键不存在无法删除，系统将删除已存在的数据{}条", idSet, count);
-        }   
+        }
     }
-    
+
     /**
      * <p>更新系统菜单前校验</p>
      *
@@ -182,6 +193,7 @@ public class SysMenuServiceImpl implements SysMenuService {
             throw LoggerUtil.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
         }
         String menuCode = dto.getMenuCode();
+        Long parentId = dto.getParentId();
         wrapper = new LambdaQueryWrapper<SysMenu>();
         wrapper.ne(SysMenu::getId, id);
         boolean checkUnique = false;
@@ -189,11 +201,24 @@ public class SysMenuServiceImpl implements SysMenuService {
             checkUnique = true;
             wrapper.eq(SysMenu::getMenuCode, menuCode);
         }
-       if (checkUnique) {
+        if (checkUnique) {
             exists = mapper.exists(wrapper);
             if (exists) {
                 throw LoggerUtil.logAetherValidError(log, "菜单码值为[menuCode={}]的数据已存在，不能重复更新", menuCode);
             }
-       }     
+        }
+        if (ObjectUtil.isNotNull(parentId)) {
+            wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(SysMenu::getId, parentId);
+            SysMenu sysMenu = mapper.selectOne(wrapper);
+            if (sysMenu == null) {
+                throw LoggerUtil.logAetherValidError(log, "上级菜单[parentId={}]不存在，修改失败", parentId);
+            }
+            String absolutePath = dto.getAbsolutePath();
+            String handleAbsolutePath = sysMenu.handleAbsolutePath();
+            dto.setAbsolutePath(handleAbsolutePath);
+            log.debug("层级路径[absolutePath={}]将被替换为[absolutePath={}]", absolutePath, handleAbsolutePath);
+        }
+        DictTool.verifyDictLegitimacy(dto);
     }
 }

@@ -10,7 +10,7 @@ import top.finder.aether.system.api.support.pool.SystemApiConstantPool;
 import top.finder.aether.system.api.support.pool.SystemConstantPool;
 import top.finder.aether.system.api.vo.SysUserVo;
 import top.finder.aether.system.core.dto.GrantRoleToUserDto;
-import top.finder.aether.system.core.dto.SysSysUserPageQueryDto;
+import top.finder.aether.system.core.dto.SysUserPageQueryDto;
 import top.finder.aether.system.core.dto.SysUserChangePasswordDto;
 import top.finder.aether.system.core.dto.SysUserUpdateDto;
 import top.finder.aether.system.core.service.SysUserService;
@@ -73,7 +73,7 @@ public class SysUserController {
 
     @ApiOperation(value = "分页系统查询", notes = "分页查询用户信息")
     @GetMapping(value = "/page/query")
-    public Apis<IPage<SysUserVo>> pageQuery(@Validated SysSysUserPageQueryDto dto) {
+    public Apis<IPage<SysUserVo>> pageQuery(@Validated SysUserPageQueryDto dto) {
         return Apis.success(service.pageQuery(dto));
     }
 

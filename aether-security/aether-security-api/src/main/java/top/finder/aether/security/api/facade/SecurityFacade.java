@@ -2,6 +2,7 @@ package top.finder.aether.security.api.facade;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -9,11 +10,14 @@ import top.finder.aether.common.support.api.CommonHttpStatus;
 import top.finder.aether.common.support.exception.AetherException;
 import top.finder.aether.common.support.helper.CodeHelper;
 import top.finder.aether.common.support.pool.SecurityConstantPool;
+import top.finder.aether.common.utils.LoggerUtil;
 import top.finder.aether.data.cache.support.helper.RedisHelper;
 import top.finder.aether.security.api.entity.SecuritySignature;
 import top.finder.aether.security.api.utils.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.Set;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 
@@ -40,6 +44,8 @@ public class SecurityFacade {
         Long id = signature.getId();
         // 登录时先踢出当前用户
         kickOut(id);
+        // 安全注入
+        inject(signature);
         RedisHelper redisHelper = RedisHelper.getInstance();
         String securityTokenKey = SecurityUtil.generateSecurityTokenKey(tokenId);
         String securityUserKey = SecurityUtil.generateSecurityUserKey(id);
@@ -161,5 +167,26 @@ public class SecurityFacade {
             redisHelper.delete(securityTokenKey);
         }
         redisHelper.delete(securityUserKey);
+    }
+
+    /**
+     * <p>安全注入</p>
+     *
+     * @param signature 签名信息
+     * @author guocq
+     * @date 2023/1/19 13:58
+     */
+    private static void inject(SecuritySignature signature) {
+        SecurityInjectFacade injectFacade = SpringUtil.getBean(SecurityInjectFacade.class);
+        if (injectFacade == null) {
+            throw LoggerUtil.logAetherError(log, "安全注入未找到合适的实现, 请确保安全注入已被实现并交与SpringBean处理");
+        }
+        Set<String> permissionSet = injectFacade.injectPermissionSet(signature);
+        Set<String> roleSet = injectFacade.injectRoleSet(signature);
+        Set<String> resourceUrlSet = injectFacade.injectResourceUrlSet(signature);
+        signature.setPermissions(permissionSet);
+        signature.setRoles(roleSet);
+        signature.setResourceUrls(resourceUrlSet);
+        injectFacade.clearMap();
     }
 }

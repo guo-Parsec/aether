@@ -100,12 +100,15 @@ public class SysMenuVo extends AbstractTreeNodeDataVo {
                 .add("menuUrl='" + menuUrl + "'")
                 .add("menuComponent='" + menuComponent + "'")
                 .add("menuDisplay=" + menuDisplay)
+                .add("menuDisplayName='" + menuDisplayName + "'")
                 .add("menuDesc='" + menuDesc + "'")
                 .add("gmtCreate=" + gmtCreate)
                 .add("gmtModify=" + gmtModify)
                 .add("id=" + id)
                 .add("parentId=" + parentId)
                 .add("children=" + children)
+                .add("root=" + root)
+                .add("leaf=" + leaf)
                 .toString();
     }
 }

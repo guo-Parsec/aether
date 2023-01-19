@@ -93,4 +93,56 @@ public class SysMenu extends BaseDataEntity {
                 .add("id=" + id)
                 .toString();
     }
+
+    /**
+     * <p>对当前对象处理层级路径</p>
+     *
+     * @param isAppendSeparatorToTail 是否追加到末尾
+     * @return java.lang.String
+     * @author guocq
+     * @date 2023/1/19 10:04
+     */
+    public String handleAbsolutePath(boolean isAppendSeparatorToTail) {
+        return handleAbsolutePath(this.absolutePath, this.id, isAppendSeparatorToTail);
+    }
+
+    /**
+     * <p>对当前对象处理层级路径[不追加路径分隔符到末尾]</p>
+     *
+     * @return java.lang.String
+     * @author guocq
+     * @date 2023/1/19 10:04
+     */
+    public String handleAbsolutePath() {
+        return handleAbsolutePath(this.absolutePath, this.id);
+    }
+
+    /**
+     * <p>路径层级处理[不追加路径分隔符到末尾]</p>
+     *
+     * @param rawAbsolutePath 原始路径层级
+     * @param appendId        追加的id
+     * @return java.lang.String
+     * @author guocq
+     * @date 2023/1/19 10:02
+     */
+    public static String handleAbsolutePath(String rawAbsolutePath, Long appendId) {
+        return handleAbsolutePath(rawAbsolutePath, appendId, false);
+    }
+
+    /**
+     * <p>路径层级处理</p>
+     *
+     * @param rawAbsolutePath         原始路径层级
+     * @param appendId                追加的id
+     * @param isAppendSeparatorToTail 是否追加分隔符到末尾
+     * @return java.lang.String
+     * @author guocq
+     * @date 2023/1/19 10:01
+     */
+    public static String handleAbsolutePath(String rawAbsolutePath, Long appendId, boolean isAppendSeparatorToTail) {
+        final String pathSeparator = "/";
+        String temp = rawAbsolutePath.endsWith(pathSeparator) ? rawAbsolutePath : rawAbsolutePath + pathSeparator;
+        return isAppendSeparatorToTail ? temp + appendId + pathSeparator : temp + appendId;
+    }
 }

@@ -21,14 +21,14 @@ import top.finder.aether.system.core.dto.SysResourceUpdateDto;
 import top.finder.aether.system.core.entity.SysResource;
 import top.finder.aether.system.core.mapper.SysResourceMapper;
 import top.finder.aether.system.core.service.SysResourceService;
-import top.finder.aether.system.core.vo.SysResourceVo;
+import top.finder.aether.system.api.vo.SysResourceVo;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static top.finder.aether.system.api.support.pool.resource.ResourceCacheConstantPool.P_RESOURCE;
 import static top.finder.aether.system.api.support.pool.resource.ResourceCacheConstantPool.M_VO_RESOURCE;
+import static top.finder.aether.system.api.support.pool.resource.ResourceCacheConstantPool.P_RESOURCE;
 
 /**
  * <p>系统资源业务接口实现类</p>
@@ -138,11 +138,13 @@ public class SysResourceServiceImpl implements SysResourceService {
      */
     private void checkBeforeCreate(SysResourceCreateDto dto) {
         String resourceCode = dto.getResourceCode();
+        String resourceUrl = dto.getResourceUrl();
         Wrapper<SysResource> wrapper = new LambdaQueryWrapper<SysResource>()
-                .eq(SysResource::getResourceCode, resourceCode);
+                .eq(SysResource::getResourceCode, resourceCode)
+                .eq(SysResource::getResourceUrl, resourceUrl);
         boolean exists = mapper.exists(wrapper);
         if (exists) {
-            throw LoggerUtil.logAetherValidError(log, "资源编码为[resourceCode={}]的数据已存在，不能重复新增", resourceCode);
+            throw LoggerUtil.logAetherValidError(log, "资源编码为[resourceCode={}]以及资源路径为[resourceUrl={}]的数据已存在，不能重复新增", resourceCode, resourceUrl);
         }
     }
 
@@ -155,20 +157,29 @@ public class SysResourceServiceImpl implements SysResourceService {
      */
     private void checkBeforeUpdate(SysResourceUpdateDto dto) {
         Long id = dto.getId();
-        Wrapper<SysResource> wrapper = new LambdaQueryWrapper<SysResource>()
+        LambdaQueryWrapper<SysResource> wrapper = new LambdaQueryWrapper<SysResource>()
                 .eq(SysResource::getId, id);
         boolean exists = mapper.exists(wrapper);
         if (!exists) {
             throw LoggerUtil.logAetherValidError(log, "主键为[id={}]的数据不存在，不能进行更新维护", id);
         }
         String resourceCode = dto.getResourceCode();
+        String resourceUrl = dto.getResourceUrl();
+        boolean checkUnique = false;
+        wrapper = new LambdaQueryWrapper<>();
+        wrapper.ne(SysResource::getId, id);
         if (StrUtil.isNotBlank(resourceCode)) {
-            wrapper = new LambdaQueryWrapper<SysResource>()
-                    .eq(SysResource::getResourceCode, resourceCode)
-                    .ne(SysResource::getId, id);
+            checkUnique = true;
+            wrapper.eq(SysResource::getResourceCode, resourceCode);
+        }
+        if (StrUtil.isNotBlank(resourceUrl)) {
+            checkUnique = true;
+            wrapper.eq(SysResource::getResourceUrl, resourceUrl);
+        }
+        if (checkUnique) {
             exists = mapper.exists(wrapper);
             if (exists) {
-                throw LoggerUtil.logAetherValidError(log, "资源编码为[resourceCode={}]的数据已存在，不能重复更新", resourceCode);
+                throw LoggerUtil.logAetherValidError(log, "资源编码为[resourceCode={}]以及资源路径为[resourceUrl={}]的数据已存在，不能重复更新", resourceCode);
             }
         }
     }

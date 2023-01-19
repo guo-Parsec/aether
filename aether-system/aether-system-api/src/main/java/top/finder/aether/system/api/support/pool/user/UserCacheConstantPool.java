@@ -81,4 +81,9 @@ public interface UserCacheConstantPool {
      * user业务holder多条结果缓存名称
      */
     String M_HO_USER = P_HO_USER + REDIS_KEY_SEPARATOR + CACHE_RESULT_MULTIPLE;
+
+    /**
+     * 安全详情map
+     */
+    String MAP_SECURITY_DETAILS = "security:details";
 }

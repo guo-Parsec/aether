@@ -61,4 +61,19 @@ public interface SystemConstantPool {
      * 默认用户密码加解密策略
      */
     String PARAM_DEFAULT_USER_PASSWORD_CRYPTO_STRATEGY = "DEFAULT_USER_PASSWORD_CRYPTO_STRATEGY";
+
+    /**
+     * 安全详情key - roles
+     */
+    String SECURITY_DETAILS_KEY_ROLES = "roles";
+    
+    /**
+     * 安全详情key - permissions
+     */
+    String SECURITY_DETAILS_KEY_PERMISSIONS = "permissions";
+    
+    /**
+     * 安全详情key - resourceUrls
+     */
+    String SECURITY_DETAILS_KEY_RESOURCE_URLS = "resourceUrls";
 }

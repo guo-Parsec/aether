@@ -5,8 +5,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import top.finder.aether.common.model.IModel;
+import top.finder.aether.common.support.annotation.DictValid;
+import top.finder.aether.common.support.pool.RegexConstantPool;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.util.StringJoiner;
 
 /**
@@ -43,6 +45,7 @@ public class SysMenuUpdateDto implements IModel {
     /**
      * 菜单码值
      */
+    @Pattern(regexp = RegexConstantPool.STR_WORDS, message = "菜单码值" + RegexConstantPool.MSG_WORDS)
     @ApiModelProperty(value = "菜单码值")
     private String menuCode;
 
@@ -61,12 +64,15 @@ public class SysMenuUpdateDto implements IModel {
     /**
      * 菜单级别
      */
+    @Min(value = 1, message = "菜单级别不能小于1")
     @ApiModelProperty(value = "菜单级别")
     private Integer menuLevel;
 
     /**
      * 菜单排序
      */
+    @Min(value = 0, message = "菜单排序不能小于0")
+    @Max(value = 99999, message = "菜单排序不能大于99999")
     @ApiModelProperty(value = "菜单排序")
     private Integer menuSort;
 
@@ -85,6 +91,7 @@ public class SysMenuUpdateDto implements IModel {
     /**
      * 显示状态
      */
+    @DictValid(type = "menu_display", emptyValid = false)
     @ApiModelProperty(value = "显示状态")
     private Integer menuDisplay;
 

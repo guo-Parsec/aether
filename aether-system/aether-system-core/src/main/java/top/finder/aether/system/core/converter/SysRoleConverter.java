@@ -4,7 +4,7 @@ import top.finder.aether.common.support.helper.Converter;
 import top.finder.aether.system.core.dto.SysRoleCreateDto;
 import top.finder.aether.system.core.dto.SysRoleUpdateDto;
 import top.finder.aether.system.core.entity.SysRole;
-import top.finder.aether.system.core.vo.SysRoleVo;
+import top.finder.aether.system.api.vo.SysRoleVo;
 
 /**
  * <p>系统角色转换类</p>

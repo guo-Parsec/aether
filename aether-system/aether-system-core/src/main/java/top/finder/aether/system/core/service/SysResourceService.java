@@ -5,7 +5,7 @@ import top.finder.aether.system.core.dto.SysResourceCreateDto;
 import top.finder.aether.system.core.dto.SysResourcePageQueryDto;
 import top.finder.aether.system.core.dto.SysResourceQueryDto;
 import top.finder.aether.system.core.dto.SysResourceUpdateDto;
-import top.finder.aether.system.core.vo.SysResourceVo;
+import top.finder.aether.system.api.vo.SysResourceVo;
 
 import java.util.List;
 import java.util.Set;

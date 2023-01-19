@@ -1,13 +1,13 @@
 package top.finder.aether.system.core.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import top.finder.aether.system.core.dto.SysUserChangePasswordDto;
+import top.finder.aether.data.core.entity.UserDetails;
 import top.finder.aether.system.api.dto.SysUserCreateDto;
 import top.finder.aether.system.api.vo.SysUserVo;
 import top.finder.aether.system.core.dto.GrantRoleToUserDto;
-import top.finder.aether.system.core.dto.SysSysUserPageQueryDto;
+import top.finder.aether.system.core.dto.SysUserChangePasswordDto;
+import top.finder.aether.system.core.dto.SysUserPageQueryDto;
 import top.finder.aether.system.core.dto.SysUserUpdateDto;
-import top.finder.aether.data.core.entity.UserDetails;
 
 import java.util.Set;
 
@@ -74,7 +74,7 @@ public interface SysUserService {
      * @author guocq
      * @date 2023/1/5 11:04
      */
-    IPage<SysUserVo> pageQuery(SysSysUserPageQueryDto dto);
+    IPage<SysUserVo> pageQuery(SysUserPageQueryDto dto);
 
     /**
      * <p>用户修改密码</p>
